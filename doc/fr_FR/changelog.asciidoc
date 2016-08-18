@@ -71,8 +71,8 @@ Modification du deamon suite aux passages de nginx vers apache=> Résolution du 
 
 ==== V1.301 du 
 Ajout de la gestion des statuts des inter scenario
-Ajout des modules 67220,77023 et 77024
+Ajout des modules 43214, 67220,77023 et 77024
 Modification des templates pour intégrer les generic_type (necessaire à l'appli mobil)
-Ajout du module alarme 
+Ajout de la gestion des statuts pour l'alarme multifonction 43214 
 
 
