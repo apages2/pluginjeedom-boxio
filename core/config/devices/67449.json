@@ -1,0 +1,531 @@
+{
+    "67449": {
+        "name": "Programmateur d'ambiance v1.0",
+		"configuration": {
+                            "version": "1.0",
+							"674491": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Zone 1",
+								"btn": "Zone 1",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "ACTION,STATUS,MEMORY,COMMAND",
+								"function_code": "51",
+								"unit_code": "6",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"674492": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Zone 2",
+								"btn": "Zone 2",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY,COMMAND",
+								"function_code": "51",
+								"unit_code": "6",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"674493": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Zone 3",
+								"btn": "Zone 3",
+								"unit": "3",
+								"unit_status": "3",
+								"possibility": "ACTION,STATUS,MEMORY,COMMAND",
+								"function_code": "51",
+								"unit_code": "6",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"674494": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Sondes",
+								"btn": "Memoire Sondes",
+								"unit": "4",
+								"unit_status": "4",
+								"possibility": "STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "145",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"674495": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Horloge",
+								"btn": "Interne",
+								"unit": "5",
+								"unit_status": "5",
+								"possibility": "STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "1444",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"674496": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Toutes Zones",
+								"btn": "Toutes Zones",
+								"unit": "6",
+								"unit_status": "6",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "NULL",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"674497": {
+								"ref_legrand": "67449",
+								"family": "COMFORT",
+								"nom_interne": "Horloge",
+								"btn": "Interne",
+								"unit": "7",
+								"unit_status": "7",
+								"possibility": "STATUS",
+								"function_code": "51",
+								"unit_code": "24",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}
+                        },				
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+					{
+                        "name": "Status Zone 1 : ",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Zone 1 - HG",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#4*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 1 - Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#3*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 1 - Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#2*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 1 - Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#1*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 1 - Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#0*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Status Zone 2 : ",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Zone 2 - HG",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#4*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 2 - Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#3*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 2 - Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#2*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 2 - Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#1*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 2 - Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#0*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Status Zone 3 : ",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        }				
+					},
+					{
+                        "name": "Zone 3 - HG",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#4*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 3 - Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#3*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 3 - Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#2*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 3 - Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#1*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Zone 3 - Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#0*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Status4",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }				
+					},
+					{
+                        "name": "Status5",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status5",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "5"
+                        }				
+					},
+					{
+                        "name": "Status Toutes Zones :",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status6",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "6"
+                        }				
+					},
+					{
+                        "name": "Toutes Zones - HG",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#4*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "6",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Toutes Zones - Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#3*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "6",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Toutes Zones - Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#2*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "6",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Toutes Zones - Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#1*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "6",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Toutes Zones - Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#0*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "6",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Status7",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status7",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "7"
+                        }				
+					}
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,227 @@
+{
+    "43214": {
+        "name": "Système d’Alarme Intrusion Multiservice RF v1.0",
+		"configuration": {
+							"version": "1.0",
+                            "432141": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Status",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432142": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "TOUCHE1",
+								"btn": "Touche 1",
+								"unit": "2",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432143": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "TOUCHE2",
+								"btn": "Touche 2",
+								"unit": "3",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432144": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "MEST",
+								"btn": "Mise en Service Totale",
+								"unit": "4",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432145": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "ARRET",
+								"btn": "Arret",
+								"unit": "5",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432146": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "MESP",
+								"btn": "Mise en Service Partielle",
+								"unit": "6",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432147": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "DEPART",
+								"btn": "Depart en Alarme",
+								"unit": "7",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432148": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "VERROUILLAGE",
+								"btn": "Verrouillage Alarme après Tempo",
+								"unit": "8",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"432149": {
+								"ref_legrand": "43214",
+								"family": "SECURITY",
+								"nom_interne": "DEFAUT",
+								"btn": "Defaut Alarme",
+								"unit": "9",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								}
+                        },
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status Alarme",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Mise en Service Totale",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+							"unit": "4",
+							"where": "Broadcast"
+                        }
+                    },
+                    {
+                        "name": "Mise en Service Partielle",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+							"unit": "6",
+							"where": "Broadcast"
+						}
+					},
+					{
+                        "name": "Arret",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+							"unit": "5",
+							"where": "Broadcast"
+						}
+					},
+					{
+                        "name": "Touche 1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+							"unit": "2",
+							"where": "Broadcast"
+                        }
+                    },
+                    {
+                        "name": "Touche 2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+						"unit": "3",
+						"where": "Broadcast"
+						}
+					}
+                ]
+            }
+        }
+    }
+}

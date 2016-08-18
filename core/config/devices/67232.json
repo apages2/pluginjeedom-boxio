@@ -1,0 +1,151 @@
+{
+    "67232": {
+        "name": "Inter Variateur 600W Radio v1.0",
+        "configuration": {
+                            "version": "1.0",
+							"672321": {
+								"ref_legrand": "67232",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF",
+								"btn": "Variation/Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "MEMORY,COMMAND",
+								"function_code": "49",
+								"unit_code": "14",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"672322": {
+								"ref_legrand": "67232",
+								"family": "LIGHTING",
+								"nom_interne": "+",
+								"btn": "Scenario +",
+								"unit": "2",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "15",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"672323": {
+								"ref_legrand": "67232",
+								"family": "LIGHTING",
+								"nom_interne": "-",
+								"btn": "Scenario -",
+								"unit": "3",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "15",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								}
+						},
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "On",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Off",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        }
+                    },
+					{
+                        "name": "Variateur",
+                        "type": "action",
+						"subtype": "slider",
+                        "isVisible": 1,
+						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#10*#SLIDER#*1##",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Dim_Step"
+							},
+							"unit": "2",
+							"where": "Broadcast",
+							"minValue": 0,
+							"maxValue": 125
+                        }
+                    },
+					{
+                        "name": "On Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+					{
+                        "name": "Off Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

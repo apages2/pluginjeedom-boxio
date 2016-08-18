@@ -1,0 +1,33 @@
+<config>
+    <version>1</version>
+
+    <!-- Serial -->
+    <serial_device>/dev/ttyACM0</serial_device>
+    <serial_rate>115200</serial_rate>
+    <serial_timeout>9</serial_timeout>
+
+    <!-- Trigger -->
+    <trigger>/tmp/boxio_remote.sh</trigger>
+    <trigger_timeout>10</trigger_timeout>
+	
+	<!-- Process -->
+    <process_boxiomsg>yes</process_boxiomsg>
+
+    <!-- Daemon -->
+    <daemon_pidfile>/tmp/boxio.pid</daemon_pidfile>
+
+    <!-- Log messages -->
+    <log_msg>yes</log_msg>
+    <log_msgfile>/usr/share/nginx/www/jeedom/core/class/../../log/boxiocmd.message</log_msgfile>
+
+   
+    <!-- Logging -->
+    <loglevel>error</loglevel>
+    <logfile>/usr/share/nginx/www/jeedom/core/class/../../log/boxiocmd.error</logfile>
+
+  
+    <!-- Socket server -->
+    <sockethost>192.168.0.246</sockethost>
+    <socketport>55002</socketport>
+
+</config>

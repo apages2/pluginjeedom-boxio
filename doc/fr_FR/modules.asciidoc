@@ -1,0 +1,53 @@
+03600 : Inter Multifonction Lexic
+
+03809 : Gestionnaire d'Energie
+
+67201 : Inter simple
+
+67202 : Inter double
+
+67203 : Inter simple à voyant
+
+67204 : Inter double à voyant
+
+67208 : Inter Scenario d'éclairage
+
+67210 : Inter Variateur 300W
+
+67212 : Inter Variateur 300W à voyant
+
+67214 : Inter Variateur 600W à voyant 
+
+67215 : Inter Auto Emetteur-Recepteur CPL
+
+67232 : Inter Variateur 600W Radio
+
+67251 : Volet roulant sans dérogation
+
+67255 : Volet roulant avec dérogation
+
+67280 : Interscenario Emetteur CPL
+
+67445 : Sortie de Cable CPL
+
+88203 : Prisinter Variateur 500W
+
+Pas encore fonctionnel ou partiel (à la recherche de Beta Testeur)
+
+03606 : Interface Radio
+
+67253 : Inter Centralisé Volet Roulant
+
+67254 : Inter Centralise Quadruple Volet Roulant
+
+67256 : Inter Centralisé Volet Roulant (orientation lamelles)
+
+67442 : Thermostat Programmable
+
+67449 : Programmateur d'ambiance
+
+67451 : Inter VMC
+
+84526 : Inter Individuel Volet Roulant Sagane
+
+88202 : Prisinter 2500W

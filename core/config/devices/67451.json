@@ -1,0 +1,56 @@
+{
+    "67451": {
+        "name": "Inter VMC v1.0",
+		"configuration": {
+                            "version": "1.0",
+							"674511": {
+								"ref_legrand": "67451",
+								"family": "LIGHTING",
+								"nom_interne": "Lent/Rapide",
+								"btn": "Vitesse Lente/rapide",
+								"unit": "1",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "55",
+								"unit_code": "19",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Changement Vitesse"
+							},
+							"674512": {
+								"ref_legrand": "67451",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Vitesse",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "55",
+								"unit_code": "141",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}
+                        },				
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+					{
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					}
+                ]
+            }
+        }
+    }
+}

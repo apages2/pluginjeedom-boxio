@@ -1,0 +1,91 @@
+{
+    "67253": {
+        "name": "Inter Centralisé Volet Roulant v1.0",
+        "configuration": {
+                            "version": "1.0",
+							"672531": {
+								"ref_legrand": "67253",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop",
+								"btn": "Monte/Descente/Stop",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Mouvement volet"
+								}
+                        },		
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Ouvrir",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},	
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Fermer",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*2*#WHERE##IDUNIT###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+						"unit": "2",
+						"where": "Unicast"
+						}
+					},
+                    {
+                        "name": "Stop",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+                    }
+                ]
+            }
+        }
+    }
+}

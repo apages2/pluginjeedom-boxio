@@ -1,0 +1,32 @@
+{
+    "plugins\/boxio\/core\/php\/jeeboxio.php": {
+        "Evènement : ": "Event : ",
+        "Clef API non valide, vous n\'êtes pas autorisé à effectuer cette action (jeeZwave)":"Invalid API key, you are not allowed to do this action (jeeZwave)"
+    },
+    "plugins\/boxio\/core\/class\/boxio.class.php": {
+        "Lancement du démon Boxio": "Launching of Boxio deamon",
+        "Démon Boxio lancé": "Boxio deamon launched",
+        "Impossible de lancer le démon Boxio": "Not possible to launch Boxio deamon"
+    },
+    "plugins\/boxio\/desktop\/php\/boxio.php": {
+        "Liste équipements Boxio": "List of Boxio devices",
+        "Nom de l'équipement Boxio": "Name of Boxio< device",
+        "ID": "ID",
+        "Equipement": "Device",
+        "Ajouter une commande": "Add command",
+        "Logical ID (info) ou Commande brute (action)": "Logical ID (info) or Raw command (action)",
+        "Paramètres": "Parameters",
+    },
+    "plugins\/boxio\/desktop\/js\/boxio.js": {
+        "Le démon a été correctement arrêté : il se relancera automatiquement dans 1 minute": "The deamon have been correctly stopped : it will be automatically relaunched in 1 minute",
+        "La valeur de la commande vaut par defaut la commande": "The command value is the command by default",
+        "Aucune": "None",
+        "Historiser": "History",
+        "Afficher": "Display",
+        "Evénement": "Event",
+        "Inverser": "Reverse",
+        "Lifetime cache": "Lifetime cache",
+        "Unité": "Unite",
+        "Tester": "Test"
+    }
+}

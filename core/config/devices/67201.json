@@ -1,0 +1,120 @@
+{
+    "67201": {
+        "name": "Inter Simple v1.0",
+        "configuration": {
+                            "version": "1.0",
+							"672011": {
+								"ref_legrand": "67201",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF",
+								"btn": "Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"672012": {
+								"ref_legrand": "67201",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Allumer/Eteindre",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "129",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								}
+                        },
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "On",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Off",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+					},
+					{
+                        "name": "On Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+                    {
+                        "name": "Off Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+						"unit": "1",
+						"where": "Multicast"
+						}
+					}
+                ]
+            }
+        }
+    }
+}

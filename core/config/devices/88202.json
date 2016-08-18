@@ -1,0 +1,56 @@
+{
+    "88202": {
+        "name": "Prisinter 2500W v1.0",
+		"configuration": {
+                            "version": "1.0",
+							"882021": {
+								"ref_legrand": "88202",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF",
+								"btn": "Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"882022": {
+								"ref_legrand": "88202",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Allumer/Eteindre",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "129",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}
+                        },				
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+					{
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					}
+                ]
+            }
+        }
+    }
+}

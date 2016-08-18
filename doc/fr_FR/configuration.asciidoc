@@ -1,0 +1,64 @@
+Le plugin BOXIO permet de dialoguer avec l'ensemble des périphériques In One By Legrand que ce soit en CPL, Radiofréquence ou Infrarouge (pour ces deux derniers, il est nécessaire d'avoir un bridge CPL/IR ou CPL/RF).
+
+Après l'avoir téléchargé sur le Market, il sera nécessaire de configurer le port sur lequel est connecté le module USB/CPL, ainsi que la vitesse du port. En général : /dev/ttyACM0:115200. Une liste déroulante propose les ports USB actifs. Le port de socket interne : 55002 est le port par défaut utilisé par le daemon Boxio. Il vaut mieux éviter de le changer sans connaitre le fonctionnement du daemon.
+
+image::../images/boxio1.png[]
+
+
+
+Une fois configuré, on accède à la page du plugin BOXIO.
+
+A gauche, la liste des modules BOXIO, et au centre les onglets Général, Information et Commandes.
+
+
+
+image::../images/boxio2.png[]
+
+
+
+Le menu à gauche présente l'ensemble des modules BOXIO détectés et/ou configurés sur son installation domotique. Pour l'instant le plugin détecte les modules Legrand, mais ne les reconnait pas automatiquement. Une fois que Jeedom a détecté le nouveau module, il va le créer, mais sans lui affecter de commande. Pour cela, il sera nécessaire soit de choisir un module dans la liste déroulante complétement à droite (si le module existe dans la base de données), soit de créer les commandes une à une.
+
+Le bouton "Ajouter équipement" permet d'ajouter des équipements spécifiques BOXIO, en générale pour des tests ou des commandes de type "Managements" ou "Spéciales".
+
+
+
+image::../images/boxio3.png[]
+
+
+
+Lorsqu'on passe en mode Expert, on a accès à d'autres options : Type de commande, unit, type de communication, trame brute.
+
+Le champ type permet de choisir entre une commande de type action ou une commande de type info, le type de l'action ou de l'info (Action, curseur, message, etc...) et l'action (Move Down, Move Up, etc...).
+Le champ unit permet de saisir l'unit utilisée pour la commande ou pour le retour d'état.
+Le champ communication permet de choisir le type de communication (Multicast, Unicast ou Broadcast).
+Le champ LogicalID ou commande brute permet de nommer l'info ou de renseigner la trame "brute".
+
+
+
+image::../images/boxio4.png[] 
+ 
+
+ 
+L'onglet Information précise le type de l'équipement.
+
+
+
+image::../images/boxio6.png[] 
+
+L'onglet général permet de choisir le nom de l'équipement, sa destination dans l'arborescence de sa domotique, la catégorie du module (dans le jargon Legrand : WHO), la possibilité de rendre inactif le module dans Jeedom, ou encore de rendre visible ou invisible le module dans l'interface et le type de média : CPL, IR ou RF.
+
+
+
+image::../images/boxio7.png[] 
+
+
+
+L'onglet Commandes détaille l'ensemble des commandes (certains éléments ne sont disponibles qu'en mode expert).
+
+Ces commandes sont automatiquement remplies si on choisit le type de module dans le champ "Equipements". Les paramètres utiles sont Historiser, Afficher(la commande), Evènement (permet de forcer la demande d'info sur le module).
+
+
+
+image::../images/boxio8.png[] 
+
+Dans une prochaine version et avec l'aide de tous, on pourrait imaginer que les modules soient reconnus automatiquement

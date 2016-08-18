@@ -1,0 +1,268 @@
+{
+    "67251": {
+        "name": "Inter Volet sans dérogation v1.0",
+        "configuration": {
+                            "version": "1.0",
+							"672511": {
+								"ref_legrand": "67251",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop",
+								"btn": "Monte/Descente/Stop",
+								"unit": "1",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Mouvement volet"
+								},
+							"672512": {
+								"ref_legrand": "67251",
+								"family": "SHUTTER",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Monte/Descente/Stop",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "50",
+								"unit_code": "139",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								}
+                        },
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Ouvrir",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},	
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Fermer",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*2*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+					},
+                    {
+                        "name": "Stop",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+                    },
+					{
+                        "name": "Ouvrir Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},	
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+                    {
+                        "name": "Fermer Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*2*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+							"unit": "1",
+							"where": "Multicast"
+						}
+					},
+                    {
+                        "name": "Stop Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "1",
+							"where": "Multicast"
+						}
+                    }
+                ]
+            },
+			"01": {
+                "name": "Inversé",
+                "commands": [
+                    {
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Ouvrir",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*2*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Fermer",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+					},
+                    {
+                        "name": "Stop",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+                    },
+					{
+                        "name": "Ouvrir Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*2*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+                    {
+                        "name": "Fermer Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},
+						"unit": "1",
+						"where": "Multicast"
+						}
+					},
+                    {
+                        "name": "Stop Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "1",
+							"where": "Multicast"
+						}
+                    }
+                ]
+            }
+        }
+    }
+}

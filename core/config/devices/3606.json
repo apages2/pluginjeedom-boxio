@@ -1,0 +1,43 @@
+{
+    "03606": {
+        "name": "Interface Radio v1.0",
+        "configuration": {
+                            "version": "1.0",
+							"036061": {
+								"ref_legrand": "3606",
+								"family": "SPECIAL",
+								"nom_interne": "STATUS",
+								"btn": "Interne",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "ACTION,STATUS",
+								"function_code": "48",
+								"unit_code": "12",
+								"server_opt": "NULL",
+								"commentaire": "Interface Protocole Inconnu"
+								}
+                        },		
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					}
+                ]
+            }
+        }
+    }
+}

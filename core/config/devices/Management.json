@@ -1,0 +1,59 @@
+{
+    "Management": {
+        "name": "commande de creation v1.2",
+		"configuration": {
+			"version": "1.2"
+		},
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Device Description",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*#WHERE##IDUNIT#*51##",
+						"eventOnly": 1,
+						"configuration": {
+							"unit": "0",
+							"where": "Unicast"
+                        }
+					},
+					{
+                        "name": "Unit Description Request",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*#WHERE##IDUNIT#*55##",
+						"eventOnly": 1,
+						"configuration": {
+							"unit": "1",
+							"where": "Unicast"
+                        }
+					},
+					{
+                        "name": "Memory Read",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*1000*66*#WHERE##IDUNIT###",
+						"eventOnly": 1,
+						"configuration": {	
+							"unit": "1",
+							"where": "Unicast"
+                        }
+					},
+					{
+                        "name": "Scan modules",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*0#*13*##",
+						"eventOnly": 1
+					}
+                ]
+            }
+        }
+    }
+}

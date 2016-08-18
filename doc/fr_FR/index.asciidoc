@@ -1,0 +1,28 @@
+== Boxio
+
+=== Description
+Plugin permettant d'utiliser l'adaptateur USB/CPL de Legrand (88213)
+
+'''
+=== Configuration
+include::configuration.asciidoc[]
+
+'''
+=== Liste des modules connus
+include::modules.asciidoc[]
+
+'''
+=== Ajouter un Equipement
+include::addequipement.asciidoc[]
+
+'''
+=== FAQ
+include::faq.asciidoc[]
+
+'''
+=== Troubleshooting
+include::troubleshooting.asciidoc[]
+
+'''
+=== Changelog
+include::changelog.asciidoc[]

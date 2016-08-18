@@ -1,0 +1,173 @@
+{
+    "67442": {
+        "name": "Thermostat Programmable v1.0",
+		"configuration": {
+                            "version": "1.0",
+							"674421": {
+								"ref_legrand": "67442",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Allumage Chauffage",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "STATUS,COMMAND",
+								"function_code": "51",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "STATUS=Etat du contacteur;COMMAND=Etat du contacteur"
+								},
+							"674422": {
+								"ref_legrand": "67442",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Mode",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "149",
+								"server_opt": "NULL",
+								"commentaire": "MEMORY=Scenarios pour le changement de mode;STATUS=Etats des modes, tempertaures et sondes;ACTION=Changement de mode et temperatures"
+								},
+							"674423": {
+								"ref_legrand": "67442",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Interne",
+								"unit": "3",
+								"unit_status": "3",
+								"possibility": "STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "145",
+								"server_opt": "NULL",
+								"commentaire": "STATUS=inconu"
+							},
+							"674424": {
+								"ref_legrand": "67442",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Interne",
+								"unit": "4",
+								"unit_status": "4",
+								"possibility": "STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "144",
+								"server_opt": "NULL",
+								"commentaire": "STATUS=Horloge mais non decrypte"
+							}
+                        },				
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+					{
+                        "name": "Status1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+                    {
+                        "name": "Température Ambiante",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "°C",
+						"eventOnly": 1,
+						"logicalId": "internal_temp2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Température Programmée",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "°C",
+						"eventOnly": 1,
+						"logicalId": "wanted_temp2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Mode Programmé : ",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "mode2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status3",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        }				
+					},
+                    {
+                        "name": "Status4",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }				
+					},
+					{
+                        "name": "Mise à jour Unit 2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*#WHERE##IDUNIT##MEDIA#*55##",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "55",
+								"nom": "Who13-Unit_Description_Request"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

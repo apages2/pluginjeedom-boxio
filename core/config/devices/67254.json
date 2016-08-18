@@ -1,0 +1,175 @@
+{
+    "67254": {
+        "name": "Inter Centralise Quadruple Volet Roulant v1.0",
+        "configuration": {
+                            "version": "1.0",
+							"672541": {
+								"ref_legrand": "67254",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop Volet 1",
+								"btn": "Monte/Descente/Stop Volet 1",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"672542": {
+								"ref_legrand": "67254",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop Volet 2",
+								"btn": "Monte/Descente/Stop Volet 2",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"672543": {
+								"ref_legrand": "67254",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop Volet 3",
+								"btn": "Monte/Descente/Stop Volet 3",
+								"unit": "3",
+								"unit_status": "3",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"672544": {
+								"ref_legrand": "67254",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop Volet 4",
+								"btn": "Monte/Descente/Stop Volet 4",
+								"unit": "4",
+								"unit_status": "4",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}
+						},
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Ouvrir",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},	
+							"unit": "2",
+							"where": "Unicast"
+                        }
+                    },
+                    {
+                        "name": "Fermer",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*2*#WHERE##IDUNIT###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+						"unit": "2",
+						"where": "Unicast"
+						}
+					},
+                    {
+                        "name": "Stop",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						}
+                    },
+					{
+                        "name": "Status2",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status3",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        }				
+					},
+					{
+                        "name": "Status4",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }				
+					}
+                ]
+            }
+        }
+    }
+}
