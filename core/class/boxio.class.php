@@ -25,9 +25,21 @@ class boxio extends eqLogic {
 	
     /*     * ***********************Methode static*************************** */
 
+
+	public static function cronDaily() {
+		if (config::byKey('jeeNetwork::mode') == 'master') {
+			if (config::byKey('auto_updateConf', 'boxio') == 1) {
+				try {
+					boxio::syncconfBoxio();
+				} catch (Exception $e) {
+				}
+			}
+		}
+	}
+
 	public static function dependancy_info() {
 		$return = array();
-		$return['log'] = 'boxio_update';
+		$return['log'] = 'boxio.update';
 		$return['progress_file'] = '/tmp/dependancy_boxio_in_progress';
 		if (exec('sudo dpkg --get-selections | grep python-serial | grep install | wc -l') != 0) {
 			$return['state'] = 'ok';
@@ -38,9 +50,9 @@ class boxio extends eqLogic {
 	}
 
 	public static function dependancy_install() {
-		log::remove('boxio_update');
+		log::remove('boxio.update');
 		$cmd = 'sudo /bin/bash ' . dirname(__FILE__) . '/../../ressources/install.sh';
-		$cmd .= ' >> ' . log::getPathToLog('boxio_update') . ' 2>&1 &';
+		$cmd .= ' >> ' . log::getPathToLog('boxio.update') . ' 2>&1 &';
 		exec($cmd);
 	}
 
@@ -156,6 +168,28 @@ class boxio extends eqLogic {
 		system::fuserk(config::byKey('socketport', 'boxio', 55002));
 	}
 	
+	public static function syncconfBoxio($_background = true) {
+		if (config::byKey('jeeNetwork::mode') == 'master') {
+			foreach (jeeNetwork::byPlugin('boxio') as $jeeNetwork) {
+				try {
+					$jeeNetwork->sendRawRequest('syncconfBoxio', array('plugin' => 'boxio'));
+				} catch (Exception $e) {
+
+				}
+			}
+		}
+		log::remove('boxio.syncconf');
+		$cmd = 'sudo /bin/bash ' . dirname(__FILE__) . '/../../ressources/syncconf.sh';
+		if ($_background) {
+			$cmd .= ' >> ' . log::getPathToLog('boxio.syncconf') . ' 2>&1 &';
+		}
+		log::add('boxio.syncconf', 'info', $cmd);
+		shell_exec($cmd);
+		/*foreach (self::byType('boxio') as $eqLogic) {
+			$eqLogic->loadCmdFromConf(true);
+		}*/
+	}
+
 	public static function updateDBScenario($data) {
 		$sql = "INSERT INTO boxio_scenarios (id_legrand, unit, id_legrand_listen, unit_listen, value_listen, media_listen, frame_number) VALUES ('".$data["id"]."','".$data["unit"]."','".$data["id_listen"]."','".$data["unit_listen"]."','".$data["value"]."','".$data["media"]."','".$data["frame_number"]."')";
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);

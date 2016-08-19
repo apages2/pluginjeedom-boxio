@@ -25,23 +25,36 @@ if (!isConnect()) {
 <form class="form-horizontal">
     <fieldset>
         <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
-        <?php if (config::byKey('jeeNetwork::mode') == 'master') {?>
-        <div class="form-group">
-            <label class="col-lg-4 control-label">{{Créer automatiquement les nouveaux équipements}}</label>
-            <div class="col-lg-4">
-                <input type="checkbox" class="configKey bootstrapSwitch" data-l1key="autoDiscoverEqLogic" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-4 control-label">{{Bannir les IDs suivants}}</label>
-            <div class="col-lg-8">
-                <textarea class="configKey form-control" data-l1key="banboxioId" rows="3"/>
-            </div>
-        </div>
+		<?php if (config::byKey('jeeNetwork::mode') == 'master') {?>
+			<div class="form-group">
+				<label class="col-lg-4 control-label">{{Créer automatiquement les nouveaux équipements}}</label>
+				<div class="col-lg-3">
+					<input type="checkbox" class="configKey bootstrapSwitch" data-l1key="autoDiscoverEqLogic" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-4 control-label">{{Mettre à jour les templates des modules automatiquement}}</label>
+				<div class="col-lg-3">
+					<input type="checkbox" class="configKey bootstrapSwitch" data-l1key="auto_updateConf"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-4 control-label">{{Bannir les IDs suivants}}</label>
+				<div class="col-lg-8">
+					<textarea class="configKey form-control" data-l1key="banboxioId" rows="3"/>
+				</div>
+			</div>
 		<?php }
 		?>
+		<legend><i class="fa fa-cog"></i>  {{Gestion avancée}}</legend>
+			<div class="form-group">
+				<label class="col-lg-4 control-label">{{Options avancées}}</label>
+				<div class="col-lg-3">
+					<a class="btn btn-success" id="bt_syncconfigBoxio"><i class="fa fa-refresh"></i> {{Update Templates Modules}}</a>
+				</div>
+			</div>
         <legend>{{Démon local}}</legend>
-		<div class="form-group">
+			<div class="form-group">
 				<label class="col-sm-4 control-label">{{Port Boxio}}</label>
 				<div class="col-sm-4">
 					<select class="configKey form-control" data-l1key="port">
@@ -59,30 +72,30 @@ if (!isConnect()) {
 				</div>
 			</div>
             <div class="form-group">
-               <label class="col-sm-4 control-label">{{Enregistrer tous les messages (cela peut ralentir le système)}}</label>
-               <div class="col-sm-1">
-                <input type="checkbox" class="configKey bootstrapSwitch" data-l1key="enableLogging" />
-            </div>
-            <div class="col-sm-7">
+				<label class="col-sm-4 control-label">{{Enregistrer tous les messages (cela peut ralentir le système)}}</label>
+				<div class="col-sm-1">
+				<input type="checkbox" class="configKey bootstrapSwitch" data-l1key="enableLogging" />
+				</div>
+				<div class="col-sm-7">
                 <a class="btn btn-default" id="bt_logBoxioMessage"><i class="fa fa-file-o"></i> {{Voir les messages}}</a>
-            </div>
-        </div>
-		<div class="form-group">
-            <label class="col-lg-4 control-label">{{Vitesse du port}}</label>
-            <div class="col-lg-2">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-4 control-label">{{Vitesse du port}}</label>
+				<div class="col-lg-2">
                 <select class="configKey form-control" data-l1key="serial_rate" >
                     <option value="115200">115200</option>
 					<option value="38400">38400</option>
 					<option value="19200">19200</option>
                 </select>    
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4 control-label">{{Port socket interne (modification dangereuse : entrer la même valeur sur tous les Jeedom déportés avec Boxio)}}</label>
-            <div class="col-sm-2">
-                <input class="configKey form-control" data-l1key="socketport" value='55002' />
-            </div>
-        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 control-label">{{Port socket interne (modification dangereuse : entrer la même valeur sur tous les Jeedom déportés avec Boxio)}}</label>
+				<div class="col-sm-2">
+					<input class="configKey form-control" data-l1key="socketport" value='55002' />
+				</div>
+			</div>
     </fieldset>
 </form>
 
@@ -104,36 +117,36 @@ foreach ($jeeNetwork->sendRawRequest('jeedom::getUsbMapping') as $name => $value
 			echo '<option value="' . $name . '">' . $name . ' (' . $value . ')</option>';
 		}
 		?>
-                     </select>
-                 </div>
-             </div>
-             <div class="form-group">
-               <label class="col-lg-4 control-label">{{Enregistrer tous les messages, cela peut ralentir le système}}</label>
-               <div class="col-lg-1">
-                <input type="checkbox" class="slaveConfigKey bootstrapSwitch" data-l1key="enableLogging" />
-            </div>
-            <div class="col-lg-7">
-                <a class="btn btn-default bt_logBoxioMessage"><i class="fa fa-file-o"></i> {{Voir les messages}}</a>
-            </div>
-        </div>
-        <div class="form-group expertModeVisible">
-            <label class="col-lg-4 control-label">{{Port socket interne (modification dangereuse, doit etre le meme surtout les esclaves)}}</label>
-            <div class="col-lg-2">
-                <input class="slaveConfigKey form-control" data-l1key="socketport" value='55002' />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4 control-label">{{Vitesse du port}}</label>
-            <div class="col-sm-2">
-                <select class="slaveConfigKey form-control" data-l1key="serial_rate" >
-                    <option value="115200">115200</option>
-                    <option value="38400">38400</option>
-					<option value="19200">19200</option>
-                </select>
-            </div>
-        </div>
-    </fieldset>
-</form>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-4 control-label">{{Enregistrer tous les messages, cela peut ralentir le système}}</label>
+					<div class="col-lg-1">
+					<input type="checkbox" class="slaveConfigKey bootstrapSwitch" data-l1key="enableLogging" />
+					</div>
+					<div class="col-lg-7">
+					<a class="btn btn-default bt_logBoxioMessage"><i class="fa fa-file-o"></i> {{Voir les messages}}</a>
+					</div>
+				</div>
+				<div class="form-group expertModeVisible">
+				<label class="col-lg-4 control-label">{{Port socket interne (modification dangereuse, doit etre le meme surtout les esclaves)}}</label>
+					<div class="col-lg-2">
+					<input class="slaveConfigKey form-control" data-l1key="socketport" value='55002' />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label">{{Vitesse du port}}</label>
+					<div class="col-sm-2">
+						<select class="slaveConfigKey form-control" data-l1key="serial_rate" >
+							<option value="115200">115200</option>
+							<option value="38400">38400</option>
+							<option value="19200">19200</option>
+						</select>
+					</div>
+				</div>
+			</fieldset>
+		</form>
 
 <?php
 }
@@ -143,14 +156,27 @@ foreach ($jeeNetwork->sendRawRequest('jeedom::getUsbMapping') as $name => $value
 
 <script>
     $('.bt_logBoxioMessage').on('click', function () {
-     var slave_id = $(this).closest('.slaveConfig').attr('data-slave_id');
-     $('#md_modal').dialog({title: "{{Log des messages Boxio}}"});
-     $('#md_modal').load('index.php?v=d&plugin=boxio&modal=show.log&slave_id='+slave_id).dialog('open');
- });
+		var slave_id = $(this).closest('.slaveConfig').attr('data-slave_id');
+		$('#md_modal').dialog({title: "{{Log des messages Boxio}}"});
+		$('#md_modal').load('index.php?v=d&plugin=boxio&modal=show.log&slave_id='+slave_id).dialog('open');
+	});
 
     $('#bt_logBoxioMessage').on('click', function () {
         $('#md_modal').dialog({title: "{{Log des messages Boxio}}"});
         $('#md_modal').load('index.php?v=d&plugin=boxio&modal=show.log').dialog('open');
     });
-
+	
+	$('#bt_fileconfigBoxio').on('click', function () {
+		$('#md_modal').dialog({title: "{{Configuration}}"});
+		$('#md_modal').load('index.php?v=d&plugin=boxio&modal=config').dialog('open');
+	});
+	
+	$('#bt_syncconfigBoxio').on('click',function(){
+		bootbox.confirm('{{Etes-vous sûr de vouloir télécharger les dernièrs templates des modules ?}}', function (result) {
+			if (result) {
+				$('#md_modal').dialog({title: "{{Téléchargement des configurations}}"});
+				$('#md_modal').load('index.php?v=d&plugin=boxio&modal=syncconf.boxio').dialog('open');
+			}
+		});
+	});
 </script>

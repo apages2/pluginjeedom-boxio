@@ -24,6 +24,11 @@ try {
         throw new Exception('401 Unauthorized');
     }
 	
+	if (init('action') == 'syncconfBoxio') {
+		boxio::syncconfBoxio();
+		ajax::success();
+	}
+	
 	if (init('action') == 'checkscenario') {
 		$sql = " SELECT * FROM boxio_scenarios where id_legrand='" . init('id') ."'";	
 		$result =  DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL); 
