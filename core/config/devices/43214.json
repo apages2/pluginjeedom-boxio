@@ -3,6 +3,7 @@
         "name": "Système d’Alarme Intrusion Multiservice RF v1.0",
 		"configuration": {
 							"version": "1.0",
+							"update": "Creation",
                             "432141": {
 								"ref_legrand": "43214",
 								"family": "SECURITY",
@@ -138,7 +139,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "ALARM_STATE"
+						}				
 					},
 					{
                         "name": "Mise en Service Totale",
@@ -154,7 +158,10 @@
 							},
 							"unit": "4",
 							"where": "Broadcast"
-                        }
+                        },
+						"display": {
+							"generic_type": "ALARM_ARMED"
+						}
                     },
                     {
                         "name": "Mise en Service Partielle",
@@ -170,6 +177,9 @@
 							},
 							"unit": "6",
 							"where": "Broadcast"
+						},
+						"display": {
+							"generic_type": "ALARM_SET_MODE"
 						}
 					},
 					{
@@ -186,6 +196,9 @@
 							},
 							"unit": "5",
 							"where": "Broadcast"
+						},
+						"display": {
+							"generic_type": "ALARM_RELEASED"
 						}
 					},
 					{
@@ -202,7 +215,10 @@
 							},
 							"unit": "2",
 							"where": "Broadcast"
-                        }
+                        },
+						"display": {
+							"generic_type": "ALARM_SET_MODE"
+						}
                     },
                     {
                         "name": "Touche 2",
@@ -218,6 +234,9 @@
 							},
 						"unit": "3",
 						"where": "Broadcast"
+						},
+						"display": {
+							"generic_type": "ALARM_SET_MODE"
 						}
 					}
                 ]

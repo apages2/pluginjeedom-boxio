@@ -1,8 +1,9 @@
 {
     "67251": {
-        "name": "Inter Volet sans dérogation v1.0",
+        "name": "Inter Volet sans dérogation v1.1",
         "configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672511": {
 								"ref_legrand": "67251",
 								"family": "SHUTTER",
@@ -47,7 +48,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "FLAP_STATE"
+						}				
 					},
 					{
                         "name": "Ouvrir",
@@ -63,7 +67,10 @@
 							},	
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "FLAP_UP"
+						}
                     },
                     {
                         "name": "Fermer",
@@ -79,6 +86,9 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_DOWN"
 						}
 					},
                     {
@@ -95,6 +105,9 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_STOP"
 						}
                     },
 					{
@@ -163,7 +176,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "FLAP_STATE"
+						}				
 					},
 					{
                         "name": "Ouvrir",
@@ -179,7 +195,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "FLAP_UP"
+						}
                     },
                     {
                         "name": "Fermer",
@@ -195,6 +214,9 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_DOWN"
 						}
 					},
                     {
@@ -211,6 +233,9 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_STOP"
 						}
                     },
 					{

@@ -1,8 +1,9 @@
 {
     "67204": {
-        "name": "Inter Double à voyant v1.0",
+        "name": "Inter Double à voyant v1.1",
         "configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672041": {
 								"ref_legrand": "67204",
 								"family": "LIGHTING",
@@ -73,7 +74,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
-                        }				
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}				
 					},
 					{
                         "name": "On Bouton1",
@@ -89,7 +93,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
                     },
                     {
                         "name": "Off Bouton1",
@@ -105,6 +112,9 @@
 							},
 						"unit": "3",
 						"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "LIGHT_OFF"
 						}
 					},
 					{
@@ -152,7 +162,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
-                        }				
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}				
 					},
 					{
                         "name": "On Bouton2",
@@ -168,7 +181,10 @@
 							},
 							"unit": "4",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
                     },
                     {
                         "name": "Off Bouton2",
@@ -184,6 +200,9 @@
 							},
 							"unit": "4",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "LIGHT_OFF"
 						}
 					},
 					{

@@ -1,8 +1,9 @@
 {
     "67208": {
-        "name": "Inter Scenario d'éclairage v1.1",
+        "name": "Inter Scenario d'éclairage v1.2",
         "configuration": {
-                            "version": "1.1",
+                            "version": "1.2",
+							"update": "Ajout Generic Type",
 							"672081": {
 								"ref_legrand": "67208",
 								"family": "LIGHTING",
@@ -60,7 +61,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}					
 					},
 					{
                         "name": "On",
@@ -76,7 +80,10 @@
 							},
 							"unit": "1",
 							"where": "Broadcast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}	
                     },
 					{
                         "name": "Off",
@@ -92,7 +99,10 @@
 							},
 							"unit": "1",
 							"where": "Broadcast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}	
                     },
 					{
                         "name": "Status Scenario 1",
@@ -107,7 +117,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
 					},
 					{
                         "name": "Scenario 1",
@@ -122,8 +135,11 @@
 								"nom": "Who25-Action"
 							},
 							"unit": "2",
-							"where": "Broadcast"
-                        }
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     },
 					{
                         "name": "Status Scenario 2",
@@ -138,7 +154,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
-                        }				
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
 					},
 					{
                         "name": "Scenario 2",
@@ -153,8 +172,11 @@
 								"nom": "Who25-Action"
 							},
 							"unit": "3",
-							"where": "Broadcast"
-                        }
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     }
                 ]
             }

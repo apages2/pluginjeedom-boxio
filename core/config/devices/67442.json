@@ -1,8 +1,9 @@
 {
     "67442": {
-        "name": "Thermostat Programmable v1.0",
+        "name": "Thermostat Programmable v1.1",
 		"configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"674421": {
 								"ref_legrand": "67442",
 								"family": "COMFORT",
@@ -73,7 +74,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}					
 					},
                     {
                         "name": "Température Ambiante",
@@ -88,7 +92,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_TEMPERATURE"
+						}					
 					},
 					{
                         "name": "Température Programmée",
@@ -103,7 +110,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SETPOINT"
+						}					
 					},
 					{
                         "name": "Mode Programmé : ",
@@ -118,7 +128,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_MODE"
+						}					
 					},
 					{
                         "name": "Status3",
@@ -133,7 +146,7 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
-                        }				
+                        }					
 					},
                     {
                         "name": "Status4",
@@ -148,7 +161,7 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
-                        }				
+                        }					
 					},
 					{
                         "name": "Mise à jour Unit 2",

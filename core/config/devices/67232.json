@@ -1,8 +1,9 @@
 {
     "67232": {
-        "name": "Inter Variateur 600W Radio v1.0",
+        "name": "Inter Variateur 600W Radio v1.1",
         "configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672321": {
 								"ref_legrand": "67232",
 								"family": "LIGHTING",
@@ -60,7 +61,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}				
 					},
 					{
                         "name": "On",
@@ -76,7 +80,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
                     },
 					{
                         "name": "Off",
@@ -92,7 +99,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}
                     },
 					{
                         "name": "Variateur",
@@ -110,7 +120,10 @@
 							"where": "Broadcast",
 							"minValue": 0,
 							"maxValue": 125
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_SLIDER"
+						}
                     },
 					{
                         "name": "On Scenario",

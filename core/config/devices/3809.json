@@ -1,8 +1,9 @@
 {
     "03809": {
-        "name": "Gestionnaire d'Energie v1.0",
+        "name": "Gestionnaire d'Energie v1.1",
 		"configuration": {
-							"version": "1.0",
+							"version": "1.1",
+							"update": "Ajout Generic Type",
                             "038091": {
 								"ref_legrand": "03809",
 								"family": "CONFORT",
@@ -47,7 +48,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "HEATING_STATE"
+						}					
 					},
 					{
                         "name": "Status Commande de chauffe",
@@ -62,7 +66,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "HEATING_STATE"
+						}		
 					},
 					{
                         "name": "Status Chauffage",
@@ -77,7 +84,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}					
 					},
 					{
                         "name": "Index HP",
@@ -92,7 +102,7 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        }					
 					},
 					{
                         "name": "Index HC",
@@ -107,7 +117,7 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        }					
 					},
 					{
                         "name": "Tarif EDF",
@@ -122,7 +132,7 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        }					
 					},
 					{
                         "name": "ECS OFF",
@@ -138,7 +148,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "HEATING_OFF"
+						}	
                     },
                     {
                         "name": "ECS ON",
@@ -154,7 +167,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-						}
+						},
+						"display": {
+							"generic_type": "HEATING_ON"
+						}	
 					},
 					{
                         "name": "ECS AUTO",
@@ -170,7 +186,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-						}
+						},
+						"display": {
+							"generic_type": "HEATING_OTHER"
+						}	
 					},
 					{
                         "name": "Interrogation Etat ECS et Chauffe",
@@ -186,7 +205,7 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        }	
                     },
                     {
                         "name": "Hors-Gel",
@@ -202,7 +221,10 @@
 							},
 						"unit": "2",
 						"where": "Multicast"
-						}
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
 					},
 					{
                         "name": "Eco",
@@ -218,7 +240,10 @@
 							},
 						"unit": "2",
 						"where": "Multicast"
-						}
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
 					},
 					{
                         "name": "Confort-2",
@@ -234,7 +259,10 @@
 							},
 						"unit": "2",
 						"where": "Multicast"
-						}
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
 					},
 					{
                         "name": "Confort-1",
@@ -250,7 +278,10 @@
 							},
 						"unit": "2",
 						"where": "Multicast"
-						}
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
 					},
 					{
                         "name": "Confort",
@@ -266,7 +297,10 @@
 							},
 						"unit": "2",
 						"where": "Multicast"
-						}
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
 					},
 					{
                         "name": "Interrogation Index EDF",
@@ -282,7 +316,7 @@
 							},
 						"unit": "2",
 						"where": "Unicast"
-						}
+						}	
 					},
 					{
                         "name": "Interrogation Tarif EDF",

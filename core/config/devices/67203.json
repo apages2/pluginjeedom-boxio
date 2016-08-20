@@ -1,8 +1,9 @@
 {
     "67203": {
-        "name": "Inter Simple à voyant v1.0",
+        "name": "Inter Simple à voyant v1.1",
         "configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672031": {
 								"ref_legrand": "67203",
 								"family": "LIGHTING",
@@ -47,7 +48,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}				
 					},
 					{
                         "name": "On",
@@ -63,7 +67,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
                     },
                     {
                         "name": "Off",
@@ -79,6 +86,9 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "LIGHT_OFF"
 						}
 					},
 					{

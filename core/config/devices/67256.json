@@ -1,8 +1,9 @@
 {
     "67256": {
-        "name": "Inter Centralisé Volet Roulant (orientation lamelles) v1.0",
+        "name": "Inter Centralisé Volet Roulant (orientation lamelles) v1.1",
 		"configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672561": {
 								"ref_legrand": "67256",
 								"family": "SHUTTER",
@@ -47,7 +48,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "FLAP_STATE"
+						}				
 					},
 					{
                         "name": "Ouvrir",
@@ -63,7 +67,10 @@
 							},	
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "FLAP_UP"
+						}
                     },
                     {
                         "name": "Fermer",
@@ -79,6 +86,9 @@
 							},
 						"unit": "2",
 						"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_DOWN"
 						}
 					},
                     {
@@ -95,10 +105,13 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_STOP"
 						}
                     },
 					{
-                        "name": "Ouvrir Esclave",
+                        "name": "Ouvrir Scenario",
                         "type": "action",
 						"subtype": "other",
                         "isVisible": 1,
@@ -110,7 +123,7 @@
 								"nom": "Move_Up"
 							},	
 							"unit": "1",
-							"where": "Broadcast"
+							"where": "Multicast"
                         }
                     },
                     {
@@ -126,7 +139,7 @@
 								"nom": "Move_Down"
 							},
 						"unit": "1",
-						"where": "Broadcast"
+						"where": "Multicast"
 						}
 					},
                     {
@@ -142,7 +155,7 @@
 								"nom": "Move_Stop"
 							},
 							"unit": "1",
-							"where": "Broadcast"
+							"where": "Multicast"
 						}
                     }
                 ]
@@ -163,7 +176,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "FLAP_STATE"
+						}				
 					},
 					{
                         "name": "Ouvrir",
@@ -179,7 +195,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "FLAP_UP"
+						}
                     },
                     {
                         "name": "Fermer",
@@ -195,6 +214,9 @@
 							},
 						"unit": "2",
 						"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_DOWN"
 						}
 					},
                     {
@@ -211,6 +233,9 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "FLAP_STOP"
 						}
                     },
 					{
@@ -226,7 +251,7 @@
 								"nom": "Move_Down"
 							},
 							"unit": "1",
-							"where": "Broadcast"
+							"where": "Multicast"
                         }
                     },
                     {
@@ -242,7 +267,7 @@
 								"nom": "Move_Up"
 							},
 						"unit": "1",
-						"where": "Broadcast"
+						"where": "Multicast"
 						}
 					},
                     {
@@ -258,7 +283,7 @@
 								"nom": "Move_Stop"
 							},
 							"unit": "1",
-							"where": "Broadcast"
+							"where": "Multicast"
 						}
                     }
                 ]

@@ -1,8 +1,9 @@
 {
     "88202": {
-        "name": "Prisinter 2500W v1.0",
+        "name": "Prisinter 2500W v1.1",
 		"configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"882021": {
 								"ref_legrand": "88202",
 								"family": "LIGHTING",
@@ -34,7 +35,7 @@
             "00": {
                 "name": "Defaut",
                 "commands": [
-					{
+                    {
                         "name": "Status",
                         "type": "info",
 						"subtype": "string",
@@ -47,7 +48,80 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "ENERGY_STATE"
+						}				
+					},
+					{
+                        "name": "On",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "ENERGY_ON"
+						}
+                    },
+                    {
+                        "name": "Off",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "2",
+							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "ENERGY_OFF"
+						}
+					},
+					{
+                        "name": "On Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+                    {
+                        "name": "Off Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+						"unit": "1",
+						"where": "Multicast"
+						}
 					}
                 ]
             }

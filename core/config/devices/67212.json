@@ -1,8 +1,9 @@
 {
     "67212": {
-        "name": "Inter Variateur 300W à voyant v1.0",
+        "name": "Inter Variateur 300W à voyant v1.1",
         "configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672121": {
 								"ref_legrand": "67212",
 								"family": "LIGHTING",
@@ -73,7 +74,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
-                        }				
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}					
 					},
 					{
                         "name": "On",
@@ -89,7 +93,10 @@
 							},
 							"unit": "4",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}	
                     },
 					{
                         "name": "Off",
@@ -105,7 +112,10 @@
 							},
 							"unit": "4",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}	
                     },
 					{
                         "name": "On Scenario",
@@ -155,7 +165,10 @@
 							"where": "Broadcast",
 							"minValue": 0,
 							"maxValue": 125
-                        }
+                        },
+						"display": {
+							"generic_type": "LIGHT_SLIDER"
+						}	
                     },
 					{
                         "name": "Prereglage +",

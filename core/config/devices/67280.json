@@ -1,8 +1,9 @@
 {
     "67280": {
-        "name": "Interscenario Emetteur CPL v1.0",
+        "name": "Interscenario Emetteur CPL v1.1",
 		"configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"672801": {
 								"ref_legrand": "67280",
 								"family": "SCENE",
@@ -73,7 +74,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
 					},
 					{
                         "name": "Scenario 1",
@@ -89,7 +93,10 @@
 							},	
 							"unit": "1",
 							"where": "Multicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     },
                     {
                         "name": "Status2",
@@ -104,7 +111,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
 					},
 					{
                         "name": "Scenario 2",
@@ -120,7 +130,10 @@
 							},	
 							"unit": "2",
 							"where": "Multicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     },
 					{
                         "name": "Status3",
@@ -135,7 +148,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
-                        }				
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
 					},
                     {
                         "name": "Scenario 3",
@@ -151,7 +167,10 @@
 							},	
 							"unit": "3",
 							"where": "Multicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     },
 					{
                         "name": "Status4",
@@ -166,7 +185,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
-                        }				
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
 					},
 					{
                         "name": "Scenario 4",
@@ -182,7 +204,10 @@
 							},	
 							"unit": "4",
 							"where": "Multicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     }
                 ]
             }

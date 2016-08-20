@@ -1,8 +1,9 @@
 {
     "67449": {
-        "name": "Programmateur d'ambiance v1.0",
+        "name": "Programmateur d'ambiance v1.1",
 		"configuration": {
-                            "version": "1.0",
+                            "version": "1.1",
+							"update": "Ajout Generic Type",
 							"674491": {
 								"ref_legrand": "67449",
 								"family": "COMFORT",
@@ -112,7 +113,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}				
 					},
 					{
                         "name": "Zone 1 - HG",
@@ -128,7 +132,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 1 - Eco",
@@ -144,7 +151,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 1 - Confort-2",
@@ -160,7 +170,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 1 - Confort-1",
@@ -176,7 +189,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 1 - Confort",
@@ -192,7 +208,10 @@
 							},
 							"unit": "1",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
                     {
                         "name": "Status Zone 2 : ",
@@ -207,7 +226,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}				
 					},
 					{
                         "name": "Zone 2 - HG",
@@ -223,7 +245,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 2 - Eco",
@@ -239,7 +264,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 2 - Confort-2",
@@ -255,7 +283,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 2 - Confort-1",
@@ -271,7 +302,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 2 - Confort",
@@ -287,7 +321,10 @@
 							},
 							"unit": "2",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Status Zone 3 : ",
@@ -302,7 +339,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
-                        }				
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}				
 					},
 					{
                         "name": "Zone 3 - HG",
@@ -318,7 +358,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 3 - Eco",
@@ -334,7 +377,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 3 - Confort-2",
@@ -350,7 +396,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 3 - Confort-1",
@@ -366,7 +415,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
 					{
                         "name": "Zone 3 - Confort",
@@ -382,7 +434,10 @@
 							},
 							"unit": "3",
 							"where": "Unicast"
-                        }
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
                     },
                     {
                         "name": "Status4",
@@ -412,7 +467,7 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "5"
-                        }				
+                        }			
 					},
 					{
                         "name": "Status Toutes Zones :",
