@@ -29,6 +29,31 @@ try {
 		ajax::success();
 	}
 	
+	if (init('action') == 'checktemplate') {
+		$id=init('id');
+		$boxio = boxio::byLogicalId($id, 'boxio');
+        if (is_object($boxio)) {
+            $device_type = explode('::', $boxio->getConfiguration('applyDevice'));
+			$deviceref = $device_type[0];
+			$path = dirname(__FILE__) . '/../config/devices';
+			if (isset($deviceref) && $deviceref != '') {
+				$files = ls($path, $deviceref . '.json', false, array('files', 'quiet'));
+				if (count($files) == 1) {
+					try {
+						$content = file_get_contents($path . '/' . $files[0]);
+						if (is_json($content)) {
+							$deviceConfiguration = json_decode($content, true);
+							$deviceConfiguration[$deviceref]['configuration']['versioninst'] = $boxio->getConfiguration('version');
+							ajax::success($deviceConfiguration[$deviceref]['configuration']);
+						}
+					} catch (Exception $e) {
+						return array();
+					}
+				}
+			}
+        }
+    }
+	
 	if (init('action') == 'checkscenario') {
 		$sql = " SELECT * FROM boxio_scenarios where id_legrand='" . init('id') ."'";	
 		$result =  DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL); 
@@ -36,32 +61,6 @@ try {
 		ajax::success($result);
 	}
 
-    if (init('action') == 'uploadConfboxio') {
-        $uploaddir = dirname(__FILE__) . '/../config';
-        if (!file_exists($uploaddir)) {
-            mkdir($uploaddir);
-        }
-        $uploaddir .= '/devices/';
-        if (!file_exists($uploaddir)) {
-            mkdir($uploaddir);
-        }
-        if (!file_exists($uploaddir)) {
-            throw new Exception(__('Répertoire d\'upload non trouvé : ', __FILE__) . $uploaddir);
-        }
-        if (!isset($_FILES['file'])) {
-            throw new Exception(__('Aucun fichier trouvé. Vérifié parametre PHP (post size limit)', __FILE__));
-        }
-        if (filesize($_FILES['file']['tmp_name']) > 2000000) {
-            throw new Exception(__('Le fichier est trop gros (miximum 2mo)', __FILE__));
-        }
-        if (!is_json(file_get_contents($_FILES['file']['tmp_name']))) {
-            throw new Exception(__('Le fichier json est invalide', __FILE__));
-        }
-        if (!move_uploaded_file($_FILES['file']['tmp_name'], $uploaddir . '/' . $_FILES['file']['name'])) {
-            throw new Exception(__('Impossible de déplacer le fichier temporaire', __FILE__));
-        }
-        ajax::success();
-    }
 	
 	if (init('action') == 'updateMemory') {
         $mem = boxio::byId(init('id'));

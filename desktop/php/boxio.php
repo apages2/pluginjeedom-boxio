@@ -142,7 +142,7 @@ $eqLogics = eqLogic::byType('boxio');
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Equipement</label>
+								<label class="col-sm-3 control-label">Template</label>
 								<div class="col-sm-8">	
 									<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="device">
 										<option value="">Aucun</option>
@@ -157,10 +157,21 @@ $eqLogics = eqLogic::byType('boxio');
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Version Utilisée</label>
+								<label class="col-sm-3 control-label">Version Utilisée du template</label>
 								<div class="col-sm-3">
-									<span class="eqLogicAttr label label-default tooltips" data-l1key="configuration" data-l2key="version" style="font-size : 1em;"></span>
+									<span id="vinst" class="eqLogicAttr label label-default tooltips" data-l1key="configuration" data-l2key="version" style="font-size : 1em;"></span>
 								</div>
+								<label class="col-sm-3 control-label">Version Disponible du template</label>
+								<div class="col-sm-3">
+									<span id="vdispo" class="eqLogicAttr label label-default tooltips" style="font-size : 1em;"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Release Notes du template</label>
+								<div class="col-sm-3">
+									<span id="rnotes" class="eqLogicAttr label label-default tooltips" style="font-size : 1em;"></span>
+								</div>
+		
 							</div>
 							<div class="form-group expertModeVisible">
 								<label class="col-sm-3 control-label">{{Délai maximum autorisé entre 2 messages (min)}}</label>

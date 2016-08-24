@@ -20,22 +20,6 @@
     $('#md_modal').load('index.php?v=d&plugin=boxio&modal=health').dialog('open');
 });
 
-$('body').delegate('#bt_getFromMarket', 'click', function () {
-    $('#md_modal').dialog({title: "{{Partager sur le market}}"});
-    $('#md_modal').load('index.php?v=d&modal=market.list&type=boxio').dialog('open');
-});
-
-$('body').delegate('#bt_shareOnMarket', 'click', function () {
-    var logicalId = $('.eqLogicAttr[data-l1key=configuration][data-l2key=device]').value();
-    if (logicalId == '') {
-        $('#div_alert').showAlert({message: '{{Vous devez d\'abord sélectionner une configuration à partager}}', level: 'danger'});
-        return;
-    }
-    $('#md_modal').dialog({title: "{{Partager sur le market}}"});
-
-    $('#md_modal').load('index.php?v=d&modal=market.send&type=boxio&logicalId=' + encodeURI(logicalId.split("::")[0]) + '&name=' + encodeURI($('.eqLogicAttr[data-l1key=configuration][data-l2key=device] option:selected').text())).dialog('open');
-});
-
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $("#table_mem").sortable({axis: "y", cursor: "move", items: ".mem", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 
@@ -53,6 +37,38 @@ $('body').delegate('.cmdAttr[data-l1key=type]','change',function(){
 });
 
 function printEqLogic(_mem) {
+	var versiondispo ='';
+	var releasenotes ='';
+	var color ='red';
+	$.ajax({// fonction permettant de faire de l'ajax
+        type: "POST", // methode de transmission des données au fichier php
+        url: "plugins/boxio/core/ajax/boxio.ajax.php", // url du fichier php
+        data: {
+            action: "checktemplate",
+            id: $('.eqLogicAttr[data-l1key=logicalId]').value(),
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data_init) { // si l'appel a bien fonctionné
+			if (data_init.state != 'ok') {
+				$('#div_DashboardAlert').showAlert({message: data_init.result, level: 'danger'});
+				return;
+			}else{
+				versiondispo = data_init.result['version'];
+				releasenotes =  data_init.result['update'];
+				$('#vdispo').append(versiondispo);
+				$('#rnotes').append(releasenotes);
+				if (data_init.result['versioninst'] < data_init.result['version']) {
+					$('#vinst').css({'background-color': '#ff4343'});
+				}else{
+					$('#vinst').css({'background-color': '#e7e7e7'});
+				}
+			}
+		}
+	});
+	
 	
 	$.ajax({// fonction permettant de faire de l'ajax
         type: "POST", // methode de transmission des données au fichier php
@@ -111,8 +127,6 @@ function printEqLogic(_mem) {
 			}
 		}
 	});
-	
-
 }
 
 function addCmdToTable(_cmd) {
