@@ -1,9 +1,9 @@
 {
     "67201": {
-        "name": "Inter Simple v1.1",
+        "name": "Inter Simple",
         "configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"672011": {
 								"ref_legrand": "67201",
 								"family": "LIGHTING",

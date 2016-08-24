@@ -1,9 +1,9 @@
 {
     "88203": {
-        "name": "Prisinter Variateur 500W v1.1",
+        "name": "Prisinter Variateur 500W",
 		"configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"882031": {
 								"ref_legrand": "88203",
 								"family": "LIGHTING",

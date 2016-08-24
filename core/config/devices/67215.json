@@ -1,9 +1,9 @@
 {
     "67215": {
-        "name": "Inter Auto 1000W v1.2",
+        "name": "Inter Auto 1000W",
         "configuration": {
                             "version": "1.2",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"672151": {
 								"ref_legrand": "67215",
 								"family": "LIGHTING",

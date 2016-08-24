@@ -1,9 +1,9 @@
 {
     "67214": {
-        "name": "Inter Variateur 600W à voyant v1.1",
+        "name": "Inter Variateur 600W à voyant",
         "configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"672141": {
 								"ref_legrand": "67214",
 								"family": "LIGHTING",

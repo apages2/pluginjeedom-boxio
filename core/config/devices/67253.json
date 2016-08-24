@@ -1,9 +1,9 @@
 {
     "67253": {
-        "name": "Inter Centralisé Volet Roulant v1.1",
+        "name": "Inter Centralisé Volet Roulant",
         "configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"672531": {
 								"ref_legrand": "67253",
 								"family": "SHUTTER",

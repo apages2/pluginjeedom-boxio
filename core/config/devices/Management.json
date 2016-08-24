@@ -1,8 +1,9 @@
 {
     "Management": {
-        "name": "commande de creation v1.2",
+        "name": "commande de creation",
 		"configuration": {
-			"version": "1.2"
+			"version": "1.2",
+			"update": "Ajout Generic Type + release et versionning"
 		},
         "subtype": {
             "00": {

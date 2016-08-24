@@ -1,9 +1,9 @@
 {
     "67442": {
-        "name": "Thermostat Programmable v1.1",
+        "name": "Thermostat Programmable",
 		"configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"674421": {
 								"ref_legrand": "67442",
 								"family": "COMFORT",

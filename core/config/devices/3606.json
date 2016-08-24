@@ -1,9 +1,9 @@
 {
     "03606": {
-        "name": "Interface Radio v1.1",
+        "name": "Interface Radio",
         "configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"036061": {
 								"ref_legrand": "3606",
 								"family": "SPECIAL",

@@ -1,9 +1,9 @@
 {
     "67445": {
-        "name": "Sortie de Cable CPL v1.1",
+        "name": "Sortie de Cable CPL",
 		"configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"674451": {
 								"ref_legrand": "67445",
 								"family": "COMFORT",

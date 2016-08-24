@@ -1,9 +1,9 @@
 {
     "67251": {
-        "name": "Inter Volet sans dérogation v1.1",
+        "name": "Inter Volet sans dérogation",
         "configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"672511": {
 								"ref_legrand": "67251",
 								"family": "SHUTTER",

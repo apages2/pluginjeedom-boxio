@@ -1,9 +1,9 @@
 {
     "67220": {
-        "name": "Prisinter Celiane v1.1",
+        "name": "Prisinter Celiane",
         "configuration": {
                             "version": "1.1",
-							"update": "Ajout Generic Type",
+							"update": "Ajout Generic Type + release et versionning",
 							"672201": {
 								"ref_legrand": "67220",
 								"family": "LIGHTING",
