@@ -256,9 +256,9 @@ function addCmdToTable(_cmd) {
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="name">';
 	tr += '</div>';
     tr += '</div>';
-    //tr += '<select class="cmdAttr form-control tooltips input-sm" data-l1key="value" style="display : none;margin-top : 5px;" title="La valeur de la commande vaut par défaut la commande">';
-    //tr += '<option value="">Aucune</option>';
-    //tr += '</select>';
+    tr += '<select class="cmdAttr form-control tooltips input-sm" data-l1key="value" style="display : none;margin-top : 5px;" title="La valeur de la commande vaut par défaut la commande">';
+    tr += '<option value="">Aucune</option>';
+    tr += '</select>';
     tr += '</td>';
     tr += '<td>';
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none;">';
@@ -288,15 +288,15 @@ function addCmdToTable(_cmd) {
     tr += '<td>';
     tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="isHistorized" data-size="mini" data-label-text="{{Historiser}}" /></span>';
     tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="isVisible" data-size="mini" data-label-text="{{Afficher}}" checked/></span>';
-    tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="eventOnly"data-label-text="{{Evénement}}" data-size="mini" /></span> ';
+    //tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="eventOnly"data-label-text="{{Evénement}}" data-size="mini" /></span> ';
     tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="display" data-label-text="{{Inverser}}" data-size="mini" data-l2key="invertBinary" /></span> ';
     tr += '<input style="width : 150px;" class="tooltips cmdAttr form-control input-sm" data-l1key="cache" data-l2key="lifetime" placeholder="Lifetime cache">';
     tr += '</td>';
     tr += '<td>';
-    //tr += '<select class="cmdAttr form-control tooltips input-sm" data-l1key="configuration" data-l2key="updateCmdId" style="display : none;margin-top : 5px;" title="Commande d\'information à mettre à jour">';
-    //tr += '<option value="">Aucune</option>';
-    //tr += '</select>';
-    //tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="updateCmdToValue" placeholder="Valeur de l\'information" style="display : none;margin-top : 5px;">';
+    tr += '<select class="cmdAttr form-control tooltips input-sm" data-l1key="configuration" data-l2key="updateCmdId" style="display : none;margin-top : 5px;" title="Commande d\'information à mettre à jour">';
+    tr += '<option value="">Aucune</option>';
+    tr += '</select>';
+    tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="updateCmdToValue" placeholder="Valeur de l\'information" style="display : none;margin-top : 5px;">';
     tr += '<input class="cmdAttr form-control tooltips input-sm" data-l1key="unite"  style="width : 100px;" placeholder="Unité" title="Unité">';
     tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="Min" title="Min"> ';
     tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="Max" title="Max" style="margin-top : 5px;">';
@@ -324,6 +324,53 @@ function addCmdToTable(_cmd) {
         }
     });
 }
+
+ $('#bt_healthboxio').on('click', function () {
+    $('#md_modal').dialog({title: "{{Santé Boxio}}"});
+    $('#md_modal').load('index.php?v=d&plugin=boxio&modal=health').dialog('open');
+});
+
+ $('.changeIncludeState').on('click', function () {
+    var el = $(this);
+    jeedom.config.save({
+        plugin : 'boxio',
+        configuration: {autoDiscoverEqLogic: el.attr('data-state')},
+        error: function (error) {
+          $('#div_alert').showAlert({message: error.message, level: 'danger'});
+      },
+      success: function () {
+        if (el.attr('data-state') == 1) {
+            $.hideAlert();
+            $('.changeIncludeState:not(.card)').removeClass('btn-default').addClass('btn-success');
+            $('.changeIncludeState').attr('data-state', 0);
+            $('.changeIncludeState.card').css('background-color','#8000FF');
+            $('.changeIncludeState.card span center').text('{{Arrêter l\'inclusion}}');
+            $('.changeIncludeState:not(.card)').html('<i class="fa fa-sign-in fa-rotate-90"></i> {{Arreter inclusion}}');
+            $('#div_inclusionAlert').showAlert({message: '{{Vous etes en mode inclusion. Recliquez sur le bouton d\'inclusion pour sortir de ce mode}}', level: 'warning'});
+        } else {
+            $.hideAlert();
+            $('.changeIncludeState:not(.card)').addClass('btn-default').removeClass('btn-success btn-danger');
+            $('.changeIncludeState').attr('data-state', 1);
+            $('.changeIncludeState:not(.card)').html('<i class="fa fa-sign-in fa-rotate-90"></i> {{Mode inclusion}}');
+            $('.changeIncludeState.card span center').text('{{Mode inclusion}}');
+            $('.changeIncludeState.card').css('background-color','#ffffff');
+            $('#div_inclusionAlert').hideAlert();
+        }
+    }
+});
+});
+
+$('body').on('boxio::includeDevice', function (_event,_options) {
+    if (modifyWithoutSave) {
+        $('#div_inclusionAlert').showAlert({message: '{{Un périphérique vient d\'être inclu/exclu. Veuillez réactualiser la page}}', level: 'warning'});
+    } else {
+        if (_options == '') {
+            window.location.reload();
+        } else {
+            window.location.href = 'index.php?v=d&p=boxio&m=boxio&id=' + _options;
+        }
+    }
+});
 
 $('#bt_updateMemory').on('click',function(){
 	//$('#div_alert').showAlert({message: $('.eqLogicAttr[data-l1key=logicalId]').value(), level: 'danger'}); 

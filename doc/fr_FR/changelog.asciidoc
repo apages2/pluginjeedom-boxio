@@ -69,10 +69,14 @@ Correction d'un bug dans l'ajout d'un equipement si aucun n'existe
 ==== V1.300 du 18/05/2016 22:41
 Modification du deamon suite aux passages de nginx vers apache=> Résolution du problème de démarrage du plugin avec Jeedom 2.X
 
-==== V1.301 du 
+==== V1.301 du 25/08/2016 21:40
 Ajout de la gestion des statuts des inter scenario
 Ajout des modules 43214, 67220,77023 et 77024
 Modification des templates pour intégrer les generic_type (necessaire à l'appli mobil)
 Ajout de la gestion des statuts pour l'alarme multifonction 43214 
+Ajout d'un fonction pour mettre a jour les templates via github sans pousser une nouvelle release de boxio
+Modification de l'affichage de l'equipement pour connaitre la version installé/disponible du template, ainsi qu'une courte description des changements de la nouvelle version du template
+Rajout de la possibilité de lier une commande action a une commande info (necessaire a l'appli mobile)
+Ajout du mode inclusion (detection auto des modules) dans le plugin (vs config)
 
 

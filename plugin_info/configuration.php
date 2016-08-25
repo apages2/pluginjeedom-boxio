@@ -27,12 +27,6 @@ if (!isConnect()) {
         <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
 		<?php if (config::byKey('jeeNetwork::mode') == 'master') {?>
 			<div class="form-group">
-				<label class="col-lg-4 control-label">{{Créer automatiquement les nouveaux équipements}}</label>
-				<div class="col-lg-3">
-					<input type="checkbox" class="configKey bootstrapSwitch" data-l1key="autoDiscoverEqLogic" />
-				</div>
-			</div>
-			<div class="form-group">
 				<label class="col-lg-4 control-label">{{Mettre à jour les templates des modules automatiquement}}</label>
 				<div class="col-lg-3">
 					<input type="checkbox" class="configKey bootstrapSwitch" data-l1key="auto_updateConf"/>

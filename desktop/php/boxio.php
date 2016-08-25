@@ -4,6 +4,11 @@ if (!isConnect('admin')) {
 }
 sendVarToJS('eqType', 'boxio');
 $eqLogics = eqLogic::byType('boxio');
+if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
+	echo '<div class="alert jqAlert alert-warning" id="div_inclusionAlert" style="margin : 0px 5px 15px 15px; padding : 7px 35px 7px 15px;">{{Vous etes en mode inclusion. Recliquez sur le bouton d\'inclusion pour sortir de ce mode}}</div>';
+} else {
+	echo '<div id="div_inclusionAlert"></div>';
+}
 ?>
 
 <div class="row row-overflow">
@@ -27,6 +32,23 @@ $eqLogics = eqLogic::byType('boxio');
 				<i class="fa fa-plus-circle" style="font-size : 6em;color:#94ca02;"></i></center>
 				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>Ajouter</center></span>
 			</div>
+			<?php
+				if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
+					echo '<div class="cursor changeIncludeState card" data-mode="1" data-state="0" style="background-color : #8000FF; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
+					echo '<center>';
+					echo '<i class="fa fa-sign-in fa-rotate-90" style="font-size : 5em;color:#94ca02;"></i>';
+					echo '</center>';
+					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Arrêter inclusion}}</center></span>';
+					echo '</div>';
+				} else {
+					echo '<div class="cursor changeIncludeState card" data-mode="1" data-state="1" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
+					echo '<center>';
+					echo '<i class="fa fa-sign-in fa-rotate-90" style="font-size : 5em;color:#94ca02;"></i>';
+					echo '</center>';
+					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Mode inclusion}}</center></span>';
+					echo '</div>';
+				}
+			?>
 			<div class="cursor eqLogicAction" data-action="gotoPluginConf" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;"><center>
 				<i class="fa fa-wrench" style="font-size : 6em;color:#767676;"></i></center>
 				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Configuration}}</center></span>
@@ -158,10 +180,10 @@ $eqLogics = eqLogic::byType('boxio');
 							</div>
 							<div class="form-group">
 								<label class="col-sm-3 control-label">Version Utilisée du template</label>
-								<div class="col-sm-3">
+								<div class="col-sm-2">
 									<span id="vinst" class="eqLogicAttr label label-default tooltips" data-l1key="configuration" data-l2key="version" style="font-size : 1em;"></span>
 								</div>
-								<label class="col-sm-3 control-label">Version Disponible du template</label>
+								<label class="col-sm-4 control-label">Version Disponible du template</label>
 								<div class="col-sm-3">
 									<span id="vdispo" class="eqLogicAttr label label-default tooltips" style="font-size : 1em;"></span>
 								</div>
@@ -171,21 +193,7 @@ $eqLogics = eqLogic::byType('boxio');
 								<div class="col-sm-3">
 									<span id="rnotes" class="eqLogicAttr label label-default tooltips" style="font-size : 1em;"></span>
 								</div>
-		
 							</div>
-							<div class="form-group expertModeVisible">
-								<label class="col-sm-3 control-label">{{Délai maximum autorisé entre 2 messages (min)}}</label>
-								<div class="col-sm-4">
-									<input class="eqLogicAttr form-control" data-l1key="timeout" />
-								</div>
-							</div>
-							<?php
-							/*<div class="form-group">
-								<label class="col-sm-3 control-label">{{Fonctionnement en mode Scénario}}</label>
-								<div class="col-sm-8">
-									<input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Activer}}" data-l1key="ModeScenario" checked/>
-								</div>
-							</div>*/?>
 					</fieldset> 
 				</form>
 			</div>
