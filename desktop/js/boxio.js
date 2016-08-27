@@ -37,38 +37,7 @@ $('body').delegate('.cmdAttr[data-l1key=type]','change',function(){
 });
 
 function printEqLogic(_mem) {
-	var versiondispo ='';
-	var releasenotes ='';
-	var color ='red';
-	$.ajax({// fonction permettant de faire de l'ajax
-        type: "POST", // methode de transmission des données au fichier php
-        url: "plugins/boxio/core/ajax/boxio.ajax.php", // url du fichier php
-        data: {
-            action: "checktemplate",
-            id: $('.eqLogicAttr[data-l1key=logicalId]').value(),
-        },
-        dataType: 'json',
-        error: function (request, status, error) {
-            handleAjaxError(request, status, error);
-        },
-        success: function (data_init) { // si l'appel a bien fonctionné
-			if (data_init.state != 'ok') {
-				$('#div_DashboardAlert').showAlert({message: data_init.result, level: 'danger'});
-				return;
-			}else{
-				versiondispo = data_init.result['version'];
-				releasenotes =  data_init.result['update'];
-				$('#vdispo').append(versiondispo);
-				$('#rnotes').append(releasenotes);
-				if (data_init.result['versioninst'] < data_init.result['version']) {
-					$('#vinst').css({'background-color': '#ff4343'});
-				}else{
-					$('#vinst').css({'background-color': '#e7e7e7'});
-				}
-			}
-		}
-	});
-	
+	$('#table_mem tbody').empty();
 	
 	$.ajax({// fonction permettant de faire de l'ajax
         type: "POST", // methode de transmission des données au fichier php
@@ -86,34 +55,42 @@ function printEqLogic(_mem) {
 				$('#div_DashboardAlert').showAlert({message: data_init.result, level: 'danger'});
 				return;
 			}else{
-				$('#table_mem tbody').empty();
-				for(i = 0; i < data_init.result.length; i++) {
-					for(j = 0; j < data_init.result.length; j++) {
+				$('#vdispo').append(data_init.result['version']);
+				$('#rnotes').append(data_init.result['update']);
+				if (data_init.result['versioninst'] < data_init.result['version']) {
+					$('#vinst').css({'background-color': '#ff4343'});
+				}else{
+					$('#vinst').css({'background-color': ''});
+				}
+				
+			//data_init.result['scenario'].length
+				for(i = 0; i < data_init.result['scenario'].length ; i++) {
+					for(j = 0; j < data_init.result['scenario'].length; j++) {
 						var media = '';
 					
-						if (data_init.result[j]['frame_number']==i) {
-							if (data_init.result[j]['media_listen'] == '0') { media='CPL';}
-							else if (data_init.result[j]['media_listen'] == '1') {media='RF';}
-							else if (data_init.result[j]['media_listen'] == '2') {media='IR';}
+						if (data_init.result['scenario'][j]['frame_number']==i) {
+							if (data_init.result['scenario'][j]['media_listen'] == '0') { media='CPL';}
+							else if (data_init.result['scenario'][j]['media_listen'] == '1') {media='RF';}
+							else if (data_init.result['scenario'][j]['media_listen'] == '2') {media='IR';}
 							
 							var trm = '<tr>';
 							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result[j]['frame_number']  + '" readonly="true">';
+							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['frame_number']  + '" readonly="true">';
 							trm += '</td>';
 							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result[j]['id_legrand'] + '" readonly="true">';
+							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['id_legrand'] + '" readonly="true">';
 							trm += '</td>';
 							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result[j]['unit'] + '" readonly="true">';
+							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['unit'] + '" readonly="true">';
 							trm += '</td>';
 							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result[j]['id_legrand_listen'] + '" readonly="true">';
+							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['id_legrand_listen'] + '" readonly="true">';
 							trm += '</td>';
 							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result[j]['unit_listen'] + '" readonly="true">';
+							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['unit_listen'] + '" readonly="true">';
 							trm += '</td>';
 							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result[j]['value_listen'] + '" readonly="true">';
+							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['value_listen'] + '" readonly="true">';
 							trm += '</td>';
 							trm += '<td>';
 							trm += '<input class="eqLogicAttr form-control input-sm" value="' + media + '" readonly="true">';
@@ -288,7 +265,6 @@ function addCmdToTable(_cmd) {
     tr += '<td>';
     tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="isHistorized" data-size="mini" data-label-text="{{Historiser}}" /></span>';
     tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="isVisible" data-size="mini" data-label-text="{{Afficher}}" checked/></span>';
-    //tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="eventOnly"data-label-text="{{Evénement}}" data-size="mini" /></span> ';
     tr += '<span><input type="checkbox" class="cmdAttr bootstrapSwitch" data-l1key="display" data-label-text="{{Inverser}}" data-size="mini" data-l2key="invertBinary" /></span> ';
     tr += '<input style="width : 150px;" class="tooltips cmdAttr form-control input-sm" data-l1key="cache" data-l2key="lifetime" placeholder="Lifetime cache">';
     tr += '</td>';
@@ -324,11 +300,6 @@ function addCmdToTable(_cmd) {
         }
     });
 }
-
- $('#bt_healthboxio').on('click', function () {
-    $('#md_modal').dialog({title: "{{Santé Boxio}}"});
-    $('#md_modal').load('index.php?v=d&plugin=boxio&modal=health').dialog('open');
-});
 
  $('.changeIncludeState').on('click', function () {
     var el = $(this);

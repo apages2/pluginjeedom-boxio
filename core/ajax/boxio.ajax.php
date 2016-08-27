@@ -29,35 +29,29 @@ try {
 		ajax::success();
 	}
 	
-	if (init('action') == 'checktemplate') {
-		$id=init('id');
-		$boxio = boxio::byLogicalId($id, 'boxio');
+	if (init('action') == 'checkscenario') {
+		$sql = " SELECT * FROM boxio_scenarios where id_legrand='" . init('id') ."'";	
+		$result['scenario'] =  DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL); 
+		//log::add('boxio', 'debug', print_r($result));
+		$boxio = boxio::byLogicalId(init('id'), 'boxio');
         if (is_object($boxio)) {
+			$result['versioninst'] = $boxio->getConfiguration('version');
             $device_type = explode('::', $boxio->getConfiguration('applyDevice'));
 			$deviceref = $device_type[0];
 			$path = dirname(__FILE__) . '/../config/devices';
 			if (isset($deviceref) && $deviceref != '') {
 				$files = ls($path, $deviceref . '.json', false, array('files', 'quiet'));
 				if (count($files) == 1) {
-					try {
-						$content = file_get_contents($path . '/' . $files[0]);
-						if (is_json($content)) {
-							$deviceConfiguration = json_decode($content, true);
-							$deviceConfiguration[$deviceref]['configuration']['versioninst'] = $boxio->getConfiguration('version');
-							ajax::success($deviceConfiguration[$deviceref]['configuration']);
-						}
-					} catch (Exception $e) {
-						return array();
+					$content = file_get_contents($path . '/' . $files[0]);
+					if (is_json($content)) {
+						$deviceConfiguration = json_decode($content, true);
+						$result['version'] = $deviceConfiguration[$deviceref]['configuration']['version'];
+						$result['update'] = $deviceConfiguration[$deviceref]['configuration']['update'];
+						//log::add('boxio', 'debug', print_r($result));
 					}
 				}
 			}
-        }
-    }
-	
-	if (init('action') == 'checkscenario') {
-		$sql = " SELECT * FROM boxio_scenarios where id_legrand='" . init('id') ."'";	
-		$result =  DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL); 
-		//log::add('boxio', 'debug', print_r($result));
+		}
 		ajax::success($result);
 	}
 
