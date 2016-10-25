@@ -2,8 +2,9 @@
     "03600": {
         "name": "Inter Multifonction Lexic",
         "configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "4",
 							"036001": {
 								"ref_legrand": "3600",
 								"family": "LIGHTING",

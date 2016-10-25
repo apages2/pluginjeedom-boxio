@@ -2,8 +2,9 @@
     "67203": {
         "name": "Inter Simple à voyant",
         "configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "2",
 							"672031": {
 								"ref_legrand": "67203",
 								"family": "LIGHTING",

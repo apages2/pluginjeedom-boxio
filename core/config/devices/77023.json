@@ -2,8 +2,9 @@
     "77023": {
         "name": "Inter Centralisé Volet Roulant Mosaic (orientation lamelles)",
 		"configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "2",
 							"770231": {
 								"ref_legrand": "77023",
 								"family": "SHUTTER",

@@ -2,8 +2,9 @@
     "67451": {
         "name": "Inter VMC",
 		"configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "2",
 							"674511": {
 								"ref_legrand": "67451",
 								"family": "LIGHTING",

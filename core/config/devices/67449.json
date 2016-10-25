@@ -2,8 +2,9 @@
     "67449": {
         "name": "Programmateur d'ambiance",
 		"configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "7",
 							"674491": {
 								"ref_legrand": "67449",
 								"family": "COMFORT",

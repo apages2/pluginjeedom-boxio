@@ -2,8 +2,9 @@
     "67256": {
         "name": "Inter Centralisé Volet Roulant (orientation lamelles)",
 		"configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "2",
 							"672561": {
 								"ref_legrand": "67256",
 								"family": "SHUTTER",

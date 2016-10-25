@@ -2,8 +2,9 @@
     "67232": {
         "name": "Inter Variateur 600W Radio",
         "configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "3",
 							"672321": {
 								"ref_legrand": "67232",
 								"family": "LIGHTING",

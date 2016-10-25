@@ -2,8 +2,9 @@
     "67280": {
         "name": "Interscenario Emetteur CPL",
 		"configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning",
+                            "version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "4",
 							"672801": {
 								"ref_legrand": "67280",
 								"family": "SCENE",
