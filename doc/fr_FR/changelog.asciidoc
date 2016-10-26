@@ -82,7 +82,7 @@ Ajout du mode inclusion (detection auto des modules) dans le plugin (vs config)
 ==== V1.302 du 27/08/2016 17:05
 Correction d'un bug javascript/Ajax
 
-==== V1.303 du 20/10/2016 15:06
+==== V1.303 du 26/10/2016 22:08
 Correction du demarrage du daemon en mode debug
 Ajout d'un etat numerique pour les differents modules
 Correction du retour d'etat des trames DIM_STEP
