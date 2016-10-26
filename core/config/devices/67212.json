@@ -2,8 +2,8 @@
     "67212": {
         "name": "Inter Variateur 300W à voyant",
         "configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numerique",
 							"nbunit": "4",
 							"672121": {
 								"ref_legrand": "67212",
@@ -69,8 +69,21 @@
                         "isVisible": 1,
 						"isHistorized": 0,
                         "unite": "",
-						"eventOnly": 1,
 						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }					
+					},
+					
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
 						"configuration": {
                             "returnStateValue": "",
                             "returnStateTime": "",
@@ -155,22 +168,38 @@
                         "type": "action",
 						"subtype": "slider",
                         "isVisible": 1,
-						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#10*#SLIDER#*1##",
+						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#1*#SLIDER#*1##",
 						"configuration": {
 							"whatdim": {
 								"what": "1",
 								"dim": "NULL",
-								"nom": "Dim_Step"
+								"nom": "Go_To_Level_Time"
 							},
-							"unit": "2",
-							"where": "Broadcast",
-							"minValue": 0,
-							"maxValue": 125
+							"unit": "4",
+							"where": "Unicast"
                         },
 						"display": {
 							"generic_type": "LIGHT_SLIDER"
 						}	
                     },
+					{
+                        "name": "Status Scenario 1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
+					},
 					{
                         "name": "Prereglage +",
                         "type": "action",
@@ -185,8 +214,29 @@
 							},
 							"unit": "2",
 							"where": "Broadcast"
-                        }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     },
+					{
+                        "name": "Status Scenario 2",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
+					},
 					{
                         "name": "Prereglage -",
                         "type": "action",
@@ -201,8 +251,11 @@
 							},
 							"unit": "3",
 							"where": "Broadcast"
-                        }
-                    }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
+					}
                 ]
             }
         }

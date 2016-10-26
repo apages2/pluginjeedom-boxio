@@ -2,8 +2,8 @@
     "67214": {
         "name": "Inter Variateur 600W à voyant",
         "configuration": {
-                            "version": "1.2",
-							"update": "Modification du variateur ft alx68",
+                            "version": "1.3",
+							"update": "Ajout du statut numerique",
 							"nbunit": "4",
 							"672141": {
 								"ref_legrand": "67214",
@@ -69,8 +69,21 @@
                         "isVisible": 1,
 						"isHistorized": 0,
                         "unite": "",
-						"eventOnly": 1,
 						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }				
+					},
+					
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
 						"configuration": {
                             "returnStateValue": "",
                             "returnStateTime": "",
@@ -164,8 +177,9 @@
 							},
 							"unit": "4",
 							"where": "Unicast",
-							"minValue": 0,
-							"maxValue": 128
+							"minValue" : "",
+							"maxValue" : "",
+							
                         },
 						"display": {
 							"generic_type": "LIGHT_SLIDER"
