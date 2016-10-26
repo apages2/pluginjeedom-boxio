@@ -131,7 +131,7 @@ class boxio extends eqLogic {
 			throw new Exception(__('Impossible de créer : ', __FILE__) . '/tmp/config_boxio.xml');
 		}
 		$cmd = '/usr/bin/python ' . $boxio_path . '/boxiocmd.py -l -o /tmp/config_boxio.xml';
-		if ($_debug) {
+		if (log::getLogLevel('boxio')=='100') {
 			$cmd .= ' -D';
 		}
 		log::add('boxiocmd', 'info', 'Lancement démon boxiocmd : ' . $cmd);
@@ -371,20 +371,176 @@ class boxio extends eqLogic {
 	public static function dimensionRequestStatus($decrypted_trame) {
 		
 		$def = new boxio_def();
+		//Creation des variables utiles
 		$boxio = boxio::byLogicalId($decrypted_trame["id"], 'boxio');
 		$id = $decrypted_trame['id'];
 		$unit = $decrypted_trame['unit'];
 		$device_type = explode('::', $boxio->getConfiguration('device'));
 		$ref_id_legrand = $device_type[0].$unit;
+		//recuperation du unit principale de sauvegarde des status
 		$config = $boxio->getConfiguration($ref_id_legrand);
 		$unit_status = $config["unit_status"];
+		$unit_code = $config["unit_code"];
 		$statusid = "status".$unit_status;
-		$type=$decrypted_trame["type"];
+		$boxiocmd = $boxio->getCmd('info', $statusid);
+		$statusidnum = "statusnum".$unit_status;
+		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
+		$date = strtotime($decrypted_trame["date"]);
+		if (!isset($def->OWN_STATUS_DEFINITION[$unit_code]['DEFINITION'][0])) {
+			$type = 'other';
+		} else {
+			$type = $def->OWN_STATUS_DEFINITION[$unit_code]['DEFINITION'][0];
+		}
+		$status = NULL;
+		$statusnum = NULL;
+		log::add('boxio','debug',"statusid : ".$statusid." ref legrand/sous device: ".$ref_id_legrand."/".$sousdevice." date : ".$date." unit status : ".$unit_status." unit_code : ".$unit_code." type : ".$type);
 		
-		$params = preg_split('/[\*|#]/', $decrypted_trame['param']);
+		//$params = preg_split('/[\*|#]/', $decrypted_trame['param']);
 		
 		//GESTION DES LIGHT
-		if ($type == 'light') {
+		if ($type == 'variator') {
+			
+			//Interruption des actions en cours on fait une demande de status
+			if ($decrypted_trame["value"] == 'DIM_STOP') {
+				$value = 'DIM_STOP';
+				log::add('boxio','debug',"DIM_STOP");
+				//on supprimme les actions en cours
+				$ownid = boxioCmd::ioblId_to_ownId($id, $unit);
+				$trame="#1000*".$ownid."*55##";
+				$boxiocmd->setConfiguration('updatedate',NULL);
+				$boxiocmd->setConfiguration('returnStateValue',NULL);
+				$boxiocmd->setConfiguration('returnStateTime',NULL);
+				$boxiocmdnum->setConfiguration('updatedate',NULL);
+				$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+				$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+				$res = boxio::send_trame($trame);
+			}
+			//Variation par etape 
+			else if ($decrypted_trame["dimension"] == 'DIM_STEP') {
+				$value = 'DIM_STEP';
+				log::add('boxio','debug',"DIM_STEP");
+				//Recuperation du derniere etat connu(last_status de l'unitstatus)
+				$last_status = $boxiocmd->execCmd(null,2);
+				
+				if (!is_numeric($last_status)) {
+					if ($last_status == 'OFF') {
+						$last_status = 0;
+					} else if ($last_status == 'ON') {
+						$last_status = 100;
+					} else {
+						$last_status = 0;
+					}
+				}
+				preg_match('/(?P<step>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
+				//on test si le status est trouve
+				if (isset($param['step']) && isset($param['time'])) {
+					$timer = boxioCmd::calc_iobl_to_time($param['time']);
+					$change_status = boxioCmd::calc_iobl_to_light($param['step']);
+					log::add('boxio','debug',$change_status);
+					$next_status = $change_status;
+					if ($next_status > 100) {
+						$next_status = 100;
+					} else if ($next_status < 0) {
+						$next_status = 0;
+					}
+					if ($timer==0)
+					{
+						if ($next_status == 0) {
+							$statusnum = $next_status;
+							$status = 'OFF';
+						} else if ($next_status == 100) {
+							$statusnum = $next_status;
+							$status = 'ON';
+						} else {
+							$statusnum = $next_status;
+							$status = 'ON';
+						}
+					
+					} else {
+				
+					$boxiocmd->setConfiguration('returnStateValue',$next_status);
+					$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
+					$boxiocmdnum->setConfiguration('returnStateValue',$next_status);
+					$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+					}
+					
+				} else {
+					$status = NULL;
+				}
+			} else if ($decrypted_trame["dimension"] == 'GO_TO_LEVEL_TIME') {
+				$value = 'GO_TO_LEVEL_TIME';
+				log::add('boxio','debug',"GO_TO_LEVEL_TIME");
+				//Recuperation du derniere etat connu
+				$last_status = $boxiocmd->execCmd(null,2);
+				if (!is_numeric($last_status)) {
+					if ($last_status == 'OFF') {
+						$last_status = 0;
+					} else if ($last_status == 'ON') {
+						$last_status = 100;
+					} else {
+						$last_status = 0;
+					}
+				}
+				preg_match('/(?P<level>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
+				//on test si le status est trouve
+				if (isset($param['level']) && isset($param['time'])) {
+					$timer = boxioCmd::calc_iobl_to_time($param['time']);
+					$next_status = boxioCmd::calc_iobl_to_light($param['level']);
+					if ($next_status > 100) {
+						$next_status = 100;
+					} else if ($next_status < 0) {
+						$next_status = 0;
+					}
+					if ($timer==0)
+					{
+						if ($next_status == 0) {
+							$statusnum = $next_status;
+							$status = 'OFF';
+						} else if ($next_status == 100) {
+							$statusnum = $next_status;
+							$status = 'ON';
+						} else {
+								$statusnum = $next_status;
+								$status = 'ON';
+						}
+					} else {
+						$boxiocmd->setConfiguration('returnStateValue',$next_status);
+						$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
+						$boxiocmdnum->setConfiguration('returnStateValue',$next_status);
+						$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+					}
+				} else {
+				$status = NULL;
+				}
+			//Il ne s'agit pas d'une mise à jour
+			} else {
+					return;
+			}
+			//on n'a pas trouve le nouveau status, erreur dans la trame ?
+			if ($status == NULL) {
+			return;
+			}		
+			
+			//Mise à jour des scenarios si necessaire
+			if ($scenarios === true && $decrypted_trame["dimension"] != 'GO_TO_LEVEL_TIME') {
+				$scenarios_decrypted_trame = $decrypted_trame;
+				
+				$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand<>'$id';";
+				$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL); 
+				$row=sizeof($result);
+				for ($i=0; $i<$row; $i++){
+					$scenarios_decrypted_trame['id'] = $result[$i]['id_legrand'];
+					$scenarios_decrypted_trame['unit'] = $result[$i]['unit'];
+					log::add('boxio','debug',"update_scenario_id : ".$result[$i]['id_legrand']." update_scenario_unit : ".$result[$i]['unit']);
+					boxio::updateStatusLight($scenarios_decrypted_trame, false);
+				}
+			}
+			log::add('boxio','debug',"mise a jour du status : ".$status."\n");
+			$boxiocmd->event($status);
+			$boxiocmd->save();
+			$boxiocmdnum->event($statusnum);
+			$boxiocmdnum->save();
+	
 		//GESTION DES CONFORT
 		} 
 		else if ($type == 'heating') {
@@ -551,23 +707,37 @@ class boxio extends eqLogic {
 		//$boxio->save();
 	}
 	
-	public static function checkMemory($dev,$unit) {
+	public static function checkMemory($dev) {
 	
-		$check="*1000*66*" . (($dev*16)+$unit) . "##";
-	
-		if (config::byKey('jeeNetwork::mode') == 'master') {
-			foreach (jeeNetwork::byPlugin('boxio') as $jeeNetwork) {
-				$socket = socket_create(AF_INET, SOCK_STREAM, 0);
-				socket_connect($socket, $jeeNetwork->getRealIp(), config::byKey('socketport', 'boxio', 55002));
-				socket_write($socket, trim($check), strlen(trim($check)));
-				socket_close($socket);
+		//Creation des variables utiles
+		$boxio = boxio::byLogicalId($dev, 'boxio');
+		$nbunit = $boxio->getConfiguration('nbunit');
+		$device_type = explode('::', $boxio->getConfiguration('device'));
+		
+		
+		for ($i = 1; $i <= $nbunit; $i++) {
+			$ref_id_legrand = $device_type[0].$i;
+			$config = $boxio->getConfiguration($ref_id_legrand);
+			$possibility = $config["possibility"];
+			if (strpos($possibility, 'MEMORY') !== FALSE) {
+				log::add('boxio', 'debug', 'unit :'.$i.' en memory');
+				$check="*1000*66*" . (($dev*16)+$i) . "##";
+		
+				if (config::byKey('jeeNetwork::mode') == 'master') {
+					foreach (jeeNetwork::byPlugin('boxio') as $jeeNetwork) {
+						$socket = socket_create(AF_INET, SOCK_STREAM, 0);
+						socket_connect($socket, $jeeNetwork->getRealIp(), config::byKey('socketport', 'boxio', 55002));
+						socket_write($socket, trim($check), strlen(trim($check)));
+						socket_close($socket);
+					}
+				}
+				if (config::byKey('port', 'boxio', 'none') != 'none') {
+					$socket = socket_create(AF_INET, SOCK_STREAM, 0);
+					socket_connect($socket, '127.0.0.1', config::byKey('socketport', 'boxio', 55002));
+					socket_write($socket, trim($check), strlen(trim($check)));
+					socket_close($socket);
+				}
 			}
-		}
-		if (config::byKey('port', 'boxio', 'none') != 'none') {
-			$socket = socket_create(AF_INET, SOCK_STREAM, 0);
-			socket_connect($socket, '127.0.0.1', config::byKey('socketport', 'boxio', 55002));
-			socket_write($socket, trim($check), strlen(trim($check)));
-			socket_close($socket);
 		}
 	}
 
@@ -877,7 +1047,10 @@ class boxio extends eqLogic {
 		$boxiocmd = $boxio->getCmd('info', $statusid);
 		$duree_cmd	= $boxiocmd->getConfiguration('DureeCmd');
 		$last_status = $boxiocmd->execCmd(null,2);
+		$statusidnum = 'statusnum'.$unit_status;
+		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
 		log::add('boxio','debug','unit_status : '.$unit_status.' poss : '.$possibility.' Sous_device : '.$sousdevice.' last : '.$last_status.' duréecmd : '.$duree_cmd.' id cmd : '.$boxiocmd->getId() . " date : ".$date);
+		$updatedate=$boxiocmd->getConfiguration('updatedate');
 		//on test s'il faut faire un update des statuts
 		if ($decrypted_trame["value"] == 'MOVE_UP'
 				|| $decrypted_trame["value"] == 'MOVE_DOWN'
@@ -889,7 +1062,7 @@ class boxio extends eqLogic {
 			return;
 		}
 		//Recuperation des options
-		 if ($config["server_opt"] != "NULL") {
+		if ($config["server_opt"] != "NULL") {
 			preg_match_all('/(?P<param>.+?)=(?P<value>[^;]+);//', $config["server_opt"], $server_opt);
 			$params = array();
 			foreach ($server_opt['param'] as $opt => $opt_value) {
@@ -913,30 +1086,59 @@ class boxio extends eqLogic {
 					//Si le volet est en train de monter
 					if ($last_status == 'UP') {
 						$status = 'UP';
+						$new_pos= ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round($new_pos);
+						if ($new_pos >= 100) {
+							$status = 'OPEN';
+							$statusnum = 100;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
+						
 					//Si le volet est deja en haut
 					} 
 					elseif ($last_status == '100' || $last_status == 'OPEN') {
 						$status = 'OPEN';
+						$statusnum = 100;
 					//Si le volet change de sens
 					} 
 					elseif ($last_status == 'DOWN') {
 						$status = 'UP';
+						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round(100-$new_pos);
+						if ((100-$new_pos) <= 0) {
+							$statusnum = 0;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 						$sec=date("s");
-						$updatedate=$boxiocmd->getConfiguration('updatedate');
 						if ($updatedate<$date)
 						{
 							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
 							$boxiocmd->save();
+							$boxiocmdnum->save();
 							$updatedate=0;
 						}
-						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
 						$move_time = round($new_pos/100*$move_time);
 						$move_time_quotient = floor($move_time/60);
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','OPEN');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',100);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
+						
 						//Si le volet est en position intermediaire ou completement ferme
 					} 
 					elseif (is_numeric($last_status) || $last_status == 'CLOSED') {
@@ -944,6 +1146,7 @@ class boxio extends eqLogic {
 							$last_status = 0;
 						}
 						$status = 'UP';
+						$statusnum = $last_status;
 						$sec=date("s");
 						log::add('boxio', 'debug', "Point ".$status);
 						$move_time = $move_time - ($last_status/100*$move_time);
@@ -951,11 +1154,15 @@ class boxio extends eqLogic {
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','OPEN');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',100);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 					} 
 					else {
 						$status = 'OPEN';
+						$statusnum = 100;
 					}
 				} 
 				elseif ($value == 'MOVE_DOWN') {
@@ -963,32 +1170,61 @@ class boxio extends eqLogic {
 					//Si le volet est en train de descendre
 					if ($last_status == 'DOWN') {
 						$status = 'DOWN';
+						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round(100-$new_pos);
+						if ((100-$new_pos) <= 0) {
+							$status = 'CLOSED';
+							$statusnum = 0;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 						//Si le volet est deja en bas
 					} 
 					elseif ($last_status == '0' || $last_status == 'CLOSED') {
 						$status = 'CLOSED';
+						$statusnum = 0;
 						//Si le volet change de sens
 					} 
 					elseif ($last_status == 'UP') {
 						$status = 'DOWN';
+						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round($new_pos);
+						if (($new_pos) >= 100) {
+							$statusnum = 100;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 						$sec=date("s");
 						$updatedate=$boxiocmd->getConfiguration('updatedate');
 						if ($updatedate<$date)
 						{
 							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
 							$boxiocmd->save();
+							$boxiocmdnum->save();
 							$updatedate=0;
 						}
-						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
 						$move_time = round($new_pos/100*$move_time);
 						log::add('boxio', 'debug', " Move time : ".$move_time." New_pos : ".$new_pos);
 						$move_time_quotient = floor($move_time/60);
 						log::add('boxio', 'debug', " Move time : ".$move_time);						
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','CLOSED');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',0);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 						log::add('boxio', 'debug', " Move time : ".$move_time);
+						
 						//Si le volet est arrete en position intermediaire ou completement ouvert
 					} 
 					elseif (is_numeric($last_status) || $last_status == 'OPEN') {
@@ -996,6 +1232,7 @@ class boxio extends eqLogic {
 							$last_status = 100;
 						}
 						$status = 'DOWN';
+						$statusnum = $last_status;
 						$sec=date("s");
 						log::add('boxio', 'debug', "Point ".$status."sec : ".$sec."movetime : ".$move_time);
 						$move_time = ($last_status/100*$move_time);
@@ -1003,54 +1240,60 @@ class boxio extends eqLogic {
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','CLOSED');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',0);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 					} 
 					else {
 						$status = 'CLOSED';
+						$statusnum = 0;
 					}
 				} 
 				elseif ($value == 'MOVE_STOP') {
 					log::add('boxio', 'debug', "Action move_STOP");
 					//Par defaut on dit que le volet est arrete et donc à son ancienne position
 					$status = $last_status;
+					
 					$updatedate=$boxiocmd->getConfiguration('updatedate');
 					//Si le volet est deja en mouvement
 					if (!is_numeric($last_status) && isset($updatedate)) {
 						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
 						log::add('boxio', 'debug', " updatedate : ".$updatedate." Newpos : ".$new_pos);
-						$boxiocmd->setConfiguration('updatedate',NULL);
 						if ($last_status == 'UP') {
 							$status = round($new_pos);
+							$statusnum = round($new_pos);
 							log::add('boxio', 'debug', "last_status : Up, status : ".$status);
-							$boxiocmd->setConfiguration('returnStateValue',$status);
-							$boxiocmd->setConfiguration('returnStateTime',1);
 						} 
 						elseif ($last_status == 'DOWN') {
 							$status = round(100 - $new_pos);
-							$boxiocmd->setConfiguration('returnStateValue',$status);
-							$boxiocmd->setConfiguration('returnStateTime',1);
+							$statusnum = round(100 - $new_pos);
 							log::add('boxio', 'debug', "last_status : Down, status : ".$status);
 						}
 						if ($status <= 0) {
 							$status = 'CLOSED';
-							$boxiocmd->setConfiguration('updatedate',NULL);
-							$boxiocmd->setConfiguration('returnStateValue',NULL);
-							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$statusnum = 0;
 						} 
 						elseif ($status >= 100) {
 							$status = 'OPEN';
-							$boxiocmd->setConfiguration('updatedate',NULL);
-							$boxiocmd->setConfiguration('returnStateValue',NULL);
-							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$statusnum = 100;
 						}
+						$boxiocmd->setConfiguration('updatedate',NULL);
+						$boxiocmd->setConfiguration('returnStateValue',NULL);
+						$boxiocmd->setConfiguration('returnStateTime',NULL);
+						$boxiocmdnum->setConfiguration('updatedate',NULL);
+						$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+						$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 					} 
 					else {
 						$status = 'OPEN';
+						$statusnum = 100;
 					}
 				}
 				$boxiocmd->save();
+				$boxiocmdnum->save();
 			}	 
 			elseif ($sousdevice == '01') {
 
@@ -1061,31 +1304,59 @@ class boxio extends eqLogic {
 					//Si le volet est en train de descendre
 					if ($last_status == 'DOWN') {
 						$status = 'DOWN';
+						$new_pos= ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round(100-$new_pos);
+						if ((100-$new_pos) <= 0) {
+							$status = 'CLOSED';
+							$statusnum = 0;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 					//Si le volet est deja en bas
 					} 
 					elseif ($last_status == '0' || $last_status == 'CLOSED') {
 						$status = 'CLOSED';
+						$statusnum = 0;
 					//Si le volet change de sens
 					} 
 					elseif ($last_status == 'UP') {
 						$status = 'DOWN';
+						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round($new_pos);
+						if (($new_pos) >= 100) {
+							$statusnum = 100;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 						$sec=date("s");
 						$updatedate=$boxiocmd->getConfiguration('updatedate');
 						if ($updatedate<$date)
 						{
 							$boxiocmd->setConfiguration('updatedate',NULL);
 							$boxiocmd->save();
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->save();
 							$updatedate=0;
 						}
-						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
 						$move_time = round($new_pos/100*$move_time);
 						log::add('boxio', 'debug', " Move time : ".$move_time." New_pos : ".$new_pos);
 						$move_time_quotient = floor($move_time/60);
 						log::add('boxio', 'debug', " Move time : ".$move_time);						
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','CLOSED');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',0);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 					//Si le volet est en position intermediaire ou completement ouvert
 					} 
@@ -1094,6 +1365,7 @@ class boxio extends eqLogic {
 							$last_status = 100;
 						}
 						$status = 'DOWN';
+						$statusnum = $last_status;
 						$sec=date("s");
 						log::add('boxio', 'debug', "Point ".$status."sec : ".$sec."movetime : ".$move_time);
 						$move_time = ($last_status/100*$move_time);
@@ -1101,12 +1373,16 @@ class boxio extends eqLogic {
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','CLOSED');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',0);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 					} 
 					else {
-						$status = 'OPEN';
+						$status = 'CLOSED';
+						$statusnum = 0;
 					}
 				} 
 				elseif ($value == 'MOVE_DOWN') {
@@ -1114,30 +1390,58 @@ class boxio extends eqLogic {
 					//Si le volet est en train de monter
 					if ($last_status == 'UP') {
 						$status = 'UP';
+						$new_pos= ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round($new_pos);
+						if ($new_pos >= 100) {
+							$status = 'OPEN';
+							$statusnum = 100;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 						//Si le volet est deja en haut
 					} 
 					elseif ($last_status == '100' || $last_status == 'OPEN') {
 						$status = 'OPEN';
+						$statusnum = 100;
 						//Si le volet change de sens
 					} 
 					elseif ($last_status == 'DOWN') {
 						$status = 'UP';
+						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
+						$statusnum = round(100-$new_pos);
+						if ((100-$new_pos) <= 0) {
+							$statusnum = 0;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+						}
 						$sec=date("s");
 						$updatedate=$boxiocmd->getConfiguration('updatedate');
 						if ($updatedate<$date)
 						{
 							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
 							$boxiocmd->save();
+							$boxiocmdnum->save();
 							$updatedate=0;
 						}
-						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
 						$move_time = round($new_pos/100*$move_time);
 						$move_time_quotient = floor($move_time/60);
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','OPEN');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',100);			
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 						//Si le volet est arrete en position intermediaire ou completement fermé
 					} 
 					elseif (is_numeric($last_status) || $last_status == 'CLOSED') {
@@ -1145,6 +1449,7 @@ class boxio extends eqLogic {
 							$last_status = 0;
 						}
 						$status = 'UP';
+						$statusnum = $last_status;
 						$sec=date("s");
 						log::add('boxio', 'debug', "Point ".$status);
 						$move_time = $move_time - ($last_status/100*$move_time);
@@ -1152,53 +1457,58 @@ class boxio extends eqLogic {
 						log::add('boxio', 'debug', " Move time : ".$move_time);
 						$boxiocmd->setConfiguration('updatedate',$date+$move_time);
 						$boxiocmd->setConfiguration('returnStateValue','OPEN');
+						$boxiocmdnum->setConfiguration('updatedate',$date+$move_time);
+						$boxiocmdnum->setConfiguration('returnStateValue',100);
 						$nextupdate= 1+$move_time_quotient;
 						$boxiocmd->setConfiguration('returnStateTime',$nextupdate);
+						$boxiocmdnum->setConfiguration('returnStateTime',$nextupdate);
 					} 
 					else {
-						$status = 'CLOSED';
+						$status = 'OPEN';
+						$statusnum = 100;
 					}
 				} 
 				elseif ($value == 'MOVE_STOP') {
 					log::add('boxio', 'debug', "Action move_STOP");
 					//Par defaut on dit que le volet est arrete et donc à son ancienne position
 					$status = $last_status;
+					
 					$updatedate=$boxiocmd->getConfiguration('updatedate');
 					//Si le volet est deja en mouvement
 					if (!is_numeric($last_status) && isset($updatedate)) {
 						$new_pos = ($move_time - ($updatedate - $date))/$move_time*100;
 						log::add('boxio', 'debug', " updatedate : ".$updatedate." Newpos : ".$new_pos);
-						$boxiocmd->setConfiguration('updatedate',NULL);
 						if ($last_status == 'UP') {
 							$status = round($new_pos);
+							$statusnum = round($new_pos);
 							log::add('boxio', 'debug', "last_status : Up, status : ".$status);
-							$boxiocmd->setConfiguration('returnStateValue',$status);
-							$boxiocmd->setConfiguration('returnStateTime',1);
 						} 
 						elseif ($last_status == 'DOWN') {
 							$status = round(100 - $new_pos);
-							$boxiocmd->setConfiguration('returnStateValue',$status);
-							$boxiocmd->setConfiguration('returnStateTime',1);
-							log::add('boxio', 'debug', "last_status : Down, status : ".$status);
+							$statusnum = round(100 - $new_pos);
 						}
 						if ($status <= 0) {
 							$status = 'CLOSED';
-							$boxiocmd->setConfiguration('updatedate',NULL);
-							$boxiocmd->setConfiguration('returnStateValue',NULL);
-							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$statusnum = 0;
 						} 
 						elseif ($status >= 100) {
 							$status = 'OPEN';
-							$boxiocmd->setConfiguration('updatedate',NULL);
-							$boxiocmd->setConfiguration('returnStateValue',NULL);
-							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$statusnum = 100;
 						}
+						$boxiocmd->setConfiguration('updatedate',NULL);
+						$boxiocmd->setConfiguration('returnStateValue',NULL);
+						$boxiocmd->setConfiguration('returnStateTime',NULL);
+						$boxiocmdnum->setConfiguration('updatedate',NULL);
+						$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+						$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+					}
+					else {
+					$status = 'OPEN';
+					$statusnum = 100;
 					}
 				} 
-				else {
-					$status = 'OPEN';
-				} 
 				$boxiocmd->save();
+				$boxiocmdnum->save();
 			}
 		//mise a jour simple du bouton
 		/*} 
@@ -1214,6 +1524,7 @@ class boxio extends eqLogic {
 		//if (strpos($possibility, 'MEMORY') !== FALSE) {
 			log::add('boxio','debug',"mise a jour du status : ".$status."\n");
 			$boxiocmd->event($status);
+			$boxiocmdnum->event($statusnum);
 		//}
 		//Mise à jour des groupe de volet en parametre (INTERFACE SOMFY)
 		if (isset($params['grp_opt'])) {
@@ -1282,41 +1593,52 @@ class boxio extends eqLogic {
 		$config = $boxio->getConfiguration($ref_id_legrand);
 		$unit_status = $config["unit_status"];
 		$statusid = "status".$unit_status;
+		$statusidnum = "statusnum".$unit_status;
 		$boxiocmd = $boxio->getCmd('info', $statusid);
+		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
 		$status = NULL;
+		$statusnum = NULL;
 		log::add('boxio','debug',"statusid : ".$statusid." ref legrand/sous device: ".$ref_id_legrand."/".$sousdevice." unit status : ".$unit_status);
 			
 		//Appui Touche 1
 		if ($decrypted_trame["unit"] == '2') {
 				$status = 'TOUCHE1';
+				$statusnum = 2;
 		}
 		//Appui Touche 2
 		else if ($decrypted_trame["unit"] == '3') {
 				$status = 'TOUCHE2';
+				$statusnum = 3;
 		}
 		//Mise en Service Totale
 		else if ($decrypted_trame["unit"] == '4') {
 				$status = 'Mise en Service Totale';
+				$statusnum = 4;
 		}
 		//Arret
 		else if ($decrypted_trame["unit"] == '5') {
 				$status = 'Arret';
+				$statusnum = 5;
 		}
 		//Mise en Service Partielle 
 		else if ($decrypted_trame["unit"] == '6') {
 				$status = 'Mise en Service Partielle';
+				$statusnum = 6;
 		}
 		//Départ En Alarme
 		else if ($decrypted_trame["unit"] == '7') {
 				$status = 'Départ en Alarme';
+				$statusnum = 7;
 		}
 		//Vérrouillage Alarme Après Tempo de Sortie
 		else if ($decrypted_trame["unit"] == '8') {
 				$status = 'Verrouillage Alarme après Tempo de Sortie';
+				$statusnum = 8;
 		}
 		//Défaut Détécté (par exemple l'alarme s'est déclenchée)
 		else if ($decrypted_trame["unit"] == '9') {
 				$status = 'Défaut Détécté';
+				$statusnum = 9;
 		}
 		else {
 			return;
@@ -1328,6 +1650,9 @@ class boxio extends eqLogic {
 		$boxiocmd->setConfiguration('updatedate',NULL);
 		$boxiocmd->setConfiguration('returnStateValue',NULL);
 		$boxiocmd->setConfiguration('returnStateTime',NULL);
+		$boxiocmdnum->setConfiguration('updatedate',NULL);
+		$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+		$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 		
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true) {
@@ -1346,6 +1671,8 @@ class boxio extends eqLogic {
 		log::add('boxio','debug',"mise a jour du status : ".$status."\n");
 		$boxiocmd->event($status);
 		$boxiocmd->save();
+		$boxiocmdnum->event($statusnum);
+		$boxiocmdnum->save();
 	}
 	
 	public static function updateStatusLight($decrypted_trame, $scenarios=false) {
@@ -1379,6 +1706,8 @@ class boxio extends eqLogic {
 		$unit_code = $config["unit_code"];
 		$statusid = "status".$unit_status;
 		$boxiocmd = $boxio->getCmd('info', $statusid);
+		$statusidnum = "statusnum".$unit_status;
+		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
 		if (!isset($def->OWN_STATUS_DEFINITION[$unit_code]['DEFINITION'][0])) {
 			$type = 'other';
 		} else {
@@ -1386,6 +1715,7 @@ class boxio extends eqLogic {
 		}
 		$timer = 0;//L'action est par défaut immédiate
 		$status = NULL;
+		$statusnum = NULL;
 		log::add('boxio','debug',"statusid : ".$statusid." ref legrand/sous device: ".$ref_id_legrand."/".$sousdevice." date : ".$date." unit status : ".$unit_status." unit_code : ".$unit_code." type : ".$type);
 		
 		//On recupere les server_opt
@@ -1401,6 +1731,7 @@ class boxio extends eqLogic {
 			$decrypted_trame["value"] == 'DIM_STOP'
 			|| $decrypted_trame["dimension"] == 'DIM_STEP'
 			|| $decrypted_trame["dimension"] == 'GO_TO_LEVEL_TIME')) {
+				log::add('boxio','debug',"EXIT_Light_Update");
 			return;
 		}
 		//Gestion des ACTION
@@ -1417,8 +1748,10 @@ class boxio extends eqLogic {
 					$status = $decrypted_trame['internal_status'];
 				} else {
 					$status = 'ON';
+					$statusnum = 100;
 				}
 				$next_status = 'OFF';
+				$next_statusnum = 0;
 			} else {
 				$status = NULL;
 			}
@@ -1433,109 +1766,38 @@ class boxio extends eqLogic {
 			$boxiocmd->setConfiguration('updatedate',NULL);
 			$boxiocmd->setConfiguration('returnStateValue',NULL);
 			$boxiocmd->setConfiguration('returnStateTime',NULL);
+			$boxiocmdnum->setConfiguration('updatedate',NULL);
+			$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+			$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 			$res = boxio::send_trame($trame);
 		}
 		//Allumage
 		else if ($decrypted_trame["value"] == 'ON') {
 			$value = 'ON';
 			$status = 'ON';
+			$statusnum = 100;
 			//S'il y a un timer dans le server_opt
 			if ($timer != 0) {
 				$next_status = 'OFF';
+				$next_statusnum = 0;
 			} else {
 				$next_status = 'ON';
+				$next_statusnum = 100;
 			}
 		}
 		//Extinction 
 		else if ($decrypted_trame["value"] == 'OFF') {
 			$value = 'OFF';
 			$status = 'OFF';
+			$statusnum = 0;
 			//S'il y a un timer dans le server_opt
 			if ($timer != 0) {
 				$next_status = 'ON';
+				$next_statusnum = 100;
 			} else {
 				$next_status = 'OFF';
+				$next_statusnum = 0;
 			}
-		}
-		//Variation par etape 
-		else if ($decrypted_trame["dimension"] == 'DIM_STEP') {
-			$value = 'DIM_STEP';
-			log::add('boxio','debug',"DIM_STEP");
-			//Recuperation du derniere etat connu(last_status de l'unitstatus)
-			$last_status = $boxiocmd->execCmd(null,2);
-			if (!is_numeric($last_status)) {
-				if ($last_status == 'OFF') {
-					$last_status = 0;
-				} else if ($last_status == 'ON') {
-					$last_status = 100;
-				} else {
-					$last_status = 0;
-				}
-			}
-			preg_match('/(?P<step>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
-			//on test si le status est trouve
-			if (isset($param['step']) && isset($param['time'])) {
-				$timer = boxioCmd::calc_iobl_to_time($param['time']);
-				$change_status = boxioCmd::calc_iobl_to_light($param['step']);
-				$next_status = $last_status + $change_status;
-				if ($next_status > 100) {
-					$next_status = 100;
-				} else if ($next_status < 0) {
-					$next_status = 0;
-				}
-				if ($last_status < $next_status) {
-					$status = 'DIM_UP_'.$last_status.'_TO_'.$next_status.'_IN_'.$timer.'S';
-				} else {
-					$status = 'DIM_DOWN_'.$last_status.'_TO_'.$next_status.'_IN_'.$timer.'S';
-				}
-				if ($next_status == 0) {
-					$next_status = 'OFF';
-				} else if ($next_status == 100) {
-					$next_status = 'ON';
-				}
-			} else {
-				$next_status = NULL;
-			}
-		}
-		//Variation directe 
-		else if ($decrypted_trame["dimension"] == 'GO_TO_LEVEL_TIME') {
-			$value = 'GO_TO_LEVEL_TIME';
-			log::add('boxio','debug',"GO_TO_LEVEL_TIME");
-			//Recuperation du derniere etat connu
-			$last_status = $boxiocmd->execCmd(null,2);
-			if (!is_numeric($last_status)) {
-				if ($last_status == 'OFF') {
-					$last_status = 0;
-				} else if ($last_status == 'ON') {
-					$last_status = 100;
-				} else {
-					$last_status = 0;
-				}
-			}
-			preg_match('/(?P<level>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
-			//on test si le status est trouve
-			if (isset($param['level']) && isset($param['time'])) {
-				$timer = boxioCmd::calc_iobl_to_time($param['time']);
-				$next_status = $param['level'];
-				if ($next_status > 100) {
-					$next_status = 100;
-				} else if ($next_status < 0) {
-					$next_status = 0;
-				}
-				if ($last_status < $next_status) {
-					$status = 'DIM_UP_'.$last_status.'_TO_'.$next_status.'_IN_'.$timer.'S';
-				} else {
-					$status = 'DIM_DOWN_'.$last_status.'_TO_'.$next_status.'_IN_'.$timer.'S';
-				}
-				if ($next_status == 0) {
-					$next_status = 'OFF';
-				} else if ($next_status == 100) {
-					$next_status = 'ON';
-				}
-			} else {
-				$status = NULL;
-			}
-			//Il ne s'agit pas d'une mise à jour
 		} else {
 			return;
 		}
@@ -1555,15 +1817,21 @@ class boxio extends eqLogic {
 		$boxiocmd->setConfiguration('updatedate',NULL);
 		$boxiocmd->setConfiguration('returnStateValue',NULL);
 		$boxiocmd->setConfiguration('returnStateTime',NULL);
+		$boxiocmdnum->setConfiguration('updatedate',NULL);
+		$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+		$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 		
 		//Dans le cas d'une commande temporelle on met le status en attente de mise a jour sauf si la commande est inférieur à 1s
 		if ($timer>1) {
 			$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
 			$boxiocmd->setConfiguration('returnStateValue',$next_status);
+			$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+			$boxiocmdnum->setConfiguration('returnStateValue',$next_statusnum);
 		}
 		//La commande n'est pas temporisé on indique la bonne valeur (au cas ou cela na pas ete fait)
 		else {
 			$status = $next_status;
+			$statusnum = $next_statusnum;
 		}
 		
 		//Mise à jour des scenarios si necessaire
@@ -1595,6 +1863,8 @@ class boxio extends eqLogic {
 		log::add('boxio','debug',"mise a jour du status : ".$status."\n");
 		$boxiocmd->event($status);
 		$boxiocmd->save();
+		$boxiocmdnum->event($statusnum);
+		$boxiocmdnum->save();
 	}
 
 	public static function updateStatusConfort($decrypted_trame, $scenarios=false) {
@@ -1626,22 +1896,29 @@ class boxio extends eqLogic {
 		$unit_status = $config["unit_status"];
 		$statusid = "status".$unit_status;
 		$boxiocmd = $boxio->getCmd('info', $statusid);
+		$statusidnum = "statusnum".$unit_status;
+		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
 		//On recupere les server_opt
 		$server_opt = $config["server_opt"];
 		$status = NULL;
+		$statusnum = NULL;
 		log::add('boxio','debug',"ID : ".$id." UNIT : ".$unit." Ref Legrand+unit : ".$ref_id_legrand." Unit_Status : ".$unit_status." Statusid : ".$statusid. " Commande : ".$decrypted_trame["value"]);
 		//LOW FAN SPEED
 		if ($decrypted_trame["value"] == 'LOW_FAN_SPEED') {
 			$value = 'LOW_FAN_SPEED';
 			$status = 'LOW_FAN_SPEED';
+			$statusnum = 0;
 		}
 		//HIGH FAN SPEED
 		else if ($decrypted_trame["value"] == 'HIGH_FAN_SPEED') {
 			$value = 'HIGH_FAN_SPEED';
 			$status = 'HIGH_FAN_SPEED';
+			$statusnum = 100;
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
 				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
 				$boxiocmd->setConfiguration('returnStateValue','LOW_FAN_SPEED');
+				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateValue',0);
 			}
 		//ACTION INCONNU
 		}
@@ -1650,27 +1927,34 @@ class boxio extends eqLogic {
 			if ($decrypted_trame["param"] == 4) {
 				$value = 'Hors-Gel';
 				$status = 'Hors-Gel';
+				$statusnum = 40;
 			}
 			elseif ($decrypted_trame["param"] == 3) {
 				$value = 'Eco';
 				$status = 'Eco';
+				$statusnum = 80;
 			}
 			elseif ($decrypted_trame["param"] == 2) {
 				$value = 'Confort-2';
 				$status = 'Confort-2';
+				$statusnum = 90;
 			}
 			elseif ($decrypted_trame["param"] == 1) {
 				$value = 'Confort-1';
 				$status = 'Confort-1';
+				$statusnum = 95;
 			}
 			elseif ($decrypted_trame["param"] == 0) {
 				$value = 'Confort';
 				$status = 'Confort';
+				$statusnum = 100;
 			}
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
 				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
 				$boxiocmd->setConfiguration('returnStateValue',$status);
+				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
 		//ACTION INCONNU
 		}
@@ -1678,31 +1962,39 @@ class boxio extends eqLogic {
 			if ($decrypted_trame["param"] == 4) {
 				$value = 'Hors-Gel';
 				$status = 'Hors-Gel';
+				$statusnum = 40;
 			}
 			elseif ($decrypted_trame["param"] == 3) {
 				$value = 'Eco';
 				$status = 'Eco';
+				$statusnum = 80;
 			}
 			elseif ($decrypted_trame["param"] == 2) {
 				$value = 'Confort-2';
 				$status = 'Confort-2';
+				$statusnum = 90;
 			}
 			elseif ($decrypted_trame["param"] == 1) {
 				$value = 'Confort-1';
 				$status = 'Confort-1';
+				$statusnum = 95;
 			}
 			elseif ($decrypted_trame["param"] == 0) {
 				$value = 'Confort';
 				$status = 'Confort';
+				$statusnum = 100;
 			}
 			elseif ($decrypted_trame["param"] == '') {
 				$value = 'Confort';
 				$status = 'Confort';
+				$statusnum = 100;
 			}
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
 				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
 				$boxiocmd->setConfiguration('returnStateValue',$status);
+				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
 		//ACTION INCONNU
 		}
@@ -1753,6 +2045,8 @@ class boxio extends eqLogic {
 		log::add('boxio','debug',"mise a jour du status : ".$status."\n");
 		$boxiocmd->event($status);
 		$boxiocmd->save();
+		$boxiocmdnum->event($statusnum);
+		$boxiocmdnum->save();
 	}
 	
 	public static function updateStatusScenario($decrypted_trame) {
@@ -2049,14 +2343,26 @@ class boxioCmd extends cmd {
 		*/
 		
 		// Augmentation
-		if ($iobl_value < 128) {
-			$percent = $iobl_value;
+		if ($iobl_value <= 128) {
+			$percent = $iobl_value*100/128;
 			// Diminution
 		} 
 		else {
-			$percent = $iobl_value - 256;
+			$percent = ($iobl_value - 256)*100/128;
 		}
 		return $percent;
+	}
+	
+	public static function calc_light_to_iobl($light_value) {
+		/*
+		// FONCTION : CALCUL UNE VALEUR IOBL DE LUMIERE EN POURCENTAGE
+		// PARAMS : $iobl_value => string
+		// RETOURNE : LA VALEUR EN POURCENTAGE
+		*/
+		
+		// Augmentation
+		$iobl_value = $light_value*128/100;
+		return $iobl_value;
 	}
 
 	public static function calc_iobl_to_time($iobl_value) {
@@ -2272,8 +2578,8 @@ class boxioCmd extends cmd {
 			
             switch ($this->getSubType()) {
                 case 'slider':
-                $value = str_replace('#slider#', strtoupper(intval($_options['slider'])), $value);
-				$value = str_replace('#SLIDER#', strtoupper(intval($_options['slider'])), $value);
+                $value = str_replace('#slider#', intval(boxioCmd::calc_light_to_iobl($_options['slider'])), $value);
+				$value = str_replace('#SLIDER#', intval(boxioCmd::calc_light_to_iobl($_options['slider'])), $value);
                 break;
                 case 'color':
                 $value = str_replace('#color#', $_options['color'], $value);
@@ -2327,15 +2633,1344 @@ class boxio_def {
 	//temps pour que le relais interne change d'état
 	public $SHUTTER_RELAY_TIME = 1;
 	
-/*	//Definition des equipements Legrand
+	//Definition des equipements Legrand
 	public $OWN_EQUIP = array(
-			//"REF+UNIT" => array("ref_legrand","nom","family","media","nom_interne","btn","unit","unit_status","possibility","function_code","unit_code"server_opt","commentaire",
-			"672551" => array("67255","Inter Individuel Volet Roulant (Derogation)","SHUTTER","CPL","Monte/Descente/Stop","Monte/Descente/Stop","1","2","COMMAND","50","4","NULL","COMMAND=Mouvement volet"),
-			"672552" => array("67255","Inter Individuel Volet Roulant (Derogation)","SHUTTER","CPL","STATUS","Memoire Monte/Descente/Stop","2","2","ACTION,STATUS,MEMORY","50","139","NULL","NULL"),
-			"672511" => array("67251","Inter Individuel Volet Roulant (Derogation)","SHUTTER","CPL","Monte/Descente/Stop","Monte/Descente/Stop","1","2","COMMAND","50","4","NULL","COMMAND=Mouvement volet"),
-			"672512" => array("67251","Inter Individuel Volet Roulant (Derogation)","SHUTTER","CPL","STATUS","Memoire Monte/Descente/Stop","2","2","ACTION,STATUS,MEMORY","50","139","NULL","NULL")
+		"03600" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Multifonction Lexic",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"036001" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF Sortie 1",
+							"btn" => "Contact Sortie 1",
+							"unit" => "1",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=ON et OFF channel 1"
+						),
+						"672012" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF Sortie 2",
+							"btn" => "Contact Sortie 2",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=ON et OFF channel 2"
+						),
+						"672013" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Contact Sortie 1",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672014" => array (
+							"ref_legrand" => "3600",
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Contact Sortie 2",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"03606" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Interface Radio",
+								"NbUnit" => "1"
+				),
+				"UNIT" => array (
+						"036061" => array(
+							"family" => "SPECIAL",
+							"nom_interne" => "STATUS",
+							"btn" => "Interne",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "ACTION,STATUS",
+							"function_code" => "48",
+							"unit_code" => "12",
+							"server_opt" => "NULL",
+							"commentaire" => "Interface Protocole Inconnu"
+						)
+				)
+		),
+		"03809" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Gestionnaire d'Energie",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"038091" => array(
+							"family" => "CONFORT",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "51",
+							"unit_code" => "133",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"038092" => array (
+							"family" => "CONFORT",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "7",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"43214" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Système d’Alarme Intrusion Multiservice RF",
+								"NbUnit" => "9"
+				),
+				"UNIT" => array (
+						"432141" => array(
+							"family" => "SECURITY",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Status",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432142" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "TOUCHE1",
+							"btn" => "Touche 1",
+							"unit" => "2",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432143" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "TOUCHE2",
+							"btn" => "Touche 2",
+							"unit" => "3",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432144" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "MEST",
+							"btn" => "Mise en Service Totale",
+							"unit" => "4",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432145" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "ARRET",
+							"btn" => "Arret",
+							"unit" => "5",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432146" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "MESP",
+							"btn" => "Mise en Service Partielle",
+							"unit" => "6",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432147" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "DEPART",
+							"btn" => "Depart en Alarme",
+							"unit" => "7",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432148" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "VERROUILLAGE",
+							"btn" => "Verrouillage Alarme après Tempo",
+							"unit" => "8",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"432149" => array (
+							"family" => "SECURITY",
+							"nom_interne" => "DEFAUT",
+							"btn" => "Defaut Alarme",
+							"unit" => "9",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67201" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Simple",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"672011" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code"=> "49",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672012" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67202" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Double",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672021" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF Gauche",
+							"btn" => "Allumer/Eteindre Gauche",
+							"unit" => "1",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "55",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=ON et OFF lumiere Gauche"
+						),
+						"672021" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF Droite",
+							"btn" => "Allumer/Eteindre Droite",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "55",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=ON et OFF lumiere Droite"
+						),
+						"672023" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre Gauche",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "55",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672024" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre Droite",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "55",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67203" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Simple à voyant",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"672031" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672032" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67204" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Double à voyant",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672041" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF Gauche",
+							"btn" => "Allumer/Eteindre Gauche",
+							"unit" => "1",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "55",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=ON et OFF lumiere Gauche"
+						),
+						"672042" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF Droite",
+							"btn" => "Allumer/Eteindre Droite",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "55",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=ON et OFF lumiere Droite"
+						),
+						"672043" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre Gauche",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "55",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"6720424" => array (
+							"ref_legrand" => "67204",
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre Droite",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "55",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67208" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Scenario d'éclairage",
+								"NbUnit" => "3"
+				),
+				"UNIT" => array (
+						"672081" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Variation/Allumer/Eteindre Gauche",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "14",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672082" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "+",
+							"btn" => "Scenario Droite +",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672083" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "-",
+							"btn" => "Scenario Droite -",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67210" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Variateur 300W",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672101" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Variation/Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "14",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672102" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "+",
+							"btn" => "Scenario +",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672103" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "-",
+							"btn" => "Scenario -",
+							"unit" => "3",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672104" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Variation",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "143",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67212" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Variateur 300W à voyant",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672121" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Variation/Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "14",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672122" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "+",
+							"btn" => "Scenario +",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672123" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "-",
+							"btn" => "Scenario -",
+							"unit" => "3",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672124" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Variation",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "143",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67214" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Variateur 600W à voyant",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672141" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Variation/Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "14",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672142" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "+",
+							"btn" => "Scenario +",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672143" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "-",
+							"btn" => "Scenario -",
+							"unit" => "3",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672144" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Variation",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "143",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67215" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Auto 1000W",
+								"NbUnit" => "3"
+				),
+				"UNIT" => array (
+						"672151" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "Detecteur Mouvement",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "2",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672152" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "2",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672153" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)							
+				)
+		),
+		"67220" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Prisinter Celiane",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"672201" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672202" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67232" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Variateur 600W Radio",
+								"NbUnit" => "3"
+				),
+				"UNIT" => array (
+						"672321" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Variation/Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "MEMORY,COMMAND",
+							"function_code" => "49",
+							"unit_code" => "14",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672322" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "+",
+							"btn" => "Scenario +",
+							"unit" => "2",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672323" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "-",
+							"btn" => "Scenario -",
+							"unit" => "3",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67251" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Volet sans dérogation",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"672511" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						),
+						"672512" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Monte/Descente/Stop",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "50",
+							"unit_code" => "139",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67253" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Centralisé Volet Roulant",
+								"NbUnit" => "1"
+				),
+				"UNIT" => array (
+						"672531" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						)
+				)
+		),
+		"67254" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Centralise Quadruple Volet Roulant",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672541" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop Volet 1",
+							"btn" => "Monte/Descente/Stop Volet 1",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672542" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop Volet 2",
+							"btn" => "Monte/Descente/Stop Volet 2",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672543" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop Volet 3",
+							"btn" => "Monte/Descente/Stop Volet 3",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"672544" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop Volet 4",
+							"btn" => "Monte/Descente/Stop Volet 4",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67255" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Volet avec dérogation",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"672551" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						),
+						"672552" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Monte/Descente/Stop",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "50",
+							"unit_code" => "139",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67256" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Centralisé Volet Roulant (orientation lamelles)",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"672561" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						),
+						"672562" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Monte/Descente/Stop",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "50",
+							"unit_code" => "139",
+							"server_opt" => "NULL",
+							"commentaire" => "ACTION=Mouvement volet;STATUS=Etat du volet;MEMORY=Scenarios ou Volets"
+						)
+				)
+		),
+		"67280" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Interscenario Emetteur CPL",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"672801" => array(
+							"family" => "SCENE",
+							"nom_interne" => "I",
+							"btn" => "Scenario I",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Start et Stop Action Scenario"
+						),
+						"672802" => array (
+							"family" => "SCENE",
+							"nom_interne" => "II",
+							"btn" => "Scenario II",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Start et Stop Action Scenario"
+						),
+						"672803" => array (
+							"family" => "SCENE",
+							"nom_interne" => "III",
+							"btn" => "Scenario III",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Start et Stop Action Scenario"
+						),
+						"672804" => array (
+							"family" => "SCENE",
+							"nom_interne" => "IIII",
+							"btn" => "Scenario IIII",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "53",
+							"unit_code" => "3",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Start et Stop Action Scenario"
+						)
+				)
+		),
+		"67442" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Thermostat Programmable",
+								"NbUnit" => "4"
+				),
+				"UNIT" => array (
+						"674421" => array(
+							"family" => "COMFORT",
+							"nom_interne" => "STATUS",
+							"btn" => "Allumage Chauffage",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "STATUS,COMMAND",
+							"function_code" => "51",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "STATUS=Etat du contacteur;COMMAND=Etat du contacteur"
+						),
+						"674422" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Mode",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "149",
+							"server_opt" => "NULL",
+							"commentaire" => "MEMORY=Scenarios pour le changement de mode;STATUS=Etats des modes, tempertaures et sondes;ACTION=Changement de mode et temperatures"
+						),
+						"674423" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "STATUS",
+							"btn" => "Interne",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "145",
+							"server_opt" => "NULL",
+							"commentaire" => "STATUS=inconu"
+						),
+						"674424" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "STATUS",
+							"btn" => "Interne",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "144",
+							"server_opt" => "NULL",
+							"commentaire" => "STATUS=Horloge mais non decrypte"
+						)
+				)
+		),
+		"67445" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Sortie de Cable CPL",
+								"NbUnit" => "1"
+				),
+				"UNIT" => array (
+						"674451" => array(
+							"family" => "COMFORT",
+							"nom_interne" => "STATUS",
+							"btn" => "Interne",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "132",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67449" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Programmateur d'ambiance",
+								"NbUnit" => "7"
+				),
+				"UNIT" => array (
+						"674491" => array(
+							"family" => "COMFORT",
+							"nom_interne" => "Zone 1",
+							"btn" => "Zone 1",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "ACTION,STATUS,MEMORY,COMMAND",
+							"function_code" => "51",
+							"unit_code" => "6",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"674492" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "Zone 2",
+							"btn" => "Zone 2",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY,COMMAND",
+							"function_code" => "51",
+							"unit_code" => "6",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"674493" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "Zone 3",
+							"btn" => "Zone 3",
+							"unit" => "3",
+							"unit_status" => "3",
+							"possibility" => "ACTION,STATUS,MEMORY,COMMAND",
+							"function_code" => "51",
+							"unit_code" => "6",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"674494" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "Sondes",
+							"btn" => "Memoire Sondes",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "145",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"674495" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "Horloge",
+							"btn" => "Interne",
+							"unit" => "5",
+							"unit_status" => "5",
+							"possibility" => "STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "144",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"674496" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "Toutes Zones",
+							"btn" => "Toutes Zones",
+							"unit" => "6",
+							"unit_status" => "6",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "51",
+							"unit_code" => "NULL",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"674497" => array (
+							"family" => "COMFORT",
+							"nom_interne" => "Horloge",
+							"btn" => "Interne",
+							"unit" => "7",
+							"unit_status" => "7",
+							"possibility" => "STATUS",
+							"function_code" => "51",
+							"unit_code" => "24",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"67451" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter VMC",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"674511" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "Lent/Rapide",
+							"btn" => "Vitesse Lente/rapide",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "55",
+							"unit_code" => "19",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Changement Vitesse"
+						),
+						"674512" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Vitesse",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "55",
+							"unit_code" => "141",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"77023" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Centralisé Volet Roulant Mosaic (orientation lamelles)",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"770231" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						),
+						"770232" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Monte/Descente/Stop",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "50",
+							"unit_code" => "139",
+							"server_opt" => "NULL",
+							"commentaire" => "ACTION=Mouvement volet;STATUS=Etat du volet;MEMORY=Scenarios ou Volets"
+						)
+				)
+		),
+		"77024" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Centralisé Volet Roulant Mosaic",
+								"NbUnit" => "1"
+				),
+				"UNIT" => array (
+						"770241" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "1",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						)
+				)
+		),
+		"84526" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Inter Individuel Volet Roulant Sagane",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"845261" => array(
+							"family" => "SHUTTER",
+							"nom_interne" => "Monte/Descente/Stop",
+							"btn" => "Monte/Descente/Stop",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "50",
+							"unit_code" => "4",
+							"server_opt" => "NULL",
+							"commentaire" => "COMMAND=Mouvement volet"
+						),
+						"845262" => array (
+							"family" => "SHUTTER",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Monte/Descente/Stop",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "50",
+							"unit_code" => "139",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"88202" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Prisinter 2500W",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"882021" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "2",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "1",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"882022" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Allumer/Eteindre",
+							"unit" => "2",
+							"unit_status" => "2",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "129",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		),
+		"88203" => array(
+				"EQUIPEMENT" => array(
+								"name" => "Prisinter Variateur 500W",
+								"NbUnit" => "2"
+				),
+				"UNIT" => array (
+						"882031" => array(
+							"family" => "LIGHTING",
+							"nom_interne" => "ON/OFF",
+							"btn" => "Variation/Allumer/Eteindre",
+							"unit" => "1",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "14",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"882032" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "+",
+							"btn" => "Scenario +",
+							"unit" => "2",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"882033" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "-",
+							"btn" => "Scenario -",
+							"unit" => "3",
+							"unit_status" => "4",
+							"possibility" => "COMMAND",
+							"function_code" => "49",
+							"unit_code" => "15",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						),
+						"882034" => array (
+							"family" => "LIGHTING",
+							"nom_interne" => "STATUS",
+							"btn" => "Memoire Variation",
+							"unit" => "4",
+							"unit_status" => "4",
+							"possibility" => "ACTION,STATUS,MEMORY",
+							"function_code" => "49",
+							"unit_code" => "143",
+							"server_opt" => "NULL",
+							"commentaire" => "NULL"
+						)
+				)
+		)			
 	);
-	*/
+
 	//Definition des differentes trames IOBL possibles
 	public $OWN_TRAME = array(
 			'SPECIAL_REQUEST' => "/^\*#\d{2,4}\*\*\d{1,2}##$/",

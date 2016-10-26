@@ -2,8 +2,8 @@
     "67214": {
         "name": "Inter Variateur 600W à voyant",
         "configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.2",
+							"update": "Modification du variateur ft alx68",
 							"nbunit": "4",
 							"672141": {
 								"ref_legrand": "67214",
@@ -155,22 +155,40 @@
                         "type": "action",
 						"subtype": "slider",
                         "isVisible": 1,
-						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#10*#SLIDER#*1##",
+						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#1*#SLIDER#*1##",
 						"configuration": {
 							"whatdim": {
 								"what": "1",
 								"dim": "NULL",
-								"nom": "Dim_Step"
+								"nom": "Go_To_Level_Time"
 							},
-							"unit": "2",
-							"where": "Broadcast",
+							"unit": "4",
+							"where": "Unicast",
 							"minValue": 0,
-							"maxValue": 125
+							"maxValue": 128
                         },
 						"display": {
 							"generic_type": "LIGHT_SLIDER"
 						}	
                     },
+					{
+                        "name": "Status Scenario 1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
+					},
 					{
                         "name": "Prereglage +",
                         "type": "action",
@@ -184,9 +202,30 @@
 								"nom": "Who25-Action"
 							},
 							"unit": "2",
-							"where": "Broadcast"
-                        }
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     },
+					{
+                        "name": "Status Scenario 2",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}				
+					},
 					{
                         "name": "Prereglage -",
                         "type": "action",
@@ -201,7 +240,10 @@
 							},
 							"unit": "3",
 							"where": "Broadcast"
-                        }
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
                     }
                 ]
             }

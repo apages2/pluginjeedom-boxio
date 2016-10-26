@@ -63,7 +63,7 @@ try {
         }
 		boxio::deleteMemory(init('idtrame'));
 		//sleep(5);
-		boxio::checkMemory(init('idtrame'),2);
+		boxio::checkMemory(init('idtrame'));
 		
         sleep(10);
         ajax::success($return);
