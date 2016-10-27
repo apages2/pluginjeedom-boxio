@@ -178,8 +178,7 @@
 							"unit": "4",
 							"where": "Unicast",
 							"minValue" : "",
-							"maxValue" : "",
-							
+							"maxValue" : ""
                         },
 						"display": {
 							"generic_type": "LIGHT_SLIDER"
