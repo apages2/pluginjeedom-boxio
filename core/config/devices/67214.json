@@ -76,7 +76,7 @@
 							"unit": "4"
                         }				
 					},
-					
+					{
                         "name": "Status Numerique",
                         "type": "info",
 						"subtype": "numeric",
