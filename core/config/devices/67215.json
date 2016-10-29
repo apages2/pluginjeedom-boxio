@@ -2,8 +2,8 @@
     "67215": {
         "name": "Inter Auto 1000W",
         "configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
 							"nbunit": "3",
 							"672151": {
 								"ref_legrand": "67215",
@@ -62,10 +62,24 @@
 										"returnStateValue": "",
 										"returnStateTime": "",
 										"unit": "3"
+									}					
+								},
+								{
+									"name": "Status Numerique",
+									"type": "info",
+									"subtype": "numeric",
+									"isVisible": 0,
+									"isHistorized": 0,
+									"unite": "",
+									"logicalId": "statusnum3",	
+									"configuration": {
+										"returnStateValue": "",
+										"returnStateTime": "",
+										"unit": "3"
 									},
 									"display": {
 										"generic_type": "LIGHT_STATE"
-									}					
+									}			
 								},
 								{
 									"name": "On",

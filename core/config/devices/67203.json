@@ -2,8 +2,8 @@
     "67203": {
         "name": "Inter Simple à voyant",
         "configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
 							"nbunit": "2",
 							"672031": {
 								"ref_legrand": "67203",
@@ -37,7 +37,7 @@
                 "name": "Defaut",
                 "commands": [
                     {
-                        "name": "Status",
+                        "name": "Status1",
                         "type": "info",
 						"subtype": "string",
                         "isVisible": 1,
@@ -49,10 +49,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }			
+					},
+					{
+                        "name": "Status Numerique1",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "LIGHT_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "On",

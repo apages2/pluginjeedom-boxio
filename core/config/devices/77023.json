@@ -1,9 +1,9 @@
 {
     "77023": {
-        "name": "Inter CentralisÈ Volet Roulant Mosaic (orientation lamelles)",
+        "name": "Inter Centralis√© Volet Roulant Mosaic (orientation lamelles)",
 		"configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut num√©rique",
 							"nbunit": "2",
 							"770231": {
 								"ref_legrand": "77023",
@@ -49,10 +49,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "FLAP_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Ouvrir",
@@ -162,7 +176,7 @@
                 ]
             },
 			"01": {
-                "name": "InversÈ",
+                "name": "Invers√©",
                 "commands": [
                     {
                         "name": "Status",
@@ -177,10 +191,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "FLAP_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Ouvrir",

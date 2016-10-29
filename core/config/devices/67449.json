@@ -2,8 +2,8 @@
     "67449": {
         "name": "Programmateur d'ambiance",
 		"configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
 							"nbunit": "7",
 							"674491": {
 								"ref_legrand": "67449",
@@ -114,10 +114,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Status Numerique Zone 1",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
                         },
 						"display": {
 							"generic_type": "THERMOSTAT_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Zone 1 - HG",
@@ -227,10 +241,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }			
+					},
+					{
+                        "name": "Status Numerique Zone 2",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "THERMOSTAT_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Zone 2 - HG",
@@ -340,10 +368,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
+                        }				
+					},
+					{
+                        "name": "Status Numerique Zone 3",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
                         },
 						"display": {
 							"generic_type": "THERMOSTAT_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Zone 3 - HG",
@@ -456,6 +498,20 @@
                         }				
 					},
 					{
+                        "name": "Status Numerique4",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }			
+					},
+					{
                         "name": "Status5",
                         "type": "info",
 						"subtype": "string",
@@ -464,6 +520,20 @@
                         "unite": "",
 						"eventOnly": 1,
 						"logicalId": "status5",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "5"
+                        }			
+					},
+					{
+                        "name": "Status Numerique5",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum5",	
 						"configuration": {
                             "returnStateValue": "",
                             "returnStateTime": "",
@@ -484,6 +554,20 @@
                             "returnStateTime": "",
 							"unit": "6"
                         }				
+					},
+					{
+                        "name": "Status Numerique Toute Zones",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum6",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "6"
+                        }			
 					},
 					{
                         "name": "Toutes Zones - HG",
@@ -579,6 +663,23 @@
                             "returnStateTime": "",
 							"unit": "7"
                         }				
+					},
+					{
+                        "name": "Status Numerique7",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum7",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "7"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}			
 					}
                 ]
             }

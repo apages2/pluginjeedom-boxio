@@ -1,9 +1,9 @@
-{
+ {
     "67451": {
         "name": "Inter VMC",
 		"configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
 							"nbunit": "2",
 							"674511": {
 								"ref_legrand": "67451",
@@ -49,10 +49,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "LIGHT_STATE"
-						}				
+						}			
 					}
                 ]
             }

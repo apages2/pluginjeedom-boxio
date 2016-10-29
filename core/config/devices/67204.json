@@ -2,8 +2,8 @@
     "67204": {
         "name": "Inter Double à voyant",
         "configuration": {
-                            "version": "1.1",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.2",
+							"update": "Ajout du statut numérique",
 							"nbunit": "4",
 							"672041": {
 								"ref_legrand": "67204",
@@ -75,10 +75,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
+                        }			
+					},
+					{
+                        "name": "Status Numerique1",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
                         },
 						"display": {
 							"generic_type": "LIGHT_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "On Bouton1",
@@ -163,10 +177,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
+                        }				
+					},
+					{
+                        "name": "Status Numerique2",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
                         },
 						"display": {
 							"generic_type": "LIGHT_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "On Bouton2",

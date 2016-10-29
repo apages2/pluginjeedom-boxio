@@ -2,8 +2,8 @@
     "67256": {
         "name": "Inter Centralisé Volet Roulant (orientation lamelles)",
 		"configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
 							"nbunit": "2",
 							"672561": {
 								"ref_legrand": "67256",
@@ -49,10 +49,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "FLAP_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Ouvrir",
@@ -177,10 +191,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "FLAP_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Ouvrir",

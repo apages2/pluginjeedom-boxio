@@ -2,8 +2,8 @@
     "67253": {
         "name": "Inter Centralisé Volet Roulant",
         "configuration": {
-                            "version": "1.2",
-							"update": "Ajout Generic Type + release et versionning + NbUnit",
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
 							"nbunit": "1",
 							"672531": {
 								"ref_legrand": "67253",
@@ -36,10 +36,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
+                        }			
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
                         },
 						"display": {
 							"generic_type": "FLAP_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Ouvrir",
@@ -164,10 +178,24 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
                         },
 						"display": {
 							"generic_type": "FLAP_STATE"
-						}				
+						}			
 					},
 					{
                         "name": "Ouvrir",
