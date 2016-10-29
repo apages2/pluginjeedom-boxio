@@ -197,7 +197,7 @@
                         "name": "Status Numerique",
                         "type": "info",
 						"subtype": "numeric",
-                        "isVisible": 1,
+                        "isVisible": 0,
 						"isHistorized": 0,
                         "unite": "",
 						"logicalId": "statusnum2",	
