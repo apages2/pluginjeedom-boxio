@@ -114,7 +114,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "1"
-                        }				
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}				
 					},
 					{
                         "name": "Status Numerique Zone 1",
@@ -260,7 +263,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "2"
-                        }			
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}			
 					},
 					{
                         "name": "Status Numerique Zone 2",
@@ -406,7 +412,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "3"
-                        }				
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}				
 					},
 					{
                         "name": "Status Numerique Zone 3",
@@ -552,7 +561,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
-                        }				
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}				
 					},
 					{
                         "name": "Status Numerique4",
@@ -566,7 +578,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "4"
-                        }			
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}			
 					},
 					{
                         "name": "Status5",
@@ -581,7 +596,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "5"
-                        }			
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}			
 					},
 					{
                         "name": "Status Numerique5",
@@ -595,7 +613,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "5"
-                        }			
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}			
 					},
 					{
                         "name": "Status Toutes Zones :",
@@ -610,7 +631,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "6"
-                        }				
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}				
 					},
 					{
                         "name": "Status Numerique Toute Zones",
@@ -756,7 +780,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "7"
-                        }				
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}				
 					},
 					{
                         "name": "Status Numerique7",
@@ -770,7 +797,10 @@
                             "returnStateValue": "",
                             "returnStateTime": "",
 							"unit": "7"
-                        }			
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}			
 					}
                 ]
             }
