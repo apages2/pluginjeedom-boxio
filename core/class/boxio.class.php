@@ -1927,22 +1927,22 @@ class boxio extends eqLogic {
 			if ($decrypted_trame["param"] == 4) {
 				$value = 'Hors-Gel';
 				$status = 'Hors-Gel';
-				$statusnum = 40;
+				$statusnum = 20;
 			}
 			elseif ($decrypted_trame["param"] == 3) {
 				$value = 'Eco';
 				$status = 'Eco';
-				$statusnum = 80;
+				$statusnum = 30;
 			}
 			elseif ($decrypted_trame["param"] == 2) {
 				$value = 'Confort-2';
 				$status = 'Confort-2';
-				$statusnum = 90;
+				$statusnum = 70;
 			}
 			elseif ($decrypted_trame["param"] == 1) {
 				$value = 'Confort-1';
 				$status = 'Confort-1';
-				$statusnum = 95;
+				$statusnum = 50;
 			}
 			elseif ($decrypted_trame["param"] == 0) {
 				$value = 'Confort';
@@ -1958,26 +1958,40 @@ class boxio extends eqLogic {
 			}
 		//ACTION INCONNU
 		}
+		else if ($decrypted_trame["value"] == 'ARRET') {
+			$value = 'Arret';
+			$status = 'Arret';
+			$statusnum = 0;
+			
+			log::add('boxio','debug',"Status : ".$status);
+			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
+				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateValue',$status);
+				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+			}
+		//ACTION INCONNU
+		}
 		else if ($decrypted_trame["value"] == 'CONSIGNE') {
 			if ($decrypted_trame["param"] == 4) {
 				$value = 'Hors-Gel';
 				$status = 'Hors-Gel';
-				$statusnum = 40;
+				$statusnum = 20;
 			}
 			elseif ($decrypted_trame["param"] == 3) {
 				$value = 'Eco';
 				$status = 'Eco';
-				$statusnum = 80;
+				$statusnum = 30;
 			}
 			elseif ($decrypted_trame["param"] == 2) {
 				$value = 'Confort-2';
 				$status = 'Confort-2';
-				$statusnum = 90;
+				$statusnum = 70;
 			}
 			elseif ($decrypted_trame["param"] == 1) {
 				$value = 'Confort-1';
 				$status = 'Confort-1';
-				$statusnum = 95;
+				$statusnum = 50;
 			}
 			elseif ($decrypted_trame["param"] == 0) {
 				$value = 'Confort';
