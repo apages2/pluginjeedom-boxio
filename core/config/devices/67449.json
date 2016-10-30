@@ -156,6 +156,25 @@
 						}
                     },
 					{
+                        "name": "Zone 1 - ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*55*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "55",
+								"dim": "NULL",
+								"nom": "Fin_Arret"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_ON"
+						}
+                    },
+					{
                         "name": "Zone 1 - HG",
                         "type": "action",
 						"subtype": "other",
@@ -247,7 +266,7 @@
 							"where": "Unicast"
                         },
 						"display": {
-							"generic_type": "HEATING_ON"
+							"generic_type": "HEATING_OTHER"
 						}
                     },
                     {
@@ -302,6 +321,25 @@
                         },
 						"display": {
 							"generic_type": "HEATING_OFF"
+						}
+                    },
+					{
+                        "name": "Zone 2 - ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*55*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "55",
+								"dim": "NULL",
+								"nom": "Fin_Arret"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_ON"
 						}
                     },
 					{
@@ -396,7 +434,7 @@
 							"where": "Unicast"
                         },
 						"display": {
-							"generic_type": "HEATING_ON"
+							"generic_type": "HEATING_OTHER"
 						}
                     },
 					{
@@ -451,6 +489,25 @@
                         },
 						"display": {
 							"generic_type": "HEATING_OFF"
+						}
+                    },
+					{
+                        "name": "Zone 3 - ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*55*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "55",
+								"dim": "NULL",
+								"nom": "Fin_Arret"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_ON"
 						}
                     },
 					{
@@ -545,7 +602,7 @@
 							"where": "Unicast"
                         },
 						"display": {
-							"generic_type": "HEATING_ON"
+							"generic_type": "HEATING_OTHER"
 						}
                     },
                     {
@@ -673,6 +730,25 @@
 						}
                     },
 					{
+                        "name": "Toutes Zones - ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*55*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "55",
+								"dim": "NULL",
+								"nom": "Fin_Arret"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_ON"
+						}
+                    },
+					{
                         "name": "Toutes Zones - HG",
                         "type": "action",
 						"subtype": "other",
@@ -764,7 +840,7 @@
 							"where": "Unicast"
                         },
 						"display": {
-							"generic_type": "HEATING_ON"
+							"generic_type": "HEATING_OTHER"
 						}
                     },
 					{
