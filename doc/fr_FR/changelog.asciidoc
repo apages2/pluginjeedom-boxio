@@ -89,3 +89,7 @@ Correction du retour d'etat des trames DIM_STEP
 Modification des templates pour faire apparaitre le Nbr d'unit par modules
 Correction du problèmes de detection des équipements pilotés (cas des modules n'utilisant pas l'unit 2 pour la memoire interne)
 
+==== V1.304 du 31/10/2016 14:28
+Modification des retour d'etat pour les trames Arret et fin_arret (heating)
+Modification du calcul du type pour la fonction dimensionRequestStatus
+Ajout d'un timer sur la fonction checkMemory

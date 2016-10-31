@@ -380,22 +380,20 @@ class boxio extends eqLogic {
 		//recuperation du unit principale de sauvegarde des status
 		$config = $boxio->getConfiguration($ref_id_legrand);
 		$unit_status = $config["unit_status"];
-		$unit_code = $config["unit_code"];
+		$function_code = $config["function_code"];
 		$statusid = "status".$unit_status;
 		$boxiocmd = $boxio->getCmd('info', $statusid);
 		$statusidnum = "statusnum".$unit_status;
 		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
 		$date = strtotime($decrypted_trame["date"]);
-		if (!isset($def->OWN_STATUS_DEFINITION[$unit_code]['DEFINITION'][0])) {
+		if (!isset($def->OWN_FUNCTION_CODE[$function_code])) {
 			$type = 'other';
 		} else {
-			$type = $def->OWN_STATUS_DEFINITION[$unit_code]['DEFINITION'][0];
+			$type = $def->OWN_FUNCTION_CODE[$function_code];
 		}
 		$status = NULL;
 		$statusnum = NULL;
 		log::add('boxio','debug',"statusid : ".$statusid." ref legrand/sous device: ".$ref_id_legrand."/".$sousdevice." date : ".$date." unit status : ".$unit_status." unit_code : ".$unit_code." type : ".$type);
-		
-		//$params = preg_split('/[\*|#]/', $decrypted_trame['param']);
 		
 		//GESTION DES LIGHT
 		if ($type == 'variator') {
@@ -434,8 +432,8 @@ class boxio extends eqLogic {
 				preg_match('/(?P<step>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
 				//on test si le status est trouve
 				if (isset($param['step']) && isset($param['time'])) {
-					$timer = boxioCmd::calc_iobl_to_time($param['time']);
-					$change_status = boxioCmd::calc_iobl_to_light($param['step']);
+					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
+					$change_status = round(boxioCmd::calc_iobl_to_light($param['step']));
 					log::add('boxio','debug',$change_status);
 					$next_status = $change_status;
 					if ($next_status > 100) {
@@ -484,8 +482,8 @@ class boxio extends eqLogic {
 				preg_match('/(?P<level>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
 				//on test si le status est trouve
 				if (isset($param['level']) && isset($param['time'])) {
-					$timer = boxioCmd::calc_iobl_to_time($param['time']);
-					$next_status = boxioCmd::calc_iobl_to_light($param['level']);
+					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
+					$next_status = round(boxioCmd::calc_iobl_to_light($param['level']));
 					if ($next_status > 100) {
 						$next_status = 100;
 					} else if ($next_status < 0) {
@@ -544,10 +542,13 @@ class boxio extends eqLogic {
 		//GESTION DES CONFORT
 		} 
 		else if ($type == 'heating') {
+			$params = preg_split('/[\*|#]/', $decrypted_trame['param']);
+		
 			if ($decrypted_trame['dimension'] == 'QUEL_INDEX') {
 				$IndexHP=$params[1];
 				$IndexHC=$params[2];
 				$boxiocmd = $boxio->getCmd('info', 'indexhp'.$unit);
+				log::add('boxio','debug',"IndexHP : ".$IndexHP." IndexHC: ".$IndexHC." Pour indexhp".$unit);
 				if (isset($boxiocmd)){
 					$boxiocmd->event($IndexHP);
 					$boxiocmd->save();
@@ -737,6 +738,7 @@ class boxio extends eqLogic {
 					socket_write($socket, trim($check), strlen(trim($check)));
 					socket_close($socket);
 				}
+				sleep(10);
 			}
 		}
 	}
@@ -1956,12 +1958,24 @@ class boxio extends eqLogic {
 				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
 				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
-		//ACTION INCONNU
-		}
-		else if ($decrypted_trame["value"] == 'ARRET') {
+		//ACTION ARRET
+		}	else if ($decrypted_trame["value"] == 'ARRET') {
 			$value = 'Arret';
 			$status = 'Arret';
 			$statusnum = 0;
+			
+			log::add('boxio','debug',"Status : ".$status);
+			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
+				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateValue',$status);
+				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+			}
+		//ACTION FIN_ARRET
+		}	else if ($decrypted_trame["value"] == 'FIN_ARRET') {
+			$value = 'Fin_Arret';
+			$status = 'Fin_Arret';
+			$statusnum = 100;
 			
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
@@ -4228,7 +4242,7 @@ class boxio_def {
 	//Definition des function code
 	public $OWN_FUNCTION_CODE = array(
 			"48" => "INTERFACE",
-			"49" => "VARIATOR",
+			"49" => "variator",
 			"50" => "automatism",
 			"51" => "heating",
 			"53" => "scene",
