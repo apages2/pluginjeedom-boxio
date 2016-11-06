@@ -1,0 +1,273 @@
+{
+    "03600": {
+        "name": "Inter Multifonction Lexic",
+        "configuration": {
+                            "version": "1.3",
+							"update": "Ajout du statut numérique",
+							"nbunit": "4",
+							"036001": {
+								"ref_legrand": "3600",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF Sortie 1",
+								"btn": "Contact Sortie 1",
+								"unit": "1",
+								"unit_status": "3",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=ON et OFF channel 1"
+								},
+							"036002": {
+								"ref_legrand": "3600",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF Sortie 2",
+								"btn": "Contact Sortie 2",
+								"unit": "2",
+								"unit_status": "4",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=ON et OFF channel 2"
+								},
+							"036003": {
+								"ref_legrand": "3600",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Contact Sortie 1",
+								"unit": "3",
+								"unit_status": "3",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "129",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"036004": {
+								"ref_legrand": "3600",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Contact Sortie 2",
+								"unit": "4",
+								"unit_status": "4",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "129",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								}
+                        },		
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        }				
+					},
+					{
+                        "name": "Status Numerique1",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}					
+					},
+					{
+                        "name": "On Bouton1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "3",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
+                    },
+                    {
+                        "name": "Off Bouton1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+						"unit": "3",
+						"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}
+					},
+					{
+                        "name": "On Scenario Bouton1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+                    {
+                        "name": "Off Scenario Bouton1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+						"unit": "1",
+						"where": "Multicast"
+						}
+					},
+					{
+                        "name": "Status2",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }			
+					},
+					{
+                        "name": "Status Numerique2",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}					
+					},
+					{
+                        "name": "On Bouton2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "4",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
+                    },
+                    {
+                        "name": "Off Bouton2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "4",
+							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}
+					},
+					{
+                        "name": "On Scenario Bouton2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "2",
+							"where": "Multicast"
+                        }
+                    },
+                    {
+                        "name": "Off Scenario Bouton2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "2",
+							"where": "Multicast"
+						}
+					}
+                ]
+            }
+        }
+    }
+}

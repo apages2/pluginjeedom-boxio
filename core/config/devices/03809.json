@@ -1,0 +1,342 @@
+{
+    "03809": {
+        "name": "Gestionnaire d'Energie",
+		"configuration": {
+							"version": "1.2",
+							"update": "Ajout Generic Type + release et versionning + NbUnit",
+							"nbunit": "2",
+                            "038091": {
+								"ref_legrand": "03809",
+								"family": "CONFORT",
+								"nom_interne": "ON/OFF",
+								"btn": "Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "51",
+								"unit_code": "133",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"038092": {
+								"ref_legrand": "03809",
+								"family": "CONFORT",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Allumer/Eteindre",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "7",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								}
+                        },
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status ECS",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "mode1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        },
+						"display": {
+							"generic_type": "HEATING_STATE"
+						}					
+					},
+					{
+                        "name": "Status Commande de chauffe",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "chauffe1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        },
+						"display": {
+							"generic_type": "HEATING_STATE"
+						}		
+					},
+					{
+                        "name": "Status Chauffage",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}					
+					},
+					{
+                        "name": "Index HP",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "indexhp2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }					
+					},
+					{
+                        "name": "Index HC",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "indexhc2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }					
+					},
+					{
+                        "name": "Tarif EDF",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 1,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "tarif2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }					
+					},
+					{
+                        "name": "ECS OFF",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*##WHO#*#WHERE##IDUNIT##MEDIA#*##DIM#*0##",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "40",
+								"nom": "Commande_ECS"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_OFF"
+						}	
+                    },
+                    {
+                        "name": "ECS ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*##WHO#*#WHERE##IDUNIT##MEDIA#*##DIM#*1##",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "40",
+								"nom": "Commande_ECS"
+							},
+							"unit": "1",
+							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "HEATING_ON"
+						}	
+					},
+					{
+                        "name": "ECS AUTO",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*##WHO#*#WHERE##IDUNIT##MEDIA#*##DIM#*2##",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "40",
+								"nom": "Commande_ECS"
+							},
+							"unit": "1",
+							"where": "Unicast"
+						},
+						"display": {
+							"generic_type": "HEATING_OTHER"
+						}	
+					},
+					{
+                        "name": "Interrogation Etat ECS et Chauffe",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*#WHERE##IDUNIT##MEDIA#*#DIM###",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "55",
+								"nom": "Who13-Unit_Description_Request"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        }	
+                    },
+                    {
+                        "name": "Hors-Gel",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*#WHAT##4*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+						"unit": "2",
+						"where": "Multicast"
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
+					},
+					{
+                        "name": "Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*#WHAT##3*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+						"unit": "2",
+						"where": "Multicast"
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
+					},
+					{
+                        "name": "Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*#WHAT##2*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+						"unit": "2",
+						"where": "Multicast"
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
+					},
+					{
+                        "name": "Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*#WHAT##1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+						"unit": "2",
+						"where": "Multicast"
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
+					},
+					{
+                        "name": "Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*#WHAT##0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+						"unit": "2",
+						"where": "Multicast"
+						},
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}	
+					},
+					{
+                        "name": "Interrogation Index EDF",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*#IDUNIT##MEDIA#*#DIM###",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "43",
+								"nom": "Quel_Index"
+							},
+						"unit": "2",
+						"where": "Unicast"
+						}	
+					},
+					{
+                        "name": "Interrogation Tarif EDF",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#1000*#IDUNIT##MEDIA#*41##",
+						"configuration": {
+							"whatdim": {
+								"what": "NULL",
+								"dim": "41",
+								"nom": "Information_Tarif"
+							},
+						"unit": "2",
+						"where": "Unicast"
+						}
+					}
+                ]
+            }
+        }
+    }
+}
