@@ -97,7 +97,11 @@ if (isset($_GET['trame'])) {
 			log::add('boxio', 'debug', "Jeeboxio_EXTENDED_MEMORY_DATA \n");
 			boxio::updateMemory($tramedecrypt);
 		
-		} else if (is_object($boxio) && $tramedecrypt['format']=="BUS_COMMAND"){
+		} else if (is_object($boxio) && $tramedecrypt['dimension']=="MEMORY_DATA"){
+			log::add('boxio', 'debug', "Jeeboxio_MEMORY_DATA \n");
+			boxio::updateMemory($tramedecrypt);
+		
+		}else if (is_object($boxio) && $tramedecrypt['format']=="BUS_COMMAND"){
 			log::add('boxio', 'debug', "Jeeboxio_BUS_COMMAND \n");
 			boxio::updateStatus($tramedecrypt);
 			log::add('boxio', 'event', "Jeeboxio_update status");
