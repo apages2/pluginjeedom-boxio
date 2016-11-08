@@ -1268,26 +1268,40 @@ class boxio extends eqLogic {
 							$status = round($new_pos);
 							$statusnum = round($new_pos);
 							log::add('boxio', 'debug', "last_status : Up, status : ".$status);
+							$boxiocmd->setConfiguration('returnStateValue',$status);
+							$boxiocmd->setConfiguration('returnStateTime',1);
+							$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+							$boxiocmdnum->setConfiguration('returnStateTime',1);
 						} 
 						elseif ($last_status == 'DOWN') {
 							$status = round(100 - $new_pos);
 							$statusnum = round(100 - $new_pos);
 							log::add('boxio', 'debug', "last_status : Down, status : ".$status);
+							$boxiocmd->setConfiguration('returnStateValue',$status);
+							$boxiocmd->setConfiguration('returnStateTime',1);	
+							$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+							$boxiocmdnum->setConfiguration('returnStateTime',1);
 						}
 						if ($status <= 0) {
 							$status = 'CLOSED';
 							$statusnum = 0;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 						} 
 						elseif ($status >= 100) {
 							$status = 'OPEN';
 							$statusnum = 100;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 						}
-						$boxiocmd->setConfiguration('updatedate',NULL);
-						$boxiocmd->setConfiguration('returnStateValue',NULL);
-						$boxiocmd->setConfiguration('returnStateTime',NULL);
-						$boxiocmdnum->setConfiguration('updatedate',NULL);
-						$boxiocmdnum->setConfiguration('returnStateValue',NULL);
-						$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 					} 
 					else {
 						$status = 'OPEN';
@@ -1484,25 +1498,39 @@ class boxio extends eqLogic {
 							$status = round($new_pos);
 							$statusnum = round($new_pos);
 							log::add('boxio', 'debug', "last_status : Up, status : ".$status);
+							$boxiocmd->setConfiguration('returnStateValue',$status);
+							$boxiocmd->setConfiguration('returnStateTime',1);
+							$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+							$boxiocmdnum->setConfiguration('returnStateTime',1);
 						} 
 						elseif ($last_status == 'DOWN') {
 							$status = round(100 - $new_pos);
 							$statusnum = round(100 - $new_pos);
+							$boxiocmd->setConfiguration('returnStateValue',$status);
+							$boxiocmd->setConfiguration('returnStateTime',1);
+							$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+							$boxiocmdnum->setConfiguration('returnStateTime',1);
 						}
 						if ($status <= 0) {
 							$status = 'CLOSED';
 							$statusnum = 0;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 						} 
 						elseif ($status >= 100) {
 							$status = 'OPEN';
 							$statusnum = 100;
+							$boxiocmd->setConfiguration('updatedate',NULL);
+							$boxiocmd->setConfiguration('returnStateValue',NULL);
+							$boxiocmd->setConfiguration('returnStateTime',NULL);
+							$boxiocmdnum->setConfiguration('updatedate',NULL);
+							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 						}
-						$boxiocmd->setConfiguration('updatedate',NULL);
-						$boxiocmd->setConfiguration('returnStateValue',NULL);
-						$boxiocmd->setConfiguration('returnStateTime',NULL);
-						$boxiocmdnum->setConfiguration('updatedate',NULL);
-						$boxiocmdnum->setConfiguration('returnStateValue',NULL);
-						$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 					}
 					else {
 					$status = 'OPEN';
