@@ -522,9 +522,9 @@ class boxio extends eqLogic {
 			//Mise à jour des scenarios si necessaire
 			if ($scenarios === true && $decrypted_trame["dimension"] != 'GO_TO_LEVEL_TIME') {
 				$scenarios_decrypted_trame = $decrypted_trame;
-				
-				$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand<>'$id';";
-				$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL); 
+				$idunit=$id+$unit;
+			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand+unit<>'$idunit';";
+			$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL); 
 				$row=sizeof($result);
 				for ($i=0; $i<$row; $i++){
 					$scenarios_decrypted_trame['id'] = $result[$i]['id_legrand'];
@@ -1568,8 +1568,8 @@ class boxio extends eqLogic {
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true) {
 			$scenarios_decrypted_trame = $decrypted_trame;
-			
-			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE `id_legrand_listen`=$id AND `unit_listen`=$unit;";
+			$idunit=$id+$unit;
+			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand+unit<>'$idunit';";
 			$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL);
 			$row=sizeof($result);
 			for ($i=0; $i<$row; $i++){
@@ -1687,8 +1687,8 @@ class boxio extends eqLogic {
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true) {
 			$scenarios_decrypted_trame = $decrypted_trame;
-			
-			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand<>'$id';";
+			$idunit=$id+$unit;
+			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand+unit<>'$idunit';";
 			$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL); 
 			$row=sizeof($result);
 			for ($i=0; $i<$row; $i++){
@@ -1867,8 +1867,8 @@ class boxio extends eqLogic {
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true && $decrypted_trame["dimension"] != 'GO_TO_LEVEL_TIME') {
 			$scenarios_decrypted_trame = $decrypted_trame;
-			
-			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand<>'$id';";
+			$idunit=$id+$unit;
+			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand+unit<>'$idunit';";
 			$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL); 
 			$row=sizeof($result);
 			for ($i=0; $i<$row; $i++){
@@ -2074,8 +2074,8 @@ class boxio extends eqLogic {
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true) {
 			$scenarios_decrypted_trame = $decrypted_trame;
-			
-			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand<>'$id';";
+			$idunit=$id+$unit;
+			$query = "SELECT id_legrand,unit FROM boxio_scenarios WHERE id_legrand_listen='$id' AND unit_listen='$unit' AND id_legrand+unit<>'$idunit';";
 			$result =  DB::Prepare($query, array(), DB::FETCH_TYPE_ALL); 
 			$row=sizeof($result);
 			for ($i=0; $i<$row; $i++){
