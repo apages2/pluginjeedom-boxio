@@ -93,3 +93,6 @@ Correction du problèmes de detection des équipements pilotés (cas des modules
 Modification des retour d'etat pour les trames Arret et fin_arret (heating)
 Modification du calcul du type pour la fonction dimensionRequestStatus
 Ajout d'un timer sur la fonction checkMemory
+
+==== V1.305 
+Correction du bug de mise a jour d'un equipement lorsqu'il est piloté par lui meme (unit different)
