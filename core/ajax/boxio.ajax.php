@@ -30,7 +30,7 @@ try {
 	}
 	
 	if (init('action') == 'checkscenario') {
-		$sql = " SELECT * FROM boxio_scenarios where id_legrand='" . init('id') ."'";	
+		$sql = " SELECT * FROM boxio_scenarios where id_legrand='" . init('id') ."' ORDER BY unit,frame_number";	
 		$result['scenario'] =  DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL); 
 		//log::add('boxio', 'debug', print_r($result));
 		$boxio = boxio::byLogicalId(init('id'), 'boxio');

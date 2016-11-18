@@ -96,3 +96,4 @@ Ajout d'un timer sur la fonction checkMemory
 
 ==== V1.305 
 Correction du bug de mise a jour d'un equipement lorsqu'il est piloté par lui meme (unit different)
+Correction du bug d'affichage des equipements pilotés si doublon

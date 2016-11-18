@@ -62,43 +62,36 @@ function printEqLogic(_mem) {
 				}else{
 					$('#vinst').css({'background-color': ''});
 				}
-				
-			//data_init.result['scenario'].length
-				for(i = 0; i < data_init.result['scenario'].length ; i++) {
-					for(j = 0; j < data_init.result['scenario'].length; j++) {
-						var media = '';
+				for(j = 0; j < data_init.result['scenario'].length ; j++) {
+					var media = '';
+					if (data_init.result['scenario'][j]['media_listen'] == '0') { media='CPL';}
+					else if (data_init.result['scenario'][j]['media_listen'] == '1') {media='RF';}
+					else if (data_init.result['scenario'][j]['media_listen'] == '2') {media='IR';}
 					
-						if (data_init.result['scenario'][j]['frame_number']==i) {
-							if (data_init.result['scenario'][j]['media_listen'] == '0') { media='CPL';}
-							else if (data_init.result['scenario'][j]['media_listen'] == '1') {media='RF';}
-							else if (data_init.result['scenario'][j]['media_listen'] == '2') {media='IR';}
-							
-							var trm = '<tr>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['frame_number']  + '" readonly="true">';
-							trm += '</td>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['id_legrand'] + '" readonly="true">';
-							trm += '</td>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['unit'] + '" readonly="true">';
-							trm += '</td>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['id_legrand_listen'] + '" readonly="true">';
-							trm += '</td>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['unit_listen'] + '" readonly="true">';
-							trm += '</td>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['value_listen'] + '" readonly="true">';
-							trm += '</td>';
-							trm += '<td>';
-							trm += '<input class="eqLogicAttr form-control input-sm" value="' + media + '" readonly="true">';
-							trm += '</td>';
-							$('#table_mem tbody').append(trm);
-							trm += '</tr>';
-						}
-					}
+					var trm = '<tr>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['frame_number']  + '" readonly="true">';
+					trm += '</td>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['id_legrand'] + '" readonly="true">';
+					trm += '</td>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['unit'] + '" readonly="true">';
+					trm += '</td>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['id_legrand_listen'] + '" readonly="true">';
+					trm += '</td>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['unit_listen'] + '" readonly="true">';
+					trm += '</td>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + data_init.result['scenario'][j]['value_listen'] + '" readonly="true">';
+					trm += '</td>';
+					trm += '<td>';
+					trm += '<input class="eqLogicAttr form-control input-sm" value="' + media + '" readonly="true">';
+					trm += '</td>';
+					$('#table_mem tbody').append(trm);
+					trm += '</tr>';
 				}
 				var trm = $('#table_mem tbody trm:last');
 			}
