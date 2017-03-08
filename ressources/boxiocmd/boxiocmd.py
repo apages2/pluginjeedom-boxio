@@ -46,6 +46,7 @@ from optparse import OptionParser
 import inspect
 import socket
 import re
+from os.path import join
 
 # BOXIOCMD modules
 
@@ -86,7 +87,7 @@ except ImportError:
 class config_data:
 	def __init__(
 		self,
-		serial_device = None,
+		serial_device = "auto",
 		serial_rate = 115200,
 		serial_timeout = 9,
 		trigger = "",
@@ -485,6 +486,8 @@ def read_configfile():
 		# ----------------------
 		# Serial device
 		config.serial_device = read_config( cmdarg.configfile, "serial_device")
+		if config.serial_device == 'auto':
+			config.serial_device = find_tty_usb('1da4','0009')
 		config.serial_rate = read_config( cmdarg.configfile, "serial_rate")
 		config.serial_timeout = read_config( cmdarg.configfile, "serial_timeout")
 
@@ -580,6 +583,31 @@ def close_serialport():
 		logger.debug("Exit 1")
 		sys.exit(1)
 
+# ----------------------------------------------------------------------------
+
+def find_tty_usb(idVendor, idProduct):
+    """find_tty_usb('1da4', '0009') -> '/dev/ttyACM0'"""
+    # Note: if searching for a lot of pairs, it would be much faster to search
+    # for the enitre lot at once instead of going over all the usb devices
+    # each time.
+    for dnbase in os.listdir('/sys/bus/usb/devices'):
+        dn = join('/sys/bus/usb/devices', dnbase)
+        if not os.path.exists(join(dn, 'idVendor')):
+            continue
+        idv = open(join(dn, 'idVendor')).read().strip()
+        if idv != idVendor:
+            continue
+        idp = open(join(dn, 'idProduct')).read().strip()
+        if idp != idProduct:
+            continue
+        for subdir in os.listdir(dn):
+            if subdir.startswith(dnbase+':'):
+				for subsubdir in os.listdir(join(dn, subdir)):
+					if subsubdir.startswith('tty'):
+						for subsubsubdir in os.listdir(join(dn, subdir, 'tty')):
+							if subsubdir.startswith('tty'):
+								return join('/dev', subsubsubdir)
+								
 # ----------------------------------------------------------------------------	
 
 def logger_init(configFile, name, debug):

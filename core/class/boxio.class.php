@@ -2399,12 +2399,12 @@ class boxioCmd extends cmd {
 		*/
 		
 		// Augmentation
-		if ($iobl_value <= 128) {
-			$percent = $iobl_value*100/128;
+		if ($iobl_value < 128) {
+			$percent = $iobl_value*100/127;
 			// Diminution
 		} 
 		else {
-			$percent = ($iobl_value - 256)*100/128;
+			$percent = ($iobl_value - 256)*100/127;
 		}
 		return $percent;
 	}
@@ -2417,7 +2417,7 @@ class boxioCmd extends cmd {
 		*/
 		
 		// Augmentation
-		$iobl_value = $light_value*128/100;
+		$iobl_value = $light_value*127/100;
 		return $iobl_value;
 	}
 
