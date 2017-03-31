@@ -2263,19 +2263,6 @@ class boxio extends eqLogic {
 
 /*     * *********************Methode d'instance************************* */
 
-	public function preInsert() {
-		if ($this->getLogicalId() == '') {
-			for ($i = 0; $i < 20; $i++) {
-				$logicalId = strtoupper(str_pad(dechex(mt_rand()), 8, '0', STR_PAD_LEFT));
-				$result = eqLogic::byLogicalId($logicalId, 'boxio');
-				if (!is_object($result)) {
-					$this->setLogicalId($logicalId);
-					break;
-				}
-			}
-		}
-	}
-
 	public function postSave() {
 		if ($this->getConfiguration('applyDevice') != $this->getConfiguration('device')) {
 			$this->applyModuleConfiguration();
