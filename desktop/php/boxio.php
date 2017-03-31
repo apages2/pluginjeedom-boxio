@@ -2,8 +2,12 @@
 if (!isConnect('admin')) {
     throw new Exception('Error 401 Unauthorized');
 }
-sendVarToJS('eqType', 'boxio');
-$eqLogics = eqLogic::byType('boxio');
+$plugin = plugin::byId('boxio');
+sendVarToJS('eqType', $plugin->getId());
+$eqLogics = eqLogic::byType($plugin->getId());
+function sortByOption($a, $b) {
+	return strcmp($a['name'], $b['name']);
+}
 if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 	echo '<div class="alert jqAlert alert-warning" id="div_inclusionAlert" style="margin : 0px 5px 15px 15px; padding : 7px 35px 7px 15px;">{{Vous etes en mode inclusion. Recliquez sur le bouton d\'inclusion pour sortir de ce mode}}</div>';
 } else {
@@ -15,6 +19,7 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
     <div class="col-lg-2 col-md-3 col-sm-4">
         <div class="bs-sidebar">
             <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
+				<a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter}}</a>
 				<li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="Rechercher" style="width: 100%"/></li>
                 <?php
                 foreach ($eqLogics as $eqLogic) {
@@ -28,8 +33,10 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 	<div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
 		<legend><i class="fa fa-cog"></i>  {{Gestion}}</legend>
 		<div class="eqLogicThumbnailContainer">
-			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" ><center>
-				<i class="fa fa-plus-circle" style="font-size : 6em;color:#94ca02;"></i></center>
+			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
+				<center>
+					<i class="fa fa-plus-circle" style="font-size : 6em;color:#94ca02;"></i>
+				</center>
 				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>Ajouter</center></span>
 			</div>
 			<?php
@@ -49,9 +56,17 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 					echo '</div>';
 				}
 			?>
-			<div class="cursor eqLogicAction" data-action="gotoPluginConf" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;"><center>
-				<i class="fa fa-wrench" style="font-size : 6em;color:#767676;"></i></center>
+			<div class="cursor eqLogicAction" data-action="gotoPluginConf" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+				<center>
+					<i class="fa fa-wrench" style="font-size : 6em;color:#767676;"></i>
+				</center>
 				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Configuration}}</center></span>
+			</div>
+			<div class="cursor" id="bt_healthboxio" style="background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
+			  <center>
+				<i class="fa fa-medkit" style="font-size : 6em;color:#767676;"></i>
+			  </center>
+			  <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676"><center>{{Santé}}</center></span>
 			</div>
 		</div>
 		<legend><i class="fa fa-table"></i>  {{Mes Equipements Boxio}}</legend>
@@ -62,10 +77,13 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 				$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
 				echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
 				echo "<center>";
-				if (file_exists(dirname(__FILE__) . '/../../core/config/devices/' . $device_id . '.jpg')) {
-					echo '<img class="lazy" src="plugins/boxio/core/config/devices/' . $device_id . '.jpg" height="105" width="95" />';
+				$alternateImg = $eqLogic->getConfiguration('iconModel');
+				if (file_exists(dirname(__FILE__) . '/../../core/config/devices/' . $alternateImg . '.jpg')) {
+					echo '<img class="lazy" src="plugins/boxio/core/config/devices/' . $alternateImg . '.jpg" height="105" width="95" />';
+				}elseif (file_exists(dirname(__FILE__) . '/../../core/config/devices/' . $eqLogic->getConfiguration('device') . '.jpg')) {
+					echo '<img class="lazy" src="plugins/boxio/core/config/devices/' . $eqLogic->getConfiguration('device') . '.jpg" height="105" width="95" />';
 				} else {
-					echo '<img class="lazy" src="plugins/boxio/doc/images/boxio_icon.png" height="105" width="95" />';
+					echo '<img src="' . $plugin->getPathImgIcon() . '" height="105" width="95" />';
 				}
 				echo "</center>";
 				echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
@@ -76,23 +94,32 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 	</div>
 
 	<div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;display: none;">
+		<a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
+		<a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
+		<a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}</a>
+		<a class="btn btn-default eqLogicAction pull-right" data-action="copy"><i class="fa fa-files-o"></i> {{Dupliquer}}</a>
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
+			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
+			<li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes}}</a></li>
+			<li role="presentation"><a href="#equipiltab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Equipements Pilotés}}</a></li>
+		</ul>
+		<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
+		<div role="tabpanel" class="tab-pane active" id="eqlogictab">
+		<br/>
 		<div class="row">
 			<div class="col-sm-6">
 				<form class="form-horizontal">
 					<fieldset>
-						<legend><i class="fa fa-arrow-circle-left eqLogicAction cursor" data-action="returnToThumbnailDisplay"></i> {{Général}}
-							<i class='fa fa-cogs eqLogicAction pull-right cursor expertModeVisible' data-action='configure'></i>
-							<a class="btn btn-xs btn-default pull-right eqLogicAction" data-action="copy"><i class="fa fa-files-o"></i> {{Dupliquer}}</a>
-						</legend>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">Nom de l'équipement Boxio</label>
+							<label class="col-sm-3 control-label">{{Nom de l'équipement Boxio}}</label>
 							<div class="col-sm-4">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
 								<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="Nom de l'équipement Boxio"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">ID</label>
+							<label class="col-sm-3 control-label">{{ID}}</label>
 							<div class="col-sm-4">
 								<input type="text" id="boxioid" class="eqLogicAttr form-control" data-l1key="logicalId" placeholder="Logical ID"/>
 							</div>
@@ -100,12 +127,12 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 						<div class="form-group">
 							<label class="col-sm-3 control-label"></label>
 							<div class="col-sm-8">
-								<input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Activer}}" data-l1key="isEnable" checked/>
-								<input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Visible}}" data-l1key="isVisible" checked/> 
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label" >Objet parent</label>
+							<label class="col-sm-3 control-label" >{{Objet parent}}</label>
 							<div class="col-sm-4">
 								<select class="eqLogicAttr form-control" data-l1key="object_id">
 									<option value="">Aucun</option>
@@ -118,7 +145,7 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">Catégorie</label>
+							<label class="col-sm-3 control-label">{{Catégorie}}</label>
 							<div class="col-sm-9">
 								<?php
 								foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
@@ -151,7 +178,7 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 			<div class="col-sm-6">
 				<form class="form-horizontal">
 					<fieldset>
-						<legend><i class="fa fa-info-circle"></i>  Informations</legend>
+						<legend><i class="fa fa-info-circle"></i>{{Informations}}</legend>
 						<div id="div_instruction"></div>
 							<div class="form-group expertModeVisible">
 								<label class="col-sm-3 control-label">{{Création}}</label>
@@ -164,8 +191,8 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Template</label>
-								<div class="col-sm-8">	
+								<label class="col-sm-3 control-label">{{Template}}</label>
+								<div class="col-sm-9">	
 									<select class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="device">
 										<option value="">Aucun</option>
 										<?php
@@ -179,18 +206,18 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Version Utilisée du template</label>
+								<label class="col-sm-3 control-label">{{Version Utilisée du template}}</label>
 								<div class="col-sm-2">
 									<span id="vinst" class="eqLogicAttr label label-default tooltips" data-l1key="configuration" data-l2key="version" style="font-size : 1em;"></span>
 								</div>
-								<label class="col-sm-4 control-label">Version Disponible du template</label>
+								<label class="col-sm-4 control-label">{{Version Disponible du template}}</label>
 								<div class="col-sm-3">
 									<span id="vdispo" class="eqLogicAttr label label-default tooltips" style="font-size : 1em;"></span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Release Notes du template</label>
-								<div class="col-sm-3">
+								<label class="col-sm-3 control-label">{{Release Notes du template}}</label>
+								<div class="col-sm-9">
 									<span id="rnotes" class="eqLogicAttr label label-default tooltips" style="font-size : 1em;"></span>
 								</div>
 							</div>
@@ -198,19 +225,19 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 				</form>
 			</div>
 		</div>
-
-		<legend><i class="fa fa-list-alt"></i>  Commandes</legend>
-			<a class="btn btn-success btn-sm cmdAction" data-action="add"><i class="fa fa-plus-circle"></i> Ajouter une commande</a><br/><br/>
-			<table id="table_cmd" class="table table-bordered table-condensed">
+		</div>
+		<div role="tabpanel" class="tab-pane" id="commandtab">
+        <a class="btn btn-success btn-sm cmdAction" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter une commande}}</a><br/><br/>
+        	<table id="table_cmd" class="table table-bordered table-condensed">
 				<thead>
 					<tr>
-						<th style="width: 300px;">Nom</th>
-						<th style="width: 130px;" class="expertModeVisible">Type</th>
-						<th style="width: 70px;" class="expertModeVisible">Unit</th>
-						<th style="width: 130px;" class="expertModeVisible">Communication</th>
-						<th class="expertModeVisible">Logical ID (info) ou Commande brute (action)</th>
-						<th>Paramètres</th>
-						<th style="width: 100px;">Options</th>
+						<th style="width: 300px;">{{Nom}}</th>
+						<th style="width: 130px;" class="expertModeVisible">{{Type}}</th>
+						<th style="width: 70px;" class="expertModeVisible">{{Unit}}</th>
+						<th style="width: 130px;" class="expertModeVisible">{{Communication}}</th>
+						<th class="expertModeVisible">{{Logical ID (info) ou Commande brute (action)}}</th>
+						<th>{{Paramètres}}</th>
+						<th style="width: 100px;">{{Options}}</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -218,19 +245,20 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 
 				</tbody>
 			</table>
-		<legend><i class="fa fa-link"></i>  Equipements pilotés</legend>
-			<a class="btn btn-success pull-left" id="bt_updateMemory"><i class="fa fa-refresh"></i> Mettre à jour</a><br/><br/>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="equipiltab">
+			<a class="btn btn-success btn-sm cmdAction" id="bt_updateMemory"><i class="fa fa-refresh"></i>{{Mettre à jour}}</a><br/><br/>
 			<table id="table_mem" class="table table-bordered table-condensed">
 				<thead>
 					<div class="form-group">
 						<tr>
-							<th style="width: 200px;">Emplacement</th>
-							<th style="width: 200px;">ID</th>
-							<th style="width: 200px;">UNIT</th>
-							<th style="width: 200px;">ID Listen</th>
-							<th style="width: 200px;">UNIT Listen</th>
-							<th style="width: 200px;">Fonction</th>
-							<th style="width: 200px;">Media</th>
+							<th style="width: 200px;">{{Emplacement}}</th>
+							<th style="width: 200px;">{{ID}}</th>
+							<th style="width: 200px;">{{UNIT}}</th>
+							<th style="width: 200px;">{{ID Listen}}</th>
+							<th style="width: 200px;">{{UNIT Listen}}</th>
+							<th style="width: 200px;">{{Fonction}}</th>
+							<th style="width: 200px;">{{Media}}</th>
 						</tr>
 					</div>				
 				</thead>
@@ -238,15 +266,8 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 
 				</tbody>
 			</table>
-			
-		<form class="form-horizontal">
-			<fieldset>
-				<div class="form-actions">
-					<a class="btn btn-danger eqLogicAction" data-action="remove"><i class="fa fa-minus-circle"></i> Supprimer</a>
-					<a class="btn btn-success eqLogicAction" data-action="save"><i class="fa fa-check-circle"></i> Sauvegarder</a>
-				</div>
-			</fieldset>
-		</form>
+		</div>
+	</div>
 	</div>
 </div>
 

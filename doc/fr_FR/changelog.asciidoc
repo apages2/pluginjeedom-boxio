@@ -98,5 +98,14 @@ Ajout d'un timer sur la fonction checkMemory
 Correction du bug de mise a jour d'un equipement lorsqu'il est piloté par lui meme (unit different)
 Correction du bug d'affichage des equipements pilotés si doublon
 
-==== V1.306 du
-Mise en place de l'autodetection du port USB utilisé pour l'interface 88213 
+==== V1.306 du 31/02/2017 19:30
+Mise en place de l'autodetection du port USB utilisé pour l'interface 88213
+Gestion des onglets dans l'équipement Boxio (Equipement/Commandes/Equipement Pilotés)
+Ajout de la fonction dupliquer un équipement
+Suppression des bootstraps
+Ajout d'un menu Health
+
+==== ToDo
+log/debug
+jeelink
+Mise a jour doc

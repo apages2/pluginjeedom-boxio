@@ -44,7 +44,7 @@ foreach ($eqLogics as $eqLogic) {
 	} elseif (file_exists(dirname(__FILE__) . '/../../core/config/devices/' . $eqLogic->getConfiguration('device') . '.jpg')) {
 		$img = '<img class="lazy" src="plugins/boxio/core/config/devices/' . $eqLogic->getConfiguration('device') . '.jpg" height="65" width="55" />';
 	} else {
-		$img = '<img class="lazy" src="plugins/boxio/doc/images/myhome_icon.png" height="65" width="55" />';
+		$img = '<img class="lazy" src="plugins/boxio/doc/images/boxio_icon.png" height="65" width="55" />';
 	}
 	$signalcmd = $eqLogic->getCmd('info', 'signal');
 	$signal = '';
