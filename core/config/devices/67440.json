@@ -1,0 +1,262 @@
+{
+    "67440": {
+        "name": "Thermostat d'Ambiance",
+		"configuration": {
+                            "version": "1.0",
+							"update": "Creation",
+							"nbunit": "2",
+							"674401": {
+								"ref_legrand": "67440",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Allumage Chauffage",
+								"unit": "1",
+								"unit_status": "2",
+								"possibility": "STATUS,COMMAND",
+								"function_code": "51",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "STATUS=Etat du contacteur;COMMAND=Etat du contacteur"
+								},
+							"674402": {
+								"ref_legrand": "67440",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Mode",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "149",
+								"server_opt": "NULL",
+								"commentaire": "MEMORY=Scenarios pour le changement de mode;STATUS=Etats des modes, tempertaures et sondes;ACTION=Changement de mode et temperatures"
+								}
+                        },				
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+					{
+                        "name": "Status2",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2,	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }					
+					},
+					{
+                        "name": "Status Numerique2",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}			
+					},
+                    {
+                        "name": "Température Ambiante",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "°C",
+						"eventOnly": 1,
+						"logicalId": "internal_temp2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_TEMPERATURE"
+						}					
+					},
+					{
+                        "name": "Température Programmée",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "°C",
+						"eventOnly": 1,
+						"logicalId": "wanted_temp2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SETPOINT"
+						}					
+					},
+					{
+                        "name": "Mode Programmé : ",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "mode2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_MODE"
+						}					
+					},
+					{
+                        "name": "ARRET",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*54*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "54",
+								"dim": "NULL",
+								"nom": "Arret"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_OFF"
+						}
+                    },
+					{
+                        "name": "ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*55*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "55",
+								"dim": "NULL",
+								"nom": "Fin_Arret"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_ON"
+						}
+                    },
+					{
+                        "name": "HG",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#4*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_OTHER"
+						}
+                    },
+					{
+                        "name": "Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#3*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_OTHER"
+						}
+                    },
+					{
+                        "name": "Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#2*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}
+                    },
+					{
+                        "name": "Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#1*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "DONT"
+						}
+                    },
+					{
+                        "name": "Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#0*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "2",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "HEATING_OTHER"
+						}
+                    }
+                ]
+            }
+        }
+    }
+}
