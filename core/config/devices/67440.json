@@ -17,7 +17,7 @@
 								"unit_code": "1",
 								"server_opt": "NULL",
 								"commentaire": "STATUS=Etat du contacteur;COMMAND=Etat du contacteur"
-								},
+							},
 							"674402": {
 								"ref_legrand": "67440",
 								"family": "COMFORT",
@@ -30,7 +30,7 @@
 								"unit_code": "149",
 								"server_opt": "NULL",
 								"commentaire": "MEMORY=Scenarios pour le changement de mode;STATUS=Etats des modes, tempertaures et sondes;ACTION=Changement de mode et temperatures"
-								}
+							}
                         },				
         "subtype": {
             "00": {
@@ -44,7 +44,7 @@
 						"isHistorized": 0,
                         "unite": "",
 						"eventOnly": 1,
-						"logicalId": "status2,	
+						"logicalId": "status2",	
 						"configuration": {
                             "returnStateValue": "",
                             "returnStateTime": "",
