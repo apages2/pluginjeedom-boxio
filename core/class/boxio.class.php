@@ -1928,6 +1928,7 @@ class boxio extends eqLogic {
 		$boxiocmd = $boxio->getCmd('info', $statusid);
 		$statusidnum = "statusnum".$unit_status;
 		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
+		$timerhightolow = $def->DEFAULT_VMC_HIGHTOLOW;
 		//On recupere les server_opt
 		$server_opt = $config["server_opt"];
 		$status = NULL;
@@ -1935,7 +1936,7 @@ class boxio extends eqLogic {
 		log::add('boxio','debug',"ID : ".$id." UNIT : ".$unit." Ref Legrand+unit : ".$ref_id_legrand." Unit_Status : ".$unit_status." Statusid : ".$statusid. " Commande : ".$decrypted_trame["value"]);
 		//LOW FAN SPEED
 		if ($decrypted_trame["value"] == 'LOW_FAN_SPEED') {
-			$value = 'LOW_FAN_SPEED';
+			$value	 = 'LOW_FAN_SPEED';
 			$status = 'LOW_FAN_SPEED';
 			$statusnum = 0;
 		}
@@ -1944,6 +1945,11 @@ class boxio extends eqLogic {
 			$value = 'HIGH_FAN_SPEED';
 			$status = 'HIGH_FAN_SPEED';
 			$statusnum = 100;
+			log::add('boxio','debug',"paramètrage d'un timer pour le retour en LOW_FAN_SPEED au bout de ".$timerhightolow." min");
+			$boxiocmd->setConfiguration('returnStateValue','LOW_FAN_SPEED');
+			$boxiocmdnum->setConfiguration('returnStateValue',0);
+			$boxiocmd->setConfiguration('returnStateTime',$timerhightolow);
+			$boxiocmdnum->setConfiguration('returnStateTime',$timerhightolow);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
 				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
 				$boxiocmd->setConfiguration('returnStateValue','LOW_FAN_SPEED');
@@ -2672,6 +2678,9 @@ class boxio_def {
 	
 	//temps par default en secondes pour l'ouverture complete d'un volet (si pas de variable move_time defini en DB)
 	public $DEFAULT_SHUTTER_MOVE_TIME = 40;
+	
+	//temps par default en minutes pour le retour de la VMC en mode LOW_FAN
+	public $DEFAULT_VMC_HIGHTOLOW = 30;
 
 	//temps pour que le relais interne change d'état
 	public $SHUTTER_RELAY_TIME = 1;

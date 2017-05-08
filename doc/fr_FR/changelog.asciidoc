@@ -105,7 +105,11 @@ Ajout de la fonction dupliquer un équipement
 Suppression des bootstraps
 Ajout d'un menu Health
 
+==== V1.307 du 08/05/2017 14:25
+Implémentation  d'un timer de retour auto en low_speed après appui sur high_speed
+
 ==== ToDo
 log/debug
 jeelink
 Mise a jour doc
+interpretation des trames d'ack
