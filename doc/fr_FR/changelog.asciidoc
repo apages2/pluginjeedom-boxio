@@ -107,6 +107,7 @@ Ajout d'un menu Health
 
 ==== V1.307 du 08/05/2017 14:25
 Implémentation  d'un timer de retour auto en low_speed après appui sur high_speed
+Correction du statut du DIM_STEP
 
 ==== ToDo
 log/debug
