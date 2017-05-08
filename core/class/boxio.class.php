@@ -418,7 +418,7 @@ class boxio extends eqLogic {
 				$value = 'DIM_STEP';
 				log::add('boxio','debug',"DIM_STEP");
 				//Recuperation du derniere etat connu(last_status de l'unitstatus)
-				$last_status = $boxiocmd->execCmd(null,2);
+				$last_status = $boxiocmdnum->execCmd(null,2);
 				
 				if (!is_numeric($last_status)) {
 					if ($last_status == 'OFF') {
@@ -434,8 +434,8 @@ class boxio extends eqLogic {
 				if (isset($param['step']) && isset($param['time'])) {
 					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
 					$change_status = round(boxioCmd::calc_iobl_to_light($param['step']));
-					log::add('boxio','debug',$change_status);
-					$next_status = $change_status;
+					$next_status = $last_status+($change_status*2.5);
+					log::add('boxio','debug',$next_status);
 					if ($next_status > 100) {
 						$next_status = 100;
 					} else if ($next_status < 0) {
