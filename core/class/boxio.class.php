@@ -1856,7 +1856,6 @@ class boxio extends eqLogic {
 							$next_statusnum=$statusnum;
 							$next_status= 'ON';
 							$status = 'ON';
-							log::add('boxio','debug',$statusnum." ".$status);
 						}
 					} else {
 						$boxiocmd->setConfiguration('returnStateValue',$statusnum);
@@ -2271,7 +2270,6 @@ class boxio extends eqLogic {
 							log::add('boxio','debug',"Equipement Scenario, Update Light");
 						} else {
 							boxio::updateStatusLight($scenarios_decrypted_trame, false);
-							log::add('boxio','debug',"ID: ".$scenarios_decrypted_trame['id']."unit: ".$scenarios_decrypted_trame['unit']."type: ".$scenarios_decrypted_trame['type']."value: ".$scenarios_decrypted_trame['value']."dimension: ".$scenarios_decrypted_trame['dimension']."param: ".$scenarios_decrypted_trame['param']);
 							log::add('boxio','debug',"Equipement Scenario, Update Light");
 						}
 						//On arrete de boucle ce n'est plus necessaire
