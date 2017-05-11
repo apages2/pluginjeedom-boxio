@@ -185,9 +185,6 @@ class boxio extends eqLogic {
 		}
 		log::add('boxio.syncconf', 'info', $cmd);
 		shell_exec($cmd);
-		/*foreach (self::byType('boxio') as $eqLogic) {
-			$eqLogic->loadCmdFromConf(true);
-		}*/
 	}
 
 	public static function updateDBScenario($data) {
@@ -350,14 +347,6 @@ class boxio extends eqLogic {
 				}
 				else if ($decrypted_trame['dimension'] == 'QUEL_INDEX') {
 					log::add('boxio','debug',"mise a jour du status : Quel_index \n");
-					//Valeur par defaut
-					//$status = $params[array_search("fan_speed", $definition)];
-					//$boxiocmd = $boxio->getCmd('info', 'fan_speed'.$unit);
-					//if (isset($boxiocmd)){
-						//$boxiocmd->event($status);
-						//$boxiocmd->save();
-					//}
-					//log::add('boxio','debug',"mise a jour du status : fan_speed : ".$fan_speed."\n");
 				}
 			} 
 			
@@ -405,10 +394,8 @@ class boxio extends eqLogic {
 				//on supprimme les actions en cours
 				$ownid = boxioCmd::ioblId_to_ownId($id, $unit);
 				$trame="#1000*".$ownid."*55##";
-				$boxiocmd->setConfiguration('updatedate',NULL);
 				$boxiocmd->setConfiguration('returnStateValue',NULL);
 				$boxiocmd->setConfiguration('returnStateTime',NULL);
-				$boxiocmdnum->setConfiguration('updatedate',NULL);
 				$boxiocmdnum->setConfiguration('returnStateValue',NULL);
 				$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 				$res = boxio::send_trame($trame);
@@ -434,37 +421,42 @@ class boxio extends eqLogic {
 				if (isset($param['step']) && isset($param['time'])) {
 					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
 					$change_status = round(boxioCmd::calc_iobl_to_light($param['step']));
-					$next_status = $last_status+$change_status;
-					log::add('boxio','debug',$next_status);
-					if ($next_status > 100) {
-						$next_status = 100;
-					} else if ($next_status < 0) {
-						$next_status = 0;
+					$statusnum = $last_status+$change_status;
+					log::add('boxio','debug',$statusnum);
+					if ($statusnum > 100) {
+						$statusnum = 100;
+					} else if ($statusnum < 0) {
+						$statusnum = 0;
 					}
 					if ($timer==0)
 					{
-						if ($next_status == 0) {
-							$statusnum = $next_status;
+						if ($statusnum == 0) {
 							$status = 'OFF';
-						} else if ($next_status == 100) {
-							$statusnum = $next_status;
+						} else if ($statusnum == 100) {
 							$status = 'ON';
 						} else {
-							$statusnum = $next_status;
 							$status = 'ON';
 						}
 					
 					} else {
-				
-					$boxiocmd->setConfiguration('returnStateValue',$next_status);
-					$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
-					$boxiocmdnum->setConfiguration('returnStateValue',$next_status);
-					$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+						if ($statusnum == 0) {
+							$next_statusnum=$statusnum;
+							$next_status= 'OFF';
+							$status = NULL;
+							$statusnum = NULL;
+						} else if ($next_status == 100) {
+							$next_statusnum=$statusnum;
+							$next_status= 'ON';
+							$status = NULL;
+							$statusnum = NULL;
+						} else {
+							$next_statusnum=$statusnum;
+							$next_status= 'ON';
+							$status = NULL;
+							$statusnum = NULL;
+						}		
 					}
-					
-				} else {
-					$status = NULL;
-				}
+				} 
 			} else if ($decrypted_trame["dimension"] == 'GO_TO_LEVEL_TIME') {
 				$value = 'GO_TO_LEVEL_TIME';
 				log::add('boxio','debug',"GO_TO_LEVEL_TIME");
@@ -483,41 +475,63 @@ class boxio extends eqLogic {
 				//on test si le status est trouve
 				if (isset($param['level']) && isset($param['time'])) {
 					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
-					$next_status = round(boxioCmd::calc_jeedom_to_light($param['level']));
-					if ($next_status > 100) {
-						$next_status = 100;
-					} else if ($next_status < 0) {
-						$next_status = 0;
+					$statusnum = round(boxioCmd::calc_jeedom_to_light($param['level']));
+					if ($statusnum > 100) {
+						$statusnum = 100;
+					} else if ($statusnum < 0) {
+						$statusnum = 0;
 					}
 					if ($timer==0)
 					{
-						if ($next_status == 0) {
-							$statusnum = $next_status;
+						if ($statusnum == 0) {
 							$status = 'OFF';
-						} else if ($next_status == 100) {
-							$statusnum = $next_status;
+						} else if ($statusnum == 100) {
 							$status = 'ON';
 						} else {
-								$statusnum = $next_status;
 								$status = 'ON';
 						}
 					} else {
-						$boxiocmd->setConfiguration('returnStateValue',$next_status);
-						$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
-						$boxiocmdnum->setConfiguration('returnStateValue',$next_status);
-						$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+						if ($statusnum == 0) {
+							$next_statusnum=$statusnum;
+							$next_status= 'OFF';
+							$status = NULL;
+							$statusnum = NULL;
+						} else if ($next_status == 100) {
+							$next_statusnum=$statusnum;
+							$next_status= 'ON';
+							$status = NULL;
+							$statusnum = NULL;
+						} else {
+							$next_statusnum=$statusnum;
+							$next_status= 'ON';
+							$status = NULL;
+							$statusnum = NULL;
+						}
 					}
-				} else {
-				$status = NULL;
-				}
+				} 
 			//Il ne s'agit pas d'une mise à jour
 			} else {
 					return;
 			}
 			//on n'a pas trouve le nouveau status, erreur dans la trame ?
-			if ($status == NULL) {
-			return;
-			}		
+			//if ($status == NULL) {
+			//return;
+			//}		
+			
+			//On annule les éventuels action en cours
+		
+			$boxiocmd->setConfiguration('returnStateValue',NULL);
+			$boxiocmd->setConfiguration('returnStateTime',NULL);
+			$boxiocmdnum->setConfiguration('returnStateValue',NULL);
+			$boxiocmdnum->setConfiguration('returnStateTime',NULL);
+			
+			//Dans le cas d'une commande temporelle on met le status en attente de mise a jour sauf si la commande est inférieur à 1min
+			if ($timer>=1) {
+				$boxiocmd->setConfiguration('returnStateTime',$timer);
+				$boxiocmd->setConfiguration('returnStateValue',$next_status);
+				$boxiocmdnum->setConfiguration('returnStateTime',$timer);
+				$boxiocmdnum->setConfiguration('returnStateValue',$next_statusnum);
+			}
 			
 			//Mise à jour des scenarios si necessaire
 			if ($scenarios === true && $decrypted_trame["dimension"] != 'GO_TO_LEVEL_TIME') {
@@ -567,7 +581,6 @@ class boxio extends eqLogic {
 					$status="Heures Pleines";
 				} 
 				//Valeur par defaut
-				//$status = $params[array_search("fan_speed", $definition)];
 				$boxiocmd = $boxio->getCmd('info', 'tarif'.$unit);
 				if (isset($boxiocmd)){
 					$boxiocmd->event($status);
@@ -584,7 +597,6 @@ class boxio extends eqLogic {
 	}
 
 	public static function updateMemory($tramedecrypt) {
-		//$boxio = boxio::byLogicalId($tramedecrypt["id"], 'boxio');
 		$val=boxioCmd::get_params($tramedecrypt['dimension'], $tramedecrypt['param'], 'array');
 		log::add('boxio', 'debug', "Family_Type : " . $val['family_type'] . "\n Address : " . $val['address'] . "\n Preset value : " . $val['preset_value'] . "\n Frame Number : " . $val['frame_number'] . "\n");
 		$address = explode('/', $val['address']);
@@ -602,56 +614,6 @@ class boxio extends eqLogic {
 		$data["frame_number"]=$val['frame_number'];
 		boxio::updateDBScenario($data);
 	
-/*	
-		for ($i = 0; $i < $boxio->getConfiguration('memorydepth'); $i++) {
-			$fnbr='mem_fnbr'.$i;			
-			$fnbr_base=$boxio->getConfiguration($fnbr);
-			$ftyp='mem_ftyp'.$i;
-			$ftyp_base=$boxio->getConfiguration($ftyp);
-			$id='mem_id'.$i;
-			$id_base=$boxio->getConfiguration($id);
-			$prev='mem_prev'.$i;
-			$prev_base=$boxio->getConfiguration($prev);
-			$unit='mem_unit'.$i;
-			$unit_base=$boxio->getConfiguration($unit);
-			$address = explode('/', $val['address']);
-			$id_listen = $address[0];
-			$unit_listen = $address[1];					
-			if ($fnbr_base=='') {
-				log::add('boxio', 'debug', "Frame Number ".$val['frame_number']. " inconnu");
-				$boxio->setConfiguration($fnbr,$val['frame_number']);
-				$boxio->setConfiguration($ftyp,$val['family_type']);
-				$boxio->setConfiguration($id,$id_listen);
-				$boxio->setConfiguration($unit,$unit_listen);
-				$boxio->setConfiguration($prev,$val['preset_value']);
-				$boxio->save();
-				break;
-			} 
-			elseif ($fnbr_base!='' && $val['frame_number']==$fnbr_base){
-				log::add('boxio', 'debug', "getunit".$id_listen." getid". $unit_listen);
-				if ($id_listen!=$id_base) {
-					log::add('boxio', 'debug', "update ID");
-					$boxio->setConfiguration($fnbr,$val['frame_number']);
-					$boxio->setConfiguration($ftyp,$val['family_type']);
-					$boxio->setConfiguration($id,$id_listen);
-					$boxio->setConfiguration($unit,$unit_listen);
-					$boxio->setConfiguration($prev,$val['preset_value']);
-					$boxio->save();
-					break;
-				} 
-				elseif ($id_listen==$id_base && ($unit_listen!=$unit_base || $prev_base!=$val['preset_value'] || $ftyp_base!=$val['family_type'])){
-					log::add('boxio', 'debug', "update getunit".$id_listen." getid". $unit_listen);
-					$boxio->setConfiguration($fnbr,$val['frame_number']);
-					$boxio->setConfiguration($ftyp,$val['family_type']);
-					$boxio->setConfiguration($id,$id_listen);
-					$boxio->setConfiguration($unit,$unit_listen);
-					$boxio->setConfiguration($prev,$val['preset_value']);
-					$boxio->save();
-					break;
-				}
-			break;
-			}
-		}*/
 	}
 		
 	public static function send_trame($trame) {
@@ -687,25 +649,10 @@ class boxio extends eqLogic {
 	
 		$boxio = boxio::byLogicalId($dev, 'boxio');		
 		
-		/*for ($i = 0; $i < $boxio->getConfiguration('memorydepth'); $i++) {
-			$fnbr='mem_fnbr'.$i;			
-			$ftyp='mem_ftyp'.$i;
-			$id='mem_id'.$i;
-			$unit='mem_unit'.$i;
-			$prev='mem_prev'.$i;
-			$boxio->setConfiguration($fnbr,"");
-			$boxio->setConfiguration($ftyp,"");
-			$boxio->setConfiguration($id,"");
-			$boxio->setConfiguration($unit,"");
-			$boxio->setConfiguration($prev,"");
-			$boxio->save();
-		}*/
 		$sqld = "DELETE FROM boxio_scenarios WHERE id_legrand='".$dev."'";
 		log::add('boxio', 'debug', $sqld);
 		DB::Prepare($sqld, array(), DB::FETCH_TYPE_ROW);
 		log::add('boxio', 'debug', "Suppression des paramètres d'appairage dans la base de donnée avant reconstruction. Suppression de " . $boxio->getConfiguration('memorydepth') . " Equipements\n");
-		//$boxio->setConfiguration('memorydepth',"");
-		//$boxio->save();
 	}
 	
 	public static function checkMemory($dev) {
@@ -825,7 +772,7 @@ class boxio extends eqLogic {
 	public static function decrypt_trame($trame) {
 	
 		/*
-		 // FONCTION : DECRYPTAGE D'UNE TRAME AU FORMAT LISIBLE
+		// FONCTION : DECRYPTAGE D'UNE TRAME AU FORMAT LISIBLE
 		// PARAMS : $trame=string
 		// RETURN : array(
 				"trame" => string,
@@ -1093,10 +1040,8 @@ class boxio extends eqLogic {
 						if ($new_pos >= 100) {
 							$status = 'OPEN';
 							$statusnum = 100;
-							$boxiocmd->setConfiguration('updatedate',NULL);
 							$boxiocmd->setConfiguration('returnStateValue',NULL);
 							$boxiocmd->setConfiguration('returnStateTime',NULL);
-							$boxiocmdnum->setConfiguration('updatedate',NULL);
 							$boxiocmdnum->setConfiguration('returnStateValue',NULL);
 							$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 						}
@@ -1540,22 +1485,10 @@ class boxio extends eqLogic {
 				$boxiocmd->save();
 				$boxiocmdnum->save();
 			}
-		//mise a jour simple du bouton
-		/*} 
-		else {
-			$status = $value;
-		}*/
-		//Mise à jour de la touche de l'equipement (s'il ne s'agit pas du unit_status OU de la memoire cas particulier du SOMFY RF)
-		/*if ($unit != $unit_status || strpos($possibility, 'MEMORY') === FALSE) {
-			log::add('boxio','debug',"mise a jour du value : ".$value."\n");
-			$boxiocmd->event($value);		
-		}*/
-		//Mise à jour interne du status de l'equipement
-		//if (strpos($possibility, 'MEMORY') !== FALSE) {
-			log::add('boxio','debug',"mise a jour du status : ".$status."\n");
-			$boxiocmd->event($status);
-			$boxiocmdnum->event($statusnum);
-		//}
+		log::add('boxio','debug',"mise a jour du status : ".$status."\n");
+		$boxiocmd->event($status);
+		$boxiocmdnum->event($statusnum);
+		
 		//Mise à jour des groupe de volet en parametre (INTERFACE SOMFY)
 		if (isset($params['grp_opt'])) {
 			$grp_shutter = explode(',', $params['grp_opt']);
@@ -1578,21 +1511,6 @@ class boxio extends eqLogic {
 				log::add('boxio','debug',"update_scenario_id : ".$result[$i]['id_legrand']." update_scenario_unit : ".$result[$i]['unit']);
 				boxio::updateStatusShutter($scenarios_decrypted_trame, false);
 			}
-			
-			/*
-			$memorydepth=$boxio->getConfiguration('memorydepth');
-			log::add('boxio','debug',"mem_depth : ".$memorydepth);
-			for ($i = 0; $i < $memorydepth; $i++)
-			{
-				$mem_id="mem_id".$i;
-				$mem_unit="mem_unit".$i;
-				log::add('boxio','debug',"mem_id : ".$mem_id." mem_unit : ".$mem_unit);
-				$scenarios_decrypted_trame['id']=$boxio->getConfiguration($mem_id);
-				$scenarios_decrypted_trame['unit']=$boxio->getConfiguration($mem_unit);
-				log::add('boxio','debug',"id_scenario : ". $scenarios_decrypted_trame['id'] ." unit_scenario : ".$scenarios_decrypted_trame['unit']);
-				$i++;
-				boxio::updateStatusShutter($scenarios_decrypted_trame, false);
-			}*/
 		}
 	}
 	
@@ -1677,10 +1595,8 @@ class boxio extends eqLogic {
 		//On annule les éventuels action en cours
 		
 		
-		$boxiocmd->setConfiguration('updatedate',NULL);
 		$boxiocmd->setConfiguration('returnStateValue',NULL);
 		$boxiocmd->setConfiguration('returnStateTime',NULL);
-		$boxiocmdnum->setConfiguration('updatedate',NULL);
 		$boxiocmdnum->setConfiguration('returnStateValue',NULL);
 		$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 		
@@ -1747,15 +1663,13 @@ class boxio extends eqLogic {
 		$status = NULL;
 		$statusnum = NULL;
 		log::add('boxio','debug',"statusid : ".$statusid." ref legrand/sous device: ".$ref_id_legrand."/".$sousdevice." date : ".$date." unit status : ".$unit_status." unit_code : ".$unit_code." type : ".$type);
-		
 		//On recupere les server_opt
 		$server_opt = $config["server_opt"];
 		//s'il y a un timer dans les server_opt on l'inclus tout de suite
 		if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$res_timer)) {
 			$timer = $res_timer['seconds'];
 		}
-		//TODO: mettre à jour les modes des inters
-				
+		
 		//Si un variateur essai de mettre à jour un inter on en tient pas compte
 		if ($type != 'variator' && (
 			$decrypted_trame["value"] == 'DIM_STOP'
@@ -1764,27 +1678,40 @@ class boxio extends eqLogic {
 				log::add('boxio','debug',"EXIT_Light_Update");
 			return;
 		}
-		//Gestion des ACTION
-		//TODO: gérer les ACTION_IN_TIME
+		// ACTION_FOR_TIME
 		if ($decrypted_trame["value"] == 'ACTION_FOR_TIME') {
 			$value = 'ACTION_FOR_TIME';
-			log::add('boxio','debug',"ACTION_FOR_TIME");
+			log::add('boxio','debug',"Trame de type : ACTION_FOR_TIME");
 			preg_match('/(?P<time>\d+)/', $decrypted_trame["param"], $param);
 			//on test si le status est trouve
 			if (isset($param['time'])) {
-				$timer = boxioCmd::calc_iobl_to_time($param['time']);
+				$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+				$timer=round($timersec/60);
+				$status = 'ON';
+				$statusnum = 100;
+				$next_statusnum=0;
+				$next_status= 'OFF';
+				
+				log::add('boxio','debug',"Mise à ".$status." puis retour a ".$next_status." dans ".$timer. " mn");
+			} 
+		}
+		// ACTION_IN_TIME
+		else if ($decrypted_trame["value"] == 'ACTION_IN_TIME') {
+			$value = 'ACTION_IN_TIME';
+			log::add('boxio','debug',"ACTION_IN_TIME");
+			preg_match('/(?P<time>\d+)/', $decrypted_trame["param"], $param);
+			//on test si le status est trouve
+			if (isset($param['time'])) {
+				$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+				$timer=round($timersec/60);
 				//on a envoyé en interne le status sinon on prend par defaut ON
-				if (isset($decrypted_trame['internal_status'])) {
-					$status = $decrypted_trame['internal_status'];
-				} else {
-					$status = 'ON';
-					$statusnum = 100;
-				}
-				$next_status = 'OFF';
-				$next_statusnum = 0;
-			} else {
 				$status = NULL;
-			}
+				$statusnum = NULL;
+				$next_statusnum=100;
+				$next_status= 'ON';
+				
+				log::add('boxio','debug',"Eclairage a ON dans ".$timer." mn");
+			} 
 		}
 		//Interruption des actions en cours on fait une demande de status
 		else if ($decrypted_trame["value"] == 'DIM_STOP') {
@@ -1793,10 +1720,8 @@ class boxio extends eqLogic {
 			//on supprimme les actions en cours
 			$ownid = boxioCmd::ioblId_to_ownId($id, $unit);
 			$trame="#1000*".$ownid."*55##";
-			$boxiocmd->setConfiguration('updatedate',NULL);
 			$boxiocmd->setConfiguration('returnStateValue',NULL);
 			$boxiocmd->setConfiguration('returnStateTime',NULL);
-			$boxiocmdnum->setConfiguration('updatedate',NULL);
 			$boxiocmdnum->setConfiguration('returnStateValue',NULL);
 			$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 			$res = boxio::send_trame($trame);
@@ -1828,7 +1753,9 @@ class boxio extends eqLogic {
 				$next_status = 'OFF';
 				$next_statusnum = 0;
 			}
-		} else if ($decrypted_trame["dimension"] == 'GO_TO_LEVEL_TIME') {
+		} 
+		//GO_TO_LEVEL_TIME
+		else if ($decrypted_trame["dimension"] == 'GO_TO_LEVEL_TIME') {
 				$value = 'GO_TO_LEVEL_TIME';
 				log::add('boxio','debug',"GO_TO_LEVEL_TIME");
 				
@@ -1845,63 +1772,61 @@ class boxio extends eqLogic {
 					if ($timer==0)
 					{
 						if ($statusnum == 0) {
-							$next_statusnum=$statusnum;
-							$next_status= 'OFF';
 							$status = 'OFF';
-						} else if ($next_status == 100) {
-							$next_statusnum=$statusnum;
-							$next_status= 'ON';
+						} else if ($statusnum == 100) {
 							$status = 'ON';
 						} else {
-							$next_statusnum=$statusnum;
-							$next_status= 'ON';
 							$status = 'ON';
 						}
 					} else {
-						$boxiocmd->setConfiguration('returnStateValue',$statusnum);
-						$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
-						$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
-						$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+						if ($statusnum == 0) {
+							$next_statusnum=$statusnum;
+							$next_status= 'OFF';
+							$status = NULL;
+							$statusnum = NULL;
+						} else if ($next_status == 100) {
+							$next_statusnum=$statusnum;
+							$next_status= 'ON';
+							$status = NULL;
+							$statusnum = NULL;
+						} else {
+							$next_statusnum=$statusnum;
+							$next_status= 'ON';
+							$status = NULL;
+							$statusnum = NULL;
+						}						
 					}
-				} else {
-				$status = NULL;
 				}
+			}
 			//Il ne s'agit pas d'une mise à jour
-			} else {
+		else {
 			return;
 		}
 		
 		//on n'a pas trouve le nouveau status, erreur dans la trame ?
-		if ($status == NULL) {
-			return;
-		}
-		//Mise à jour de la touche de l'equipement (s'il ne s'agit pas du unit_status)
-		/*if ($unit != $unit_status) {
-			$query = "UPDATE `equipements_status` SET status='$value' WHERE id_legrand='$id' AND unit='$unit'";
-			$this->mysqli->query($query);
-		}*/
+		//if ($status == NULL) {
+		//	return;
+		//}
+		
 		//On annule les éventuels action en cours
 		
-		
-		$boxiocmd->setConfiguration('updatedate',NULL);
 		$boxiocmd->setConfiguration('returnStateValue',NULL);
 		$boxiocmd->setConfiguration('returnStateTime',NULL);
-		$boxiocmdnum->setConfiguration('updatedate',NULL);
 		$boxiocmdnum->setConfiguration('returnStateValue',NULL);
 		$boxiocmdnum->setConfiguration('returnStateTime',NULL);
 		
-		//Dans le cas d'une commande temporelle on met le status en attente de mise a jour sauf si la commande est inférieur à 1s
-		if ($timer>1) {
-			$boxiocmd->setConfiguration('returnStateTime',$date+$timer);
+		//Dans le cas d'une commande temporelle on met le status en attente de mise a jour sauf si la commande est inférieur à 1min
+		if ($timer>=1) {
+			$boxiocmd->setConfiguration('returnStateTime',$timer);
 			$boxiocmd->setConfiguration('returnStateValue',$next_status);
-			$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer);
+			$boxiocmdnum->setConfiguration('returnStateTime',$timer);
 			$boxiocmdnum->setConfiguration('returnStateValue',$next_statusnum);
 		}
 		//La commande n'est pas temporisé on indique la bonne valeur (au cas ou cela na pas ete fait)
-		else {
-			$status = $next_status;
-			$statusnum = $next_statusnum;
-		}
+		//else {
+			//$status = $next_status;
+			//$statusnum = $next_statusnum;
+		//}
 		
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true && $decrypted_trame["dimension"] != 'GO_TO_LEVEL_TIME') {
@@ -1916,19 +1841,8 @@ class boxio extends eqLogic {
 				log::add('boxio','debug',"update_scenario_id : ".$result[$i]['id_legrand']." update_scenario_unit : ".$result[$i]['unit']);
 				boxio::updateStatusLight($scenarios_decrypted_trame, false);
 			}
-			
-			
-			/*$memorydepth=$boxio->getConfiguration('memorydepth');
-			for($i = 0; $i < $memorydepth; $i++)
-			{
-				$mem_id="mem_id".$i;
-				$mem_unit="mem_unit".$i;
-				log::add('boxio','debug',"mem_id : ".$mem_id." mem_unit : ".$mem_unit);
-				$scenarios_decrypted_trame['id_legrand']=$boxio->getConfiguration($mem_id);
-				$scenarios_decrypted_trame['unit']=$boxio->getConfiguration($mem_unit);
-				boxio::updateStatusLight($scenarios_decrypted_trame, false);
-			}*/
 		}
+		
 		log::add('boxio','debug',"mise a jour du status : ".$status."\n");
 		$boxiocmd->event($status);
 		$boxiocmd->save();
@@ -1990,9 +1904,9 @@ class boxio extends eqLogic {
 			$boxiocmd->setConfiguration('returnStateTime',$timerhightolow);
 			$boxiocmdnum->setConfiguration('returnStateTime',$timerhightolow);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmd->setConfiguration('returnStateValue','LOW_FAN_SPEED');
-				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmdnum->setConfiguration('returnStateValue',0);
 			}
 		//ACTION INCONNU
@@ -2026,9 +1940,9 @@ class boxio extends eqLogic {
 			}
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
 		//ACTION ARRET
@@ -2039,9 +1953,9 @@ class boxio extends eqLogic {
 			
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
 		//ACTION FIN_ARRET
@@ -2052,9 +1966,9 @@ class boxio extends eqLogic {
 			
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
 		//ACTION INCONNU
@@ -2092,9 +2006,9 @@ class boxio extends eqLogic {
 			}
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',$date+$timer['seconds']);
+				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
 		//ACTION INCONNU
@@ -2107,14 +2021,6 @@ class boxio extends eqLogic {
 		if ($status == NULL) {
 			return;
 		}
-		//Mise à jour de la touche de l'equipement (s'il ne s'agit pas du unit_status)
-		/*if ($unit != $unit_status) {
-			$query = "UPDATE `equipements_status` SET status='$value' WHERE id_legrand='$id' AND unit='$unit'";
-			$this->mysqli->query($query);
-		}*/
-		//Mise à jour interne du status de l'equipement
-		//$query = "UPDATE `equipements_status` SET status='$status' WHERE id_legrand='$id' AND unit='$unit_status'";
-		//$this->mysqli->query($query);
 		
 		//Mise à jour des scenarios si necessaire
 		if ($scenarios === true) {
@@ -2129,18 +2035,7 @@ class boxio extends eqLogic {
 				log::add('boxio','debug',"update_scenario_id : ".$result[$i]['id_legrand']." update_scenario_unit : ".$result[$i]['unit']);
 				boxio::updateStatusConfort($scenarios_decrypted_trame, false);
 			}
-			
-			
-			/*$memorydepth=$boxio->getConfiguration('memorydepth');
-			for($i = 0; $i < $memorydepth; $i++)
-			{
-				$mem_id="mem_id".$i;
-				$mem_unit="mem_unit".$i;
-				log::add('boxio','debug',"mem_id : ".$mem_id." mem_unit : ".$mem_unit);
-				$scenarios_decrypted_trame['id_legrand']=$boxio->getConfiguration($mem_id);
-				$scenarios_decrypted_trame['unit']=$boxio->getConfiguration($mem_unit);
-				boxio::updateStatusConfort($scenarios_decrypted_trame, false);
-			}*/
+		
 		}
 		//Mise à jour du status
 		log::add('boxio','debug',"mise a jour du status : ".$status."\n");
@@ -2178,6 +2073,9 @@ class boxio extends eqLogic {
 		$sousdevice = $device_type[1];
 		$config = $boxio->getConfiguration($ref_id_legrand);
 		$family = $config["family"];
+		$unit_status = $config["unit_status"];
+		$unit_code = $config["unit_code"];
+		$statusid = "status".$unit_status;
 		log::add('boxio','debug',"type Scenario : update de l'ID : ".$id." UNIT : ".$unit. " Commande : ".$decrypted_trame["value"]." type :".$family);
 		
 		//On arrete l'action si celle ci est de type specifique
@@ -2194,14 +2092,13 @@ class boxio extends eqLogic {
 		
 		//Mise a jour de  l'equipement scenario
 		if ($family != 'SECURITY') {
-			$statusid = "status".$unit;
 			log::add('boxio','debug',"Statusid : ".$statusid);
 			$boxiocmd = $boxio->getCmd('info', $statusid);
 			$boxiocmd->event($value);
 			$boxiocmd->save();
 		}
 						
-		//On recherche si le scenario n'est pas de type LIGHTING, si oui on le met à jour tout de suite
+		//Mise a jour de  l'equipement lighting
 		
 		if ($family == 'LIGHTING') {
 			boxio::updateStatusLight($decrypted_trame, false);

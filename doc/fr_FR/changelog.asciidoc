@@ -105,10 +105,13 @@ Ajout de la fonction dupliquer un équipement
 Suppression des bootstraps
 Ajout d'un menu Health
 
-==== V1.308 du 10/05/2017 00:25
+==== V1.307 du 10/05/2017 00:25
 Implémentation  d'un timer de retour auto en low_speed après appui sur high_speed
 Correction du statut du DIM_STEP
 Ajout de l'update des prereglages variateur
+
+==== V1.308 du 11/05/2017 21:54
+Implémentation des commandes temporisées (For_time et in_time)
 
 ==== ToDo
 log/debug

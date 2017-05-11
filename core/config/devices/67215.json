@@ -2,8 +2,8 @@
     "67215": {
         "name": "Inter Auto 1000W",
         "configuration": {
-                            "version": "1.3",
-							"update": "Ajout du statut numérique",
+                            "version": "1.4",
+							"update": "Ajout de la commande OFF",
 							"nbunit": "3",
 							"672151": {
 								"ref_legrand": "67215",
@@ -98,6 +98,25 @@
 									},
 									"display": {
 										"generic_type": "LIGHT_ON"
+									}
+								},
+								{
+									"name": "Off",
+									"type": "action",
+									"subtype": "other",
+									"isVisible": 1,
+									"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+									"configuration": {
+										"whatdim": {
+											"what": "1",
+											"dim": "NULL",
+											"nom": "Off"
+										},
+										"unit": "3",
+										"where": "Unicast"
+									},
+									"display": {
+										"generic_type": "LIGHT_OFF"
 									}
 								},
 								{
