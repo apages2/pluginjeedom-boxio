@@ -113,7 +113,11 @@ Ajout de l'update des prereglages variateur
 ==== V1.308 du 11/05/2017 21:54
 Implémentation des commandes temporisées (For_time et in_time)
 
+==== V1.309 du 13/05/2017 22:36
+Correction du retour d'etat du status Confort (67449)
+
 ==== ToDo
+Remise a 0 du status au bout d'1 minutes quand Command=ACTION
 log/debug
 jeelink
 Mise a jour doc

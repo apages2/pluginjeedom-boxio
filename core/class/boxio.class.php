@@ -419,7 +419,8 @@ class boxio extends eqLogic {
 				preg_match('/(?P<step>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
 				//on test si le status est trouve
 				if (isset($param['step']) && isset($param['time'])) {
-					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
+					$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+					$timer=round($timersec/60);
 					$change_status = round(boxioCmd::calc_iobl_to_light($param['step']));
 					$statusnum = $last_status+$change_status;
 					log::add('boxio','debug',$statusnum);
@@ -474,7 +475,8 @@ class boxio extends eqLogic {
 				preg_match('/(?P<level>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
 				//on test si le status est trouve
 				if (isset($param['level']) && isset($param['time'])) {
-					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
+					$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+					$timer=round($timersec/60);
 					$statusnum = round(boxioCmd::calc_jeedom_to_light($param['level']));
 					if ($statusnum > 100) {
 						$statusnum = 100;
@@ -1762,7 +1764,8 @@ class boxio extends eqLogic {
 				preg_match('/(?P<level>\d+?)\*(?P<time>\d+)/', $decrypted_trame["param"], $param);
 				//on test si le status est trouve
 				if (isset($param['level']) && isset($param['time'])) {
-					$timer = round(boxioCmd::calc_iobl_to_time($param['time']));
+					$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+					$timer=round($timersec/60);
 					$statusnum = round(boxioCmd::calc_iobl_to_light($param['level']));
 					if ($statusnum > 100) {
 						$statusnum = 100;
@@ -1850,7 +1853,7 @@ class boxio extends eqLogic {
 		$boxiocmdnum->save();
 	}
 
-	public static function updateStatusConfort($decrypted_trame, $scenarios=false) {
+public static function updateStatusConfort($decrypted_trame, $scenarios=false) {
 		/*
 		// FONCTION : MISE A JOUR DU STATUS DES THERMOREGULATION
 		// PARAMS : $decrypted_trame = array(
@@ -1881,21 +1884,25 @@ class boxio extends eqLogic {
 		$boxiocmd = $boxio->getCmd('info', $statusid);
 		$statusidnum = "statusnum".$unit_status;
 		$boxiocmdnum = $boxio->getCmd('info', $statusidnum);
+		//Recuperation du derniere etat connu(last_status de l'unitstatus)
+		$last_status = $boxiocmd->execCmd();
+		//Recuperation des consignes
+		$last_consignenum = $boxiocmdnum->getConfiguration('consigne');
+		$last_consigne = $boxiocmd->getConfiguration('consigne');
+		log::add('boxio','debug',"laststatus : ".$last_status." lastconsigne : ".$last_consigne." lastconsignenum : ".$last_consignenum);
 		$timerhightolow = $def->DEFAULT_VMC_HIGHTOLOW;
 		//On recupere les server_opt
 		$server_opt = $config["server_opt"];
 		$status = NULL;
 		$statusnum = NULL;
-		log::add('boxio','debug',"ID : ".$id." UNIT : ".$unit." Ref Legrand+unit : ".$ref_id_legrand." Unit_Status : ".$unit_status." Statusid : ".$statusid. " Commande : ".$decrypted_trame["value"]);
+		log::add('boxio','debug',"ID : ".$id." UNIT : ".$unit." Ref Legrand+unit : ".$ref_id_legrand." Unit_Status : ".$unit_status." Statusid : ".$statusidnum. " Commande : ".$decrypted_trame["value"]." LastStatus : ".$last_status);
 		//LOW FAN SPEED
 		if ($decrypted_trame["value"] == 'LOW_FAN_SPEED') {
-			$value	 = 'LOW_FAN_SPEED';
 			$status = 'LOW_FAN_SPEED';
 			$statusnum = 0;
 		}
 		//HIGH FAN SPEED
 		else if ($decrypted_trame["value"] == 'HIGH_FAN_SPEED') {
-			$value = 'HIGH_FAN_SPEED';
 			$status = 'HIGH_FAN_SPEED';
 			$statusnum = 100;
 			log::add('boxio','debug',"paramètrage d'un timer pour le retour en LOW_FAN_SPEED au bout de ".$timerhightolow." min");
@@ -1912,57 +1919,105 @@ class boxio extends eqLogic {
 		//ACTION INCONNU
 		}
 		else if ($decrypted_trame["value"] == 'DEROGATION_CONSIGNE') {
+			if 	($last_status == 'Arret') {
+				if ($decrypted_trame["param"] == 4) {
+					$consigne ='Hors-Gel';
+					$consignenum = 20;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 3) {
+					$consigne = 'Eco';
+					$consignenum = 30;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 2) {
+					$consigne = 'Confort-2';
+					$consignenum = 50;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 1) {
+					$consigne = 'Confort-1';
+					$consignenum = 70;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 0) {
+					$consigne = 'Confort';
+					$consignenum = 100;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				$boxiocmd->setConfiguration('consigne',$consigne);
+				$boxiocmdnum->setConfiguration('consigne',$consignenum);
+			}
+			else {
+				if ($decrypted_trame["param"] == 4) {
+					$status = 'Hors-Gel';
+					$statusnum = 20;
+				}
+				elseif ($decrypted_trame["param"] == 3) {
+					$status = 'Eco';
+					$statusnum = 30;
+				}
+				elseif ($decrypted_trame["param"] == 2) {
+					$status = 'Confort-2';
+					$statusnum = 50;
+				}
+				elseif ($decrypted_trame["param"] == 1) {
+					$status = 'Confort-1';
+					$statusnum = 70;
+				}
+				elseif ($decrypted_trame["param"] == 0) {
+					$status = 'Confort';
+					$statusnum = 100;
+				}
+				log::add('boxio','debug',"Status : ".$status);
+				if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
+					$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
+					$boxiocmd->setConfiguration('returnStateValue',$status);
+					$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
+					$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+				}
+			}
 			
-			if ($decrypted_trame["param"] == 4) {
-				$value = 'Hors-Gel';
-				$status = 'Hors-Gel';
-				$statusnum = 20;
-			}
-			elseif ($decrypted_trame["param"] == 3) {
-				$value = 'Eco';
-				$status = 'Eco';
-				$statusnum = 30;
-			}
-			elseif ($decrypted_trame["param"] == 2) {
-				$value = 'Confort-2';
-				$status = 'Confort-2';
-				$statusnum = 70;
-			}
-			elseif ($decrypted_trame["param"] == 1) {
-				$value = 'Confort-1';
-				$status = 'Confort-1';
-				$statusnum = 50;
-			}
-			elseif ($decrypted_trame["param"] == 0) {
-				$value = 'Confort';
-				$status = 'Confort';
-				$statusnum = 100;
-			}
-			log::add('boxio','debug',"Status : ".$status);
-			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
-				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
-				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
-			}
 		//ACTION ARRET
 		}	else if ($decrypted_trame["value"] == 'ARRET') {
-			$value = 'Arret';
-			$status = 'Arret';
-			$statusnum = 0;
-			
-			log::add('boxio','debug',"Status : ".$status);
-			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
-				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
-				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+				if ($last_status != 'Arret') {
+					$status = 'Arret';
+					$statusnum = 0;
+					$boxiocmd->setConfiguration('consigne',$last_status);
+					if ($last_status == 'Hors-Gel') {
+						$boxiocmdnum->setConfiguration('consigne',20);
+					}
+					elseif ($last_status == 'Eco') {
+						$boxiocmdnum->setConfiguration('consigne',30);
+					}
+					elseif ($last_status == 'Confort-2') {
+						$boxiocmdnum->setConfiguration('consigne',50);
+					}
+					elseif ($last_status == 'Confort-1') {
+						$boxiocmdnum->setConfiguration('consigne',70);
+					}
+					elseif ($last_status == 'Confort') {
+						$boxiocmdnum->setConfiguration('consigne',100);
+					}
+					log::add('boxio','debug',"Status : ".$status);
+					if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
+						$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
+						$boxiocmd->setConfiguration('returnStateValue',$status);
+						$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
+						$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+					}
 			}
+			
+			
 		//ACTION FIN_ARRET
 		}	else if ($decrypted_trame["value"] == 'FIN_ARRET') {
-			$value = 'Fin_Arret';
-			$status = 'Fin_Arret';
-			$statusnum = 100;
+			$status = $boxiocmd->getConfiguration('consigne');
+			$statusnum = $boxiocmdnum->getConfiguration('consigne');
 			
 			log::add('boxio','debug',"Status : ".$status);
 			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
@@ -1971,45 +2026,71 @@ class boxio extends eqLogic {
 				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
 				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
 			}
-		//ACTION INCONNU
+		//ACTION CONSIGNE
 		}
 		else if ($decrypted_trame["value"] == 'CONSIGNE') {
-			if ($decrypted_trame["param"] == 4) {
-				$value = 'Hors-Gel';
-				$status = 'Hors-Gel';
-				$statusnum = 20;
+			if 	($last_status == 'Arret') {
+				if ($decrypted_trame["param"] == 4) {
+					$consigne ='Hors-Gel';
+					$consignenum = 20;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 3) {
+					$consigne = 'Eco';
+					$consignenum = 30;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 2) {
+					$consigne = 'Confort-2';
+					$consignenum = 50;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 1) {
+					$consigne = 'Confort-1';
+					$consignenum = 70;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				elseif ($decrypted_trame["param"] == 0) {
+					$consigne = 'Confort';
+					$consignenum = 100;
+					$status = 'Arret';
+					$statusnum = 0;
+				}
+				$boxiocmd->setConfiguration('consigne',$consigne);
+				$boxiocmdnum->setConfiguration('consigne',$consignenum);
 			}
-			elseif ($decrypted_trame["param"] == 3) {
-				$value = 'Eco';
-				$status = 'Eco';
-				$statusnum = 30;
-			}
-			elseif ($decrypted_trame["param"] == 2) {
-				$value = 'Confort-2';
-				$status = 'Confort-2';
-				$statusnum = 70;
-			}
-			elseif ($decrypted_trame["param"] == 1) {
-				$value = 'Confort-1';
-				$status = 'Confort-1';
-				$statusnum = 50;
-			}
-			elseif ($decrypted_trame["param"] == 0) {
-				$value = 'Confort';
-				$status = 'Confort';
-				$statusnum = 100;
-			}
-			elseif ($decrypted_trame["param"] == '') {
-				$value = 'Confort';
-				$status = 'Confort';
-				$statusnum = 100;
-			}
-			log::add('boxio','debug',"Status : ".$status);
-			if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
-				$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
-				$boxiocmd->setConfiguration('returnStateValue',$status);
-				$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
-				$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+			else {
+				if ($decrypted_trame["param"] == 4) {
+					$status = 'Hors-Gel';
+					$statusnum = 20;
+				}
+				elseif ($decrypted_trame["param"] == 3) {
+					$status = 'Eco';
+					$statusnum = 30;
+				}
+				elseif ($decrypted_trame["param"] == 2) {
+					$status = 'Confort-2';
+					$statusnum = 50;
+				}
+				elseif ($decrypted_trame["param"] == 1) {
+					$status = 'Confort-1';
+					$statusnum = 70;
+				}
+				elseif ($decrypted_trame["param"] == 0) {
+					$status = 'Confort';
+					$statusnum = 100;
+				}
+				log::add('boxio','debug',"Status : ".$status);
+				if (preg_match('/timer=(?P<seconds>\d+)/',$server_opt,$timer)) {
+					$boxiocmd->setConfiguration('returnStateTime',round($timer['seconds']/60));
+					$boxiocmd->setConfiguration('returnStateValue',$status);
+					$boxiocmdnum->setConfiguration('returnStateTime',round($timer['seconds']/60));
+					$boxiocmdnum->setConfiguration('returnStateValue',$statusnum);
+				}
 			}
 		//ACTION INCONNU
 		}
