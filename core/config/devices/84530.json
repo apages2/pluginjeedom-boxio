@@ -1,0 +1,157 @@
+{
+    "84530": {
+        "name": "Sortie de Cable CPL Sagane",
+		"configuration": {
+                            "version": "1.0",
+							"update": "Creation",
+							"nbunit": "1",
+							"845301": {
+								"ref_legrand": "84530",
+								"family": "COMFORT",
+								"nom_interne": "STATUS",
+								"btn": "Interne",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "51",
+								"unit_code": "132",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}
+                        },				
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+					{
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_STATE"
+						}			
+					},
+					{
+                        "name": "Chauffage - HG",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#4*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
+                    },
+					{
+                        "name": "Chauffage - Eco",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#3*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
+                    },
+					{
+                        "name": "Chauffage - Confort-2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#2*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
+                    },
+					{
+                        "name": "Chauffage - Confort-1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 0,
+						"logicalId": "*#WHO#*51#1*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
+                    },
+					{
+                        "name": "Chauffage - Confort",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*51#0*#WHERE###IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "51",
+								"dim": "NULL",
+								"nom": "Derogation_Consigne"
+							},
+							"unit": "1",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "THERMOSTAT_SET_MODE"
+						}
+                    }
+                ]
+            }
+        }
+    }
+}
