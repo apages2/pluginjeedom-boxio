@@ -1,0 +1,163 @@
+{
+    "84522": {
+        "name": "Inter Auto 1000W Sagane",
+        "configuration": {
+                            "version": "1.0",
+							"update": "Creation",
+							"nbunit": "3",
+							"845221": {
+								"ref_legrand": "84522",
+								"family": "LIGHTING",
+								"nom_interne": "Detecteur Mouvement",
+								"btn": "Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "3",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "2",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"845222": {
+								"ref_legrand": "84522",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF",
+								"btn": "Allumer/Eteindre",
+								"unit": "2",
+								"unit_status": "3",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"845223": {
+								"ref_legrand": "84522",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Allumer/Eteindre",
+								"unit": "3",
+								"unit_status": "3",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "129",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}	                                                                                       
+						},
+		"subtype": {
+			"00": {
+				"name": "Defaut",
+				"commands": [
+								{
+									"name": "Status",
+									"type": "info",
+									"subtype": "string",
+									"isVisible": 1,
+									"isHistorized": 0,
+									"unite": "",
+									"eventOnly": 1,
+									"logicalId": "status3",	
+									"configuration": {
+										"returnStateValue": "",
+										"returnStateTime": "",
+										"unit": "3"
+									}					
+								},
+								{
+									"name": "Status Numerique",
+									"type": "info",
+									"subtype": "numeric",
+									"isVisible": 0,
+									"isHistorized": 0,
+									"unite": "",
+									"logicalId": "statusnum3",	
+									"configuration": {
+										"returnStateValue": "",
+										"returnStateTime": "",
+										"unit": "3"
+									},
+									"display": {
+										"generic_type": "LIGHT_STATE"
+									}			
+								},
+								{
+									"name": "On",
+									"type": "action",
+									"subtype": "other",
+									"isVisible": 1,
+									"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+									"configuration": {
+										"whatdim": {
+											"what": "1",
+											"dim": "NULL",
+											"nom": "On"
+										},
+										"unit": "3",
+										"where": "Unicast"
+									},
+									"display": {
+										"generic_type": "LIGHT_ON"
+									}
+								},
+								{
+									"name": "Off",
+									"type": "action",
+									"subtype": "other",
+									"isVisible": 1,
+									"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+									"configuration": {
+										"whatdim": {
+											"what": "1",
+											"dim": "NULL",
+											"nom": "Off"
+										},
+										"unit": "3",
+										"where": "Unicast"
+									},
+									"display": {
+										"generic_type": "LIGHT_OFF"
+									}
+								},
+								{
+									"name": "Scenario Tempo",
+									"type": "action",
+									"subtype": "slider",
+									"isVisible": 1,
+									"logicalId": "*25*17##slider#*#WHERE##IDUNIT##MEDIA###",
+									"configuration": {
+										"whatdim": {
+											"what": "1",
+											"dim": "NULL",
+											"nom": "Who25-Action_For_Time"
+										},
+										"unit": "1",
+										"where": "Multicast",
+										"minValue": "",
+										"maxValue": ""
+									},
+									"display": {
+										"generic_type": "LIGHT_SLIDER"
+									}
+								},
+								{
+									"name": "On Scenario",
+									"type": "action",
+									"subtype": "other",
+									"isVisible": 1,
+									"logicalId": "*25*11*#WHERE##IDUNIT##MEDIA###",
+									"configuration": {
+										"whatdim": {
+											"what": "11",
+											"dim": "NULL",
+											"nom": "Who25-Action"
+										},
+										"unit": "2",
+										"where": "Multicast"
+									}
+								}
+							]
+				}
+		}
+	}                                                                                                          
+}
