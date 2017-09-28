@@ -1,0 +1,13 @@
+{
+        "id" : "boxio",
+        "name" : "Boxio",
+        "description" : "Plugin pour utiliser le module Legrand USB-CPL",
+        "icon" : "fa fa-rebel",
+        "licence" : "AGPL",
+        "author" : "Aurélien PAGES d'après le CODE de Michel TAVERNA",
+        "version" : "1.310",
+        "require" : "3.X",
+        "category" : "automation protocol",
+        "hasOwnDeamon" : true,
+        "hasDependency" : true
+}
