@@ -1,0 +1,224 @@
+{
+    "84521": {
+        "name": "Inter Variateur Sagane",
+        "configuration": {
+                            "version": "1.0",
+							"update": "Creation",
+							"nbunit": "4",
+							"845211": {
+								"ref_legrand": "84521",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF",
+								"btn": "Variation/Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "4",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "14",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"845212": {
+								"ref_legrand": "84521",
+								"family": "LIGHTING",
+								"nom_interne": "+",
+								"btn": "Scenario +",
+								"unit": "2",
+								"unit_status": "4",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "15",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"845213": {
+								"ref_legrand": "84521",
+								"family": "LIGHTING",
+								"nom_interne": "-",
+								"btn": "Scenario -",
+								"unit": "3",
+								"unit_status": "4",
+								"possibility": "COMMAND",
+								"function_code": "49",
+								"unit_code": "15",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							},
+							"845214": {
+								"ref_legrand": "84521",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Variation",
+								"unit": "4",
+								"unit_status": "4",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "143",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+							}
+                        },		
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }					
+					},
+					{
+                        "name": "Status Numerique",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}			
+					},
+					{
+                        "name": "On",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "4",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}	
+                    },
+					{
+                        "name": "Off",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "4",
+							"where": "Unicast"
+                        },
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}	
+                    },
+					{
+                        "name": "On Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+					{
+                        "name": "Off Scenario",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "1",
+							"where": "Multicast"
+                        }
+                    },
+					{
+                        "name": "Variateur",
+                        "type": "action",
+						"subtype": "slider",
+                        "isVisible": 1,
+						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#10*#SLIDER#*1##",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Dim_Step"
+							},
+							"unit": "2",
+							"where": "Broadcast",
+							"minValue": 0,
+							"maxValue": 125
+                        },
+						"display": {
+							"generic_type": "LIGHT_SLIDER"
+						}	
+                    },
+					{
+                        "name": "Prereglage +",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*11*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+							"unit": "2",
+							"where": "Broadcast"
+                        }
+                    },
+					{
+                        "name": "Prereglage -",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*11*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},
+							"unit": "3",
+							"where": "Broadcast"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
