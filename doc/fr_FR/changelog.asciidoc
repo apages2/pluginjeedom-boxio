@@ -20,7 +20,7 @@ Ajout des modules 67201 et 67202 (Inter simple et inter double)
 Modification du code afin de gérer les units dans les commandes (et non dans l'équipement). Nécessite de supprimer tous les équipements et de les recréer
 
 ==== V1.005 du 22/09/2015 23:00
-Mise à jour du design (utilisation des bootstrapSwitch) + Affichage des modules maitre/esclave + modification du daemon et des triggers
+Mise à jour du design + Affichage des modules maitre/esclave + modification du daemon et des triggers
 
 ==== V1.006 du 24/10/2015 23:04
 Correction d'un bug qui bloque l'envoi et la reception de trame quand on demarre le daemon en mode normal (vs debug)
@@ -102,7 +102,7 @@ Correction du bug d'affichage des equipements pilotés si doublon
 Mise en place de l'autodetection du port USB utilisé pour l'interface 88213
 Gestion des onglets dans l'équipement Boxio (Equipement/Commandes/Equipement Pilotés)
 Ajout de la fonction dupliquer un équipement
-Suppression des bootstraps
+Suppression des bootstrps
 Ajout d'un menu Health
 
 ==== V1.307 du 10/05/2017 00:25
