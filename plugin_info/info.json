@@ -5,7 +5,6 @@
         "icon" : "fa fa-rebel",
         "licence" : "AGPL",
         "author" : "Aurélien PAGES d'après le CODE de Michel TAVERNA",
-        "version" : "1.310",
         "require" : "3.0",
         "category" : "automation protocol",
         "hasOwnDeamon" : true,
