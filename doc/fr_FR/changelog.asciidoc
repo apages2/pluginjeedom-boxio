@@ -116,6 +116,9 @@ Implémentation des commandes temporisées (For_time et in_time)
 ==== V1.309 du 13/05/2017 22:36
 Correction du retour d'etat du status Confort (67449)
 
+==== V1.310 du 04/10/2017 10:11
+Mise a jour pour compatibilité 3.1.3
+
 ==== ToDo
 Remise a 0 du status au bout d'1 minutes quand Command=ACTION
 log/debug
