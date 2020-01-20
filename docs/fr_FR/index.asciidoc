@@ -2,7 +2,6 @@ Description
 ===
 Plugin permettant d'utiliser l'adaptateur USB/CPL de Legrand (88213)
 
-
 Configuration
 ===
 Le plugin BOXIO permet de dialoguer avec l'ensemble des périphériques In One By Legrand que ce soit en CPL, Radiofréquence ou Infrarouge (pour ces deux derniers, il est nécessaire d'avoir un bridge CPL/IR ou CPL/RF).
