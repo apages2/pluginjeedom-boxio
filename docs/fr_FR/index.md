@@ -115,10 +115,7 @@ Ensuite vous pourrez le partager avec la communauté (grâce à la fonction : En
 
 Merci à vous.
 
-FAQ
-===
-
-Troubleshooting
+Depannage et diagnostic
 ===
 
 Le deamon refuse de démarrer
