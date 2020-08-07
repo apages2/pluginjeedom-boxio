@@ -314,6 +314,10 @@ def read_socket():
 				logger.debug("Write message to serial port")
 				serial_param.port.write( message)
 				logger.debug("Write message ok : "+ message)
+				# Warning: when too many messages are sent to the output stream in a very short interval,
+				# the USB/PLC bridge may deliberately ignore some of the messages and reply with a NACK response.
+				# To reduce the risks of seeing rejected messages, a little delay is added after each message.
+				time.sleep(0.55)
             
 			prm = message.replace('*', 'Y')
 			prm = prm.replace('#', 'Z')
