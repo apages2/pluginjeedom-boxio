@@ -1688,6 +1688,7 @@ class boxio extends eqLogic {
 			//on test si le status est trouve
 			if (isset($param['time'])) {
 				$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+				$timersec = $timersec < 60 ? 60 : $timersec;
 				$timer=round($timersec/60);
 				$status = 'ON';
 				$statusnum = 100;
@@ -1705,6 +1706,7 @@ class boxio extends eqLogic {
 			//on test si le status est trouve
 			if (isset($param['time'])) {
 				$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+				$timersec = $timersec < 60 ? 60 : $timersec;
 				$timer=round($timersec/60);
 				//on a envoyé en interne le status sinon on prend par defaut ON
 				$status = NULL;
@@ -1765,6 +1767,7 @@ class boxio extends eqLogic {
 				//on test si le status est trouve
 				if (isset($param['level']) && isset($param['time'])) {
 					$timersec = boxioCmd::calc_iobl_to_time($param['time']);
+					$timersec = $timersec < 60 ? 60 : $timersec;
 					$timer=round($timersec/60);
 					$statusnum = round(boxioCmd::calc_iobl_to_light($param['level']));
 					if ($statusnum > 100) {
