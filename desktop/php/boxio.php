@@ -160,9 +160,9 @@ if (config::byKey('autoDiscoverEqLogic', 'boxio', 0) == 1) {
 							<label class="col-sm-3 control-label">{{Media}}</label>
 							<div class="col-sm-9">
 								<select class="eqLogicAttr" data-l1key="configuration" data-l2key="media">
-									<option value="CPL" />CPL</option>
-									<option value="RF" />RF</option>
-									<option value="IR" />IR</option>
+									<option value="CPL">CPL</option>
+									<option value="RF">RF</option>
+									<option value="IR">IR</option>
 								</select> 
 							</div>
 						</div>
