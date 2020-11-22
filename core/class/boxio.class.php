@@ -2165,7 +2165,6 @@ public static function updateStatusConfort($decrypted_trame, $scenarios=false) {
 		//On arrete l'action si celle ci est de type specifique
 		if ($decrypted_trame['value'] == 'STOP_ACTION') {
 			return;
-		log::add('boxio','debug',"action de type :".$decrypted_trame['value']);
 		}
 		
 		//On recherche si le scenario n'est pas de type SECURITY, si oui on le met à jour en fonction des units
@@ -2178,8 +2177,10 @@ public static function updateStatusConfort($decrypted_trame, $scenarios=false) {
 		if ($family != 'SECURITY') {
 			log::add('boxio','debug',"Statusid : ".$statusid);
 			$boxiocmd = $boxio->getCmd('info', $statusid);
-			$boxiocmd->event($value);
-			$boxiocmd->save();
+			if (isset($boxiocmd)) {
+				$boxiocmd->event($value);
+				$boxiocmd->save();
+			}
 		}
 						
 		//Mise a jour de  l'equipement lighting
