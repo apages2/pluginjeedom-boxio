@@ -1,3 +1,11 @@
+### V1.313 du 22/11/2020 16:55
+-   Correction du type par défaut des index du gestionnaire d'énergie 03809. Merci a Kevin Chalet (PR15)
+-   Corrige le chemin du logo In One by Legrand utilisé par défaut dans la vue santé. Merci a Kevin Chalet (PR16)
+-   Ajoute une courte attente après chaque envoi de message vers la passerelle USB/CPL. Evite l'ajout de commande sleep entre deux commande d'un scénario. Merci a Kevin Chalet (PR17)
+-   Fixe la valeure minimal à 60seconde pour $timersec. Corrige les problèmes avec les interrupteur automatique avec un retour à la normal inferieur a 60s (ne passe pas a Off dans Boxio). Merci a Kevin Chalet (PR18)
+-   Vérifie que l'info d'un scénario existe avant de créer un événement associé pour les équipements de type Security. Merci a Kevin Chalet (PR19)
+-   Corrige les balises malformées de l'ascenseur Media dans la config de l'equipement (CPL/RF/IR).  Merci a Kevin Chalet (PR20)
+
 ### V1.312 du 20/01/2020 20:23
 -   Mise a jour de la doc au format Markdown
 
