@@ -8,7 +8,7 @@
     <author>Aurélien PAGES d'après le CODE de Michel TAVERNA et l'aide de Loic</author>
     <installation>Aucun</installation>
     <require>2.3.5</require>
-    <version>1.312</version>
+    <version>1.313</version>
     <category>automation protocol</category>
     <allowRemote>1</allowRemote>
 	<hasOwnDeamon>1</hasOwnDeamon>
