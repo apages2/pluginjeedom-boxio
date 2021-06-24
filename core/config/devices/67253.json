@@ -2,8 +2,8 @@
     "67253": {
         "name": "Inter Centralisé Volet Roulant",
         "configuration": {
-                            "version": "1.3",
-							"update": "Ajout du statut numérique",
+                            "version": "1.4",
+							"update": "Suppression des commandes local",
 							"nbunit": "1",
 							"672531": {
 								"ref_legrand": "67253",
@@ -54,63 +54,6 @@
 						"display": {
 							"generic_type": "FLAP_STATE"
 						}			
-					},
-					{
-                        "name": "Ouvrir",
-                        "type": "action",
-						"subtype": "other",
-                        "isVisible": 1,
-						"logicalId": "*#WHO#*1*#WHERE##IDUNIT###",
-						"configuration": {
-							"whatdim": {
-								"what": "2",
-								"dim": "NULL",
-								"nom": "Move_Up"
-							},	
-							"unit": "2",
-							"where": "Unicast"
-                        },
-						"display": {
-							"generic_type": "FLAP_UP"
-						}
-                    },
-                    {
-                        "name": "Fermer",
-                        "type": "action",
-						"subtype": "other",
-                        "isVisible": 1,
-						"logicalId": "*#WHO#*2*#WHERE##IDUNIT###",
-						"configuration": {
-							"whatdim": {
-								"what": "1",
-								"dim": "NULL",
-								"nom": "Move_Down"
-							},
-						"unit": "2",
-						"where": "Unicast"
-						},
-						"display": {
-							"generic_type": "FLAP_DOWN"
-						}
-					},
-                    {
-                        "name": "Stop",
-                        "type": "action",
-						"subtype": "other",
-                        "isVisible": 1,
-						"logicalId": "*#WHO#*0*#WHERE##IDUNIT###",
-						"configuration": {
-							"whatdim": {
-								"what": "0",
-								"dim": "NULL",
-								"nom": "Move_Stop"
-							},
-							"unit": "2",
-							"where": "Unicast"
-						},
-						"display": {
-							"generic_type": "FLAP_STOP"
-						}
 					},
 					{
                         "name": "Ouvrir Scenario",
@@ -197,63 +140,6 @@
 							"generic_type": "FLAP_STATE"
 						}			
 					},
-					{
-                        "name": "Ouvrir",
-                        "type": "action",
-						"subtype": "other",
-                        "isVisible": 1,
-						"logicalId": "*#WHO#*2*#WHERE##IDUNIT##MEDIA###",
-						"configuration": {
-							"whatdim": {
-								"what": "2",
-								"dim": "NULL",
-								"nom": "Move_Down"
-							},
-							"unit": "2",
-							"where": "Unicast"
-                        },
-						"display": {
-							"generic_type": "FLAP_UP"
-						}
-                    },
-                    {
-                        "name": "Fermer",
-                        "type": "action",
-						"subtype": "other",
-                        "isVisible": 1,
-						"logicalId": "*#WHO#*1*#WHERE##IDUNIT##MEDIA###",
-						"configuration": {
-							"whatdim": {
-								"what": "1",
-								"dim": "NULL",
-								"nom": "Move_Up"
-							},
-							"unit": "2",
-							"where": "Unicast"
-						},
-						"display": {
-							"generic_type": "FLAP_DOWN"
-						}
-					},
-                    {
-                        "name": "Stop",
-                        "type": "action",
-						"subtype": "other",
-                        "isVisible": 1,
-						"logicalId": "*#WHO#*0*#WHERE##IDUNIT##MEDIA###",
-						"configuration": {
-							"whatdim": {
-								"what": "0",
-								"dim": "NULL",
-								"nom": "Move_Stop"
-							},
-							"unit": "2",
-							"where": "Unicast"
-						},
-						"display": {
-							"generic_type": "FLAP_STOP"
-						}
-                    },
 					{
                         "name": "Ouvrir Scenario",
                         "type": "action",

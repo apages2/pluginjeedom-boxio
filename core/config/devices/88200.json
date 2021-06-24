@@ -1,0 +1,523 @@
+{
+    "88200": {
+        "name": "Telecommande IR",
+		"configuration": {
+                            "version": "1.4",
+							"update": "Creation du template",
+							"nbunit": "7",
+							"882001": {
+								"ref_legrand": "88200",
+								"family": "LIGHTING",
+								"nom_interne": "ON/OFF",
+								"btn": "Variation/Allumer/Eteindre",
+								"unit": "1",
+								"unit_status": "1",
+								"possibility": "COMMAND",
+								"function_code": "55",
+								"unit_code": "1",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+								},
+							"882002": {
+								"ref_legrand": "88200",
+								"family": "SHUTTER",
+								"nom_interne": "Monte/Descente/Stop",
+								"btn": "Monte/Descente/Stop",
+								"unit": "2",
+								"unit_status": "2",
+								"possibility": "COMMAND",
+								"function_code": "50",
+								"unit_code": "4",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Mouvement volet"
+								},
+							"882003": {
+								"ref_legrand": "88200",
+								"family": "LIGHTING",
+								"nom_interne": "STATUS",
+								"btn": "Memoire Variation",
+								"unit": "3",
+								"unit_status": "3",
+								"possibility": "ACTION,STATUS,MEMORY",
+								"function_code": "49",
+								"unit_code": "15",
+								"server_opt": "NULL",
+								"commentaire": "NULL"
+                               },
+							"882004": {
+								"ref_legrand": "88200",
+								"family": "SCENE",
+								"nom_interne": "I",
+								"btn": "Scenario I",
+								"unit": "4",
+								"unit_status": "4",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Start et Stop Action Scenario"
+								},
+							"882005": {
+								"ref_legrand": "88200",
+								"family": "SCENE",
+								"nom_interne": "II",
+								"btn": "Scenario II",
+								"unit": "5",
+								"unit_status": "5",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Start et Stop Action Scenario"
+								},
+							"882006": {
+								"ref_legrand": "88200",
+								"family": "SCENE",
+								"nom_interne": "III",
+								"btn": "Scenario III",
+								"unit": "6",
+								"unit_status": "6",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Start et Stop Action Scenario"
+								},
+							"882007": {
+								"ref_legrand": "88200",
+								"family": "SCENE",
+								"nom_interne": "IIII",
+								"btn": "Scenario IIII",
+								"unit": "7",
+								"unit_status": "7",
+								"possibility": "COMMAND",
+								"function_code": "53",
+								"unit_code": "3",
+								"server_opt": "NULL",
+								"commentaire": "COMMAND=Start et Stop Action Scenario"
+								}
+                        },		
+		"subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [
+                    {
+                        "name": "Status1",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+					 
+						"logicalId": "status1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        }				
+					},
+					{
+                        "name": "Status Numerique1",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum1",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "1"
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}					
+					},
+					{
+                        "name": "On",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*1*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "On"
+							},
+							"unit": "1",
+							"where": "Broadcast"
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}	
+                    },
+					{
+                        "name": "Off",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*1*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Off"
+							},
+							"unit": "1",
+							"where": "Broadcast"
+                        },
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}	
+					},
+                    {
+                        "name": "Status2",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        }				
+					},
+					{
+                        "name": "Status Numerique2",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum2",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "2"
+                        },
+						"display": {
+							"generic_type": "FLAP_STATE"
+						}			
+					},
+					{
+                        "name": "Ouvrir",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*2*1*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							},	
+							"unit": "2",
+							"where": "Broadcast"
+                        },
+						"display": {
+							"generic_type": "FLAP_UP"
+						}
+                    },
+                    {
+                        "name": "Fermer",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*2*2*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							},
+						"unit": "2",
+						"where": "Broadcast"
+						},
+						"display": {
+							"generic_type": "FLAP_DOWN"
+						}
+					},
+                    {
+                        "name": "Stop",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*2*0*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							},
+							"unit": "2",
+							"where": "Broadcast"
+						},
+						"display": {
+							"generic_type": "FLAP_STOP"
+						}
+                    },
+                    {
+                        "name": "Status3",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "status3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        }				
+					},
+					{
+                        "name": "Status Numerique3",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum3",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "3"
+                        },
+						"display": {
+							"generic_type": "LIGHT_STATE"
+						}					
+					},
+					{
+                        "name": "Variateur",
+                        "type": "action",
+						"subtype": "slider",
+                        "isVisible": 1,
+						"logicalId": "*#1*#WHERE##IDUNIT##MEDIA#*#1*#SLIDER#*1##",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Go_To_Level_Time"
+							},
+							"unit": "3",
+							"where": "Broadcast",
+							"minValue" : "",
+							"maxValue" : ""
+                        },
+						"display": {
+							"generic_type": "LIGHT_SLIDER"
+						}	
+                    },
+					{
+                        "name": "Status4",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        }			
+					},
+					{
+                        "name": "Status Numerique4",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum4",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "4"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}			
+					},
+					{
+                        "name": "Scenario 1",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},	
+							"unit": "4",
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
+                    },
+                    {
+                        "name": "Status5",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status5",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "5"
+                        }			
+					},
+					{
+                        "name": "Status Numerique5",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum5",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "5"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}			
+					},
+					{
+                        "name": "Scenario 2",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},	
+							"unit": "5",
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
+                    },
+					{
+                        "name": "Status6",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status6",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "6"
+                        }				
+					},
+					{
+                        "name": "Status Numerique6",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum6",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "6"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}			
+					},
+                    {
+                        "name": "Scenario 3",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},	
+							"unit": "6",
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
+                    },
+					{
+                        "name": "Status7",
+                        "type": "info",
+						"subtype": "string",
+                        "isVisible": 1,
+						"isHistorized": 0,
+                        "unite": "",
+						"eventOnly": 1,
+						"logicalId": "status7",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "7"
+                        }				
+					},
+					{
+                        "name": "Status Numerique7",
+                        "type": "info",
+						"subtype": "numeric",
+                        "isVisible": 0,
+						"isHistorized": 0,
+                        "unite": "",
+						"logicalId": "statusnum7",	
+						"configuration": {
+                            "returnStateValue": "",
+                            "returnStateTime": "",
+							"unit": "7"
+                        },
+						"display": {
+							"generic_type": "MODE_STATE"
+						}			
+					},
+					{
+                        "name": "Scenario 4",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*25*#WHAT#*#WHERE##IDUNIT##MEDIA###",
+						"configuration": {
+							"whatdim": {
+								"what": "11",
+								"dim": "NULL",
+								"nom": "Who25-Action"
+							},	
+							"unit": "7",
+							"where": "Multicast"
+                        },
+						"display": {
+							"generic_type": "MODE_SET_STATE"
+						}
+                    }
+                ]
+            }
+        }
+    }
+}

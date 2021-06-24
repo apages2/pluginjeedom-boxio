@@ -1,3 +1,8 @@
+### V1.314 du 24/06/2021 20:13
+-   Correction d'un bug sur le champ la valeur de la commande vaut par défaut la commande dans l'onglet commande merci à alx68
+-   Ajout du template 88200. Merci à alx68 et Figjial
+-   Modif du template 67253 en supprimant les commandes locales. Merci à kevinchalet
+
 ### V1.313 du 22/11/2020 16:55
 -   Correction du type par défaut des index du gestionnaire d'énergie 03809. Merci a Kevin Chalet (PR15)
 -   Corrige le chemin du logo In One by Legrand utilisé par défaut dans la vue santé. Merci a Kevin Chalet (PR16)

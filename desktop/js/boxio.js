@@ -219,7 +219,7 @@ function addCmdToTable(_cmd) {
     tr += '<td>';
     tr += '<div class="row">';
     tr += '<div class="col-sm-6">';
-    tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fa fa-flag"></i> Icône</a>';
+    tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fas fa-flag"></i> Icône</a>';
     tr += '<span class="cmdAttr" data-l1key="display" data-l2key="icon" style="margin-left : 10px;"></span>';
     tr += '</div>';
     tr += '<div class="col-sm-6">';
@@ -271,15 +271,15 @@ function addCmdToTable(_cmd) {
     tr += '</td>';
     tr += '<td>';
     if (is_numeric(_cmd.id)) {
-        tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
-        tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> Tester </a>';
+        tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> ';
+        tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> Tester </a>';
     }
-    tr += '<i class="fa fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i></td>';
+    tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i></td>';
     tr += '</tr>';
     $('#table_cmd tbody').append(tr);
     var tr = $('#table_cmd tbody tr:last');
     jeedom.eqLogic.builSelectCmd({
-        id: $(".li_eqLogic.active").attr('data-eqLogic_id'),
+        id: $('.eqLogicAttr[data-l1key=id]').value(),
         filter: {type: 'info'},
         error: function (error) {
             $('#div_alert').showAlert({message: error.message, level: 'danger'});
@@ -308,13 +308,13 @@ function addCmdToTable(_cmd) {
             $('.changeIncludeState').attr('data-state', 0);
             $('.changeIncludeState.card').css('background-color','#8000FF');
             $('.changeIncludeState.card span center').text('{{Arrêter l\'inclusion}}');
-            $('.changeIncludeState:not(.card)').html('<i class="fa fa-sign-in fa-rotate-90"></i> {{Arreter inclusion}}');
+            $('.changeIncludeState:not(.card)').html('<i class="fas fa-sign-in-alt fa-rotate-90"></i> {{Arreter inclusion}}');
             $('#div_inclusionAlert').showAlert({message: '{{Vous etes en mode inclusion. Recliquez sur le bouton d\'inclusion pour sortir de ce mode}}', level: 'warning'});
         } else {
-            $.hideAlert();
-            $('.changeIncludeState:not(.card)').addClass('btn-default').removeClass('btn-success btn-danger');
+			$.hideAlert();
+            $('.changeIncludeState:not(.card)').removeClass('btn-success').removeClass('btn-default');
             $('.changeIncludeState').attr('data-state', 1);
-            $('.changeIncludeState:not(.card)').html('<i class="fa fa-sign-in fa-rotate-90"></i> {{Mode inclusion}}');
+            $('.changeIncludeState:not(.card)').html('<i class="fas fa-sign-in-alt fa-rotate-90"></i> {{Mode inclusion}}');
             $('.changeIncludeState.card span center').text('{{Mode inclusion}}');
             $('.changeIncludeState.card').css('background-color','#ffffff');
             $('#div_inclusionAlert').hideAlert();
